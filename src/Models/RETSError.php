@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Models;
+<?php
+
+namespace PHRETS\Models;
 
 class RETSError
 {
@@ -15,11 +17,13 @@ class RETSError
 
     /**
      * @param string $code
+     *
      * @return $this
      */
     public function setCode($code)
     {
-        $this->code = (int)$code;
+        $this->code = (int) $code;
+
         return $this;
     }
 
@@ -33,11 +37,13 @@ class RETSError
 
     /**
      * @param string $message
+     *
      * @return $this
      */
     public function setMessage($message)
     {
         $this->message = $message;
+
         return $this;
     }
 }

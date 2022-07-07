@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Models\Search;
+<?php
+
+namespace PHRETS\Models\Search;
 
 class Record implements \ArrayAccess, \Stringable
 {
@@ -10,11 +12,12 @@ class Record implements \ArrayAccess, \Stringable
 
     /**
      * @param $field
+     *
      * @return string|null
      */
     public function get($field)
     {
-        return $this->values[(string)$field] ?? null;
+        return $this->values[(string) $field] ?? null;
     }
 
     /**
@@ -23,25 +26,27 @@ class Record implements \ArrayAccess, \Stringable
      */
     public function set($field, $value)
     {
-        $this->values[(string)$field] = $value;
-    }
-
-    /**
-    * @param $field
-    */
-    public function remove($field)
-    {
-      unset($this->values[(string)$field]);
+        $this->values[(string) $field] = $value;
     }
 
     /**
      * @param $field
+     */
+    public function remove($field)
+    {
+        unset($this->values[(string) $field]);
+    }
+
+    /**
+     * @param $field
+     *
      * @return bool
      */
     public function isRestricted($field)
     {
         $val = $this->get($field);
-        return ($val == $this->restricted_value);
+
+        return $val == $this->restricted_value;
     }
 
     /**
@@ -53,6 +58,7 @@ class Record implements \ArrayAccess, \Stringable
         $this->class = $results->getClass();
         $this->restricted_value = $results->getRestrictedIndicator();
         $this->fields = $results->getHeaders();
+
         return $this;
     }
 
@@ -96,9 +102,6 @@ class Record implements \ArrayAccess, \Stringable
         return json_encode($this->values, JSON_THROW_ON_ERROR);
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->toJson();
@@ -110,7 +113,7 @@ class Record implements \ArrayAccess, \Stringable
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function offsetGet(mixed $offset): mixed
     {

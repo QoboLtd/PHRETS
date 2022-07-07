@@ -1,14 +1,16 @@
-<?php namespace PHRETS\Parsers\GetObject;
+<?php
+
+namespace PHRETS\Parsers\GetObject;
 
 use GuzzleHttp\Psr7\Response;
-use PHRETS\Http\Response as PHRETSResponse;
 use Illuminate\Support\Collection;
+use PHRETS\Http\Response as PHRETSResponse;
 
 class Multiple
 {
     public function parse(PHRETSResponse $response)
     {
-        $collection = new Collection;
+        $collection = new Collection();
 
         if (!$response->getBody()) {
             return $collection;
@@ -40,7 +42,7 @@ class Multiple
         // take off anything after the last boundary (the epilogue)
         array_pop($multi_parts);
 
-        $parser = new Single;
+        $parser = new Single();
 
         // go through each part of the multipart message
         foreach ($multi_parts as $part) {
@@ -48,7 +50,7 @@ class Multiple
             $parts = \GuzzleHttp\Psr7\Message::parseResponse("HTTP/1.1 200 OK\r\n" . $part . "\r\n");
 
             // now throw this single faked message through the Single GetObject response parser
-            $single = new PHRETSResponse(new Response($parts->getStatusCode(), $parts->getHeaders(), (string)$parts->getBody()));
+            $single = new PHRETSResponse(new Response($parts->getStatusCode(), $parts->getHeaders(), (string) $parts->getBody()));
             $obj = $parser->parse($single);
 
             // add information about this multipart to the returned collection

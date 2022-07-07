@@ -1,9 +1,11 @@
-<?php namespace PHRETS\Models\Search;
+<?php
 
-use Closure;
-use Illuminate\Support\Collection;
-use Countable;
+namespace PHRETS\Models\Search;
+
 use ArrayAccess;
+use Closure;
+use Countable;
+use Illuminate\Support\Collection;
 use IteratorAggregate;
 use League\Csv\Writer;
 use SplTempFileObject;
@@ -27,7 +29,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     public function __construct()
     {
-        $this->results = new Collection;
+        $this->results = new Collection();
     }
 
     /**
@@ -40,11 +42,13 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param array $headers
+     *
      * @return $this
      */
     public function setHeaders($headers)
     {
         $this->headers = $headers;
+
         return $this;
     }
 
@@ -68,23 +72,24 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Set which field's value will be used to key the records by
+     * Set which field's value will be used to key the records by.
      *
      * @param $field
      */
     public function keyResultsBy($field)
     {
         $results = clone $this->results;
-        $this->results = new Collection;
+        $this->results = new Collection();
         foreach ($results as $r) {
             $this->addRecord($r, $field);
         }
     }
 
     /**
-     * Grab a record by it's tracked key
+     * Grab a record by it's tracked key.
      *
      * @param $key_id
+     *
      * @return Record
      */
     public function find($key_id)
@@ -102,11 +107,13 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param null $error
+     *
      * @return $this
      */
     public function setError($error)
     {
         $this->error = $error;
+
         return $this;
     }
 
@@ -120,6 +127,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param int $returned_results_count
+     *
      * @return $this
      */
     public function setReturnedResultsCount($returned_results_count)
@@ -129,6 +137,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         }
 
         $this->returned_results_count = $returned_results_count;
+
         return $this;
     }
 
@@ -142,6 +151,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param int $total_results_count
+     *
      * @return $this
      */
     public function setTotalResultsCount($total_results_count)
@@ -151,6 +161,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         }
 
         $this->total_results_count = $total_results_count;
+
         return $this;
     }
 
@@ -164,11 +175,13 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param string $class
+     *
      * @return $this
      */
     public function setClass($class)
     {
         $this->class = $class;
+
         return $this;
     }
 
@@ -182,11 +195,13 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param string $resource
+     *
      * @return $this
      */
     public function setResource($resource)
     {
         $this->resource = $resource;
+
         return $this;
     }
 
@@ -200,11 +215,13 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param \PHRETS\Session $session
+     *
      * @return $this
      */
     public function setSession($session)
     {
         $this->session = $session;
+
         return $this;
     }
 
@@ -216,16 +233,19 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         if (!$this->metadata) {
             $this->metadata = $this->session->GetTableMetadata($this->getResource(), $this->getClass());
         }
+
         return $this->metadata;
     }
 
     /**
      * @param null $metadata
+     *
      * @return $this
      */
     public function setMetadata($metadata)
     {
         $this->metadata = $metadata;
+
         return $this;
     }
 
@@ -239,11 +259,13 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param $indicator
+     *
      * @return $this
      */
     public function setRestrictedIndicator($indicator)
     {
         $this->restricted_indicator = $indicator;
+
         return $this;
     }
 
@@ -265,7 +287,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset) {
-            $this->addRecord($value, fn() => $offset);
+            $this->addRecord($value, fn () => $offset);
         } else {
             $this->addRecord($value);
         }
@@ -284,6 +306,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * @param callable $callback
      * @param null $default
+     *
      * @return Record|null
      */
     public function first(Closure $callback = null, $default = null)
@@ -304,23 +327,26 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      */
     public function isMaxRowsReached()
     {
-        return ($this->maxrows_reached == true);
+        return $this->maxrows_reached == true;
     }
 
     /**
      * @param bool $boolean
+     *
      * @return $this
      */
     public function setMaxRowsReached($boolean = true)
     {
         $this->maxrows_reached = $boolean;
+
         return $this;
     }
 
     /**
-     * Returns an array containing the values from the given field
+     * Returns an array containing the values from the given field.
      *
      * @param $field
+     *
      * @return array
      */
     public function lists($field)
@@ -332,18 +358,19 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
                 $l[] = $v;
             }
         }
+
         return $l;
     }
 
     /**
-     * Return results as a large prepared CSV string
+     * Return results as a large prepared CSV string.
      *
      * @return string
      */
     public function toCSV()
     {
         // create a temporary file so we can write the CSV out
-        $writer = Writer::createFromFileObject(new SplTempFileObject);
+        $writer = Writer::createFromFileObject(new SplTempFileObject());
 
         // add the header line
         $writer->insertOne($this->getHeaders());
@@ -364,7 +391,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Return results as a JSON string
+     * Return results as a JSON string.
      *
      * @return string
      */
@@ -374,7 +401,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Return results as a simple array
+     * Return results as a simple array.
      *
      * @return array
      */
@@ -384,6 +411,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         foreach ($this->results as $r) {
             $result[] = $r->toArray();
         }
+
         return $result;
     }
 }

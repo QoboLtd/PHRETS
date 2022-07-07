@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Parsers\Login;
+<?php
+
+namespace PHRETS\Parsers\Login;
 
 use Illuminate\Support\Str;
 
@@ -10,7 +12,7 @@ class OneEight extends OneX
         $value = null;
 
         if (str_contains((string) $line, '=')) {
-            @[$name, $value] = explode("=", (string) $line, 2);
+            @[$name, $value] = explode('=', (string) $line, 2);
         }
 
         $value = trim($value);

@@ -5,14 +5,14 @@ use GuzzleHttp\Middleware;
 class SessionIntegrationTest extends BaseIntegration
 {
     /** @test * */
-    public function it_logs_in()
+    public function itLogsIn()
     {
         $connect = $this->session->Login();
         $this->assertTrue($connect instanceof \PHRETS\Models\Bulletin);
     }
 
     /** @test **/
-    public function it_made_the_request()
+    public function itMadeTheRequest()
     {
         $this->session->Login();
         $this->assertSame('http://retsgw.flexmls.com:80/rets2_1/Login', $this->session->getLastRequestURL());
@@ -21,7 +21,7 @@ class SessionIntegrationTest extends BaseIntegration
     /**
      * @test
      * **/
-    public function it_throws_an_exception_when_making_a_bad_request()
+    public function itThrowsAnExceptionWhenMakingABadRequest()
     {
         $this->expectException(\PHRETS\Exceptions\RETSException::class);
         $this->session->Login();
@@ -30,7 +30,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_tracks_the_last_response_body()
+    public function itTracksTheLastResponseBody()
     {
         $this->session->Login();
 
@@ -39,7 +39,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_disconnects()
+    public function itDisconnects()
     {
         $this->session->Login();
 
@@ -47,9 +47,9 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_requests_the_servers_action_transaction()
+    public function itRequestsTheServersActionTransaction()
     {
-        $config = new \PHRETS\Configuration;
+        $config = new \PHRETS\Configuration();
 
         // this endpoint doesn't actually exist, but the response is mocked, so...
         $config->setLoginUrl('http://retsgw.flexmls.com/action/rets2_1/Login')
@@ -65,9 +65,9 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_uses_http_post_method_when_desired()
+    public function itUsesHttpPostMethodWhenDesired()
     {
-        $config = new \PHRETS\Configuration;
+        $config = new \PHRETS\Configuration();
 
         // this endpoint doesn't actually exist, but the response is mocked, so...
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
@@ -87,7 +87,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_tracks_a_given_session_id()
+    public function itTracksAGivenSessionId()
     {
         $this->session->Login();
 
@@ -98,9 +98,9 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_detects_when_to_use_user_agent_authentication()
+    public function itDetectsWhenToUseUserAgentAuthentication()
     {
-        $config = new \PHRETS\Configuration;
+        $config = new \PHRETS\Configuration();
 
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
@@ -112,7 +112,7 @@ class SessionIntegrationTest extends BaseIntegration
         $session = new \PHRETS\Session($config);
 
         /**
-         * Attach a history container to Guzzle so we can verify the needed header is sent
+         * Attach a history container to Guzzle so we can verify the needed header is sent.
          */
         $container = [];
         /** @var \GuzzleHttp\HandlerStack $stack */
@@ -131,10 +131,10 @@ class SessionIntegrationTest extends BaseIntegration
     /**
      * @test
      **/
-    public function it_doesnt_allow_requests_to_unsupported_capabilities()
+    public function itDoesntAllowRequestsToUnsupportedCapabilities()
     {
         $this->expectException(\PHRETS\Exceptions\CapabilityUnavailable::class);
-        $config = new \PHRETS\Configuration;
+        $config = new \PHRETS\Configuration();
 
         // fake, mocked endpoint
         $config->setLoginUrl('http://retsgw.flexmls.com/limited/rets2_1/Login')

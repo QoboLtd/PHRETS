@@ -1,30 +1,30 @@
 <?php
 
-use PHRETS\Models\BaseObject;
 use PHPUnit\Framework\TestCase;
+use PHRETS\Models\BaseObject;
 
-class ObjectTest extends TestCase {
-
+class ObjectTest extends TestCase
+{
     /** @test **/
-    public function it_holds()
+    public function itHolds()
     {
-        $o = new BaseObject;
+        $o = new BaseObject();
         $o->setContent('Test Content');
 
         $this->assertSame('Test Content', $o->getContent());
     }
 
     /** @test **/
-    public function it_returns_a_size()
+    public function itReturnsASize()
     {
-        $o = new BaseObject;
+        $o = new BaseObject();
         $o->setContent('Hello');
 
         $this->assertSame(5, $o->getSize());
     }
 
     /** @test **/
-    public function it_makes_from_headers()
+    public function itMakesFromHeaders()
     {
         $headers = [
             'Content-Type' => 'image/jpeg',
@@ -36,7 +36,7 @@ class ObjectTest extends TestCase {
             'MIME-Version' => 'Mime Version',
         ];
 
-        $o = new BaseObject;
+        $o = new BaseObject();
         foreach ($headers as $k => $v) {
             $o->setFromHeader($k, $v);
         }
@@ -51,9 +51,9 @@ class ObjectTest extends TestCase {
     }
 
     /** @test **/
-    public function it_marks_preferred_objects()
+    public function itMarksPreferredObjects()
     {
-        $o = new BaseObject;
+        $o = new BaseObject();
         $this->assertFalse($o->isPreferred());
         $o->setPreferred(1);
         $this->assertTrue($o->isPreferred());
@@ -61,13 +61,13 @@ class ObjectTest extends TestCase {
     }
 
     /** @test **/
-    public function it_marks_errors()
+    public function itMarksErrors()
     {
-        $e = new \PHRETS\Models\RETSError;
+        $e = new \PHRETS\Models\RETSError();
         $e->setCode(1234);
         $e->setMessage('Test Error Message');
 
-        $o = new BaseObject;
+        $o = new BaseObject();
         $this->assertFalse($o->isError());
         $o->setError($e);
         $this->assertTrue($o->isError());

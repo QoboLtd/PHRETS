@@ -1,8 +1,9 @@
-<?php namespace PHRETS\Interpreters;
+<?php
+
+namespace PHRETS\Interpreters;
 
 class GetObject
 {
-
     /**
      * @param $content_ids
      * @param $object_ids
@@ -25,6 +26,7 @@ class GetObject
     /**
      * @param $value
      * @param bool $dash_ranges
+     *
      * @return array
      */
     protected static function split($value, $dash_ranges = true)

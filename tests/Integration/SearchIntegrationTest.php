@@ -3,7 +3,7 @@
 class SearchIntegrationTest extends BaseIntegration
 {
     /** @test */
-    public function it_makes_requests()
+    public function itMakesRequests()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
         $this->assertTrue($results instanceof \PHRETS\Models\Search\Results);
@@ -11,7 +11,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_parses_requests()
+    public function itParsesRequests()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
@@ -25,7 +25,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_counts_records()
+    public function itCountsRecords()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
@@ -34,7 +34,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_sees_maxrows_reached()
+    public function itSeesMaxrowsReached()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
@@ -42,7 +42,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_limits_fields()
+    public function itLimitsFields()
     {
         /** @var PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => 'LIST_1,LIST_105']);
@@ -52,7 +52,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_limits_fields_with_an_array()
+    public function itLimitsFieldsWithAnArray()
     {
         /** @var PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
@@ -62,7 +62,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_provides_access_to_associated_metadata()
+    public function itProvidesAccessToAssociatedMetadata()
     {
         /** @var PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
@@ -71,7 +71,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_recursively_retrieves_all_results()
+    public function itRecursivelyRetrievesAllResults()
     {
         $this->session->Login();
 
@@ -87,7 +87,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_recovers_from_missing_delimiter()
+    public function itRecoversFromMissingDelimiter()
     {
         $this->session->Login();
 
@@ -103,7 +103,7 @@ class SearchIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_doesnt_die_when_no_count_is_given()
+    public function itDoesntDieWhenNoCountIsGiven()
     {
         $this->session->Login();
 
@@ -122,7 +122,7 @@ class SearchIntegrationTest extends BaseIntegration
     /**
      * @test
      * **/
-    public function it_detects_broken_pagination()
+    public function itDetectsBrokenPagination()
     {
         $this->expectException(\PHRETS\Exceptions\AutomaticPaginationError::class);
         $this->session->Login();

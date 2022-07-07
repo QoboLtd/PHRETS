@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Arr;
 
@@ -19,18 +21,19 @@ abstract class Base implements \ArrayAccess
     }
 
     /**
-     * @param mixed $session
      * @return $this
      */
     public function setSession($session)
     {
         $this->session = $session;
+
         return $this;
     }
 
     /**
      * @param $name
      * @param array $args
+     *
      * @return $this|mixed|null
      */
     public function __call($name, $args = [])
@@ -45,6 +48,7 @@ abstract class Base implements \ArrayAccess
                     break;
                 }
             }
+
             return $this;
         } elseif ($action === 'get') {
             foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
@@ -52,10 +56,11 @@ abstract class Base implements \ArrayAccess
                     return Arr::get($this->values, $attr);
                 }
             }
+
             return null;
         }
 
-        throw new \BadMethodCallException;
+        throw new \BadMethodCallException();
     }
 
     /**
@@ -76,12 +81,15 @@ abstract class Base implements \ArrayAccess
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * Whether a offset exists.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
      * @param mixed $offset <p>
      * An offset to check for.
      * </p>
-     * @return boolean true on success or false on failure.
+     *
+     * @return bool true on success or false on failure.
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
@@ -93,16 +101,20 @@ abstract class Base implements \ArrayAccess
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * Offset to retrieve.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetget.php
+     *
      * @param mixed $offset <p>
      * The offset to retrieve.
      * </p>
+     *
      * @return mixed Can return all value types.
      */
     public function offsetGet(mixed $offset): mixed
@@ -112,13 +124,16 @@ abstract class Base implements \ArrayAccess
                 return Arr::get($this->values, $attr);
             }
         }
+
         return null;
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * Offset to set.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetset.php
+     *
      * @param mixed $offset <p>
      * The offset to assign the value to.
      * </p>
@@ -133,8 +148,10 @@ abstract class Base implements \ArrayAccess
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * Offset to unset.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
      * @param mixed $offset <p>
      * The offset to unset.
      * </p>

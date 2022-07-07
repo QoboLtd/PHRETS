@@ -1,37 +1,37 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Strategies\StandardStrategy;
-use PHPUnit\Framework\TestCase;
 
 class StandardStrategyTest extends TestCase
 {
     /** @test **/
-    public function it_provides_defaults()
+    public function itProvidesDefaults()
     {
-        $config = new Configuration;
-        $strategy = new StandardStrategy;
+        $config = new Configuration();
+        $strategy = new StandardStrategy();
         $strategy->initialize($config);
 
         $this->assertInstanceOf('\PHRETS\Parsers\Login\OneFive', $strategy->provide('parser.login'));
     }
 
     /** @test **/
-    public function it_provides_a_1_8_login_parser()
+    public function itProvidesA18LoginParser()
     {
-        $config = new Configuration;
+        $config = new Configuration();
         $config->setRetsVersion('1.8');
-        $strategy = new StandardStrategy;
+        $strategy = new StandardStrategy();
         $strategy->initialize($config);
 
         $this->assertInstanceOf('\PHRETS\Parsers\Login\OneEight', $strategy->provide('parser.login'));
     }
 
     /** @test **/
-    public function it_provides_singletons()
+    public function itProvidesSingletons()
     {
-        $config = new Configuration;
-        $strategy = new StandardStrategy;
+        $config = new Configuration();
+        $strategy = new StandardStrategy();
         $strategy->initialize($config);
 
         $parser = $strategy->provide('parser.login');
@@ -41,10 +41,10 @@ class StandardStrategyTest extends TestCase
     }
 
     /** @test **/
-    public function it_uses_the_container()
+    public function itUsesTheContainer()
     {
-        $config = new Configuration;
-        $strategy = new StandardStrategy;
+        $config = new Configuration();
+        $strategy = new StandardStrategy();
         $strategy->initialize($config);
 
         $this->assertInstanceOf('\Illuminate\Container\Container', $strategy->getContainer());

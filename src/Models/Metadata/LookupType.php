@@ -1,8 +1,9 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 /**
- * Class LookupType
- * @package PHRETS\Models\Metadata
+ * Class LookupType.
  *
  * @method string getValue
  * @method string getLongValue

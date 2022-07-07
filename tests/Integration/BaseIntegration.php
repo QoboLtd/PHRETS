@@ -8,12 +8,11 @@ use Psr\Http\Message\RequestInterface;
 
 class BaseIntegration extends TestCase
 {
-
     protected $client;
     /** @var Session */
     protected $session;
     protected $search_select = [
-        'LIST_0', 'LIST_1', 'LIST_5', 'LIST_106', 'LIST_105', 'LIST_15', 'LIST_22', 'LIST_10', 'LIST_30'
+        'LIST_0', 'LIST_1', 'LIST_5', 'LIST_106', 'LIST_105', 'LIST_15', 'LIST_22', 'LIST_10', 'LIST_30',
     ];
 
     private $path;
@@ -32,7 +31,7 @@ class BaseIntegration extends TestCase
 
     public function setUp(): void
     {
-        $config = new \PHRETS\Configuration;
+        $config = new \PHRETS\Configuration();
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
@@ -59,6 +58,7 @@ class BaseIntegration extends TestCase
     public function addIgnoredHeader($name)
     {
         $this->ignored_headers[strtoupper($name)] = $name;
+
         return $this;
     }
 
@@ -69,7 +69,6 @@ class BaseIntegration extends TestCase
         $stack->push($this->onBefore());
         $stack->push($this->onComplete());
     }
-
 
     public function onBefore()
     {
@@ -98,7 +97,7 @@ class BaseIntegration extends TestCase
                             mkdir($this->getPath($request), 0777, true);
                         }
 
-                        if(!file_exists($this->getFullFilePath($request))) {
+                        if (!file_exists($this->getFullFilePath($request))) {
                             file_put_contents($this->getFullFilePath($request), \GuzzleHttp\Psr7\Message::toString($response));
                         }
 
@@ -118,7 +117,7 @@ class BaseIntegration extends TestCase
             $rpath = (substr($rpath, 0, 1) === '/') ? substr($rpath, 1) : $rpath;
             $rpath = (substr($rpath, -1, 1) === '/') ? substr($rpath, 0, -1) : $rpath;
 
-            $path .= str_replace("/", "_", $rpath) . DIRECTORY_SEPARATOR;
+            $path .= str_replace('/', '_', $rpath) . DIRECTORY_SEPARATOR;
         }
 
         return $path;
@@ -136,13 +135,15 @@ class BaseIntegration extends TestCase
         }
 
         $request = $result . "\r\n\r\n" . $request->getBody();
-        $hash = md5((string)$request) . ".txt";
+        $hash = md5((string) $request) . '.txt';
+
         return $hash;
     }
 
     protected function getFullFilePath(RequestInterface $request)
     {
         $fullFilePath = $this->getPath($request) . $this->getFileName($request);
+
         return $fullFilePath;
     }
 }

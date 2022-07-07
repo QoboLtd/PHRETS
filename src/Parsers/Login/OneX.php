@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Parsers\Login;
+<?php
+
+namespace PHRETS\Parsers\Login;
 
 abstract class OneX
 {
@@ -6,7 +8,7 @@ abstract class OneX
     protected $details = [];
     protected $valid_transactions = [
         'Action', 'ChangePassword', 'GetObject', 'Login', 'LoginComplete', 'Logout', 'Search', 'GetMetadata',
-        'ServerInformation', 'Update', 'PostObject', 'GetPayloadList'
+        'ServerInformation', 'Update', 'PostObject', 'GetPayloadList',
     ];
 
     public function parse($body)

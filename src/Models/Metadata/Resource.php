@@ -1,8 +1,10 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 /**
- * Class Resource
- * @package PHRETS\Models\Metadata
+ * Class Resource.
+ *
  * @method string getResourceID
  * @method string getStandardName
  * @method string getVisibleName

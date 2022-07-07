@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Strategies;
+<?php
+
+namespace PHRETS\Strategies;
 
 use Illuminate\Container\Container;
 use PHRETS\Configuration;
@@ -6,7 +8,7 @@ use PHRETS\Configuration;
 class StandardStrategy implements Strategy
 {
     /**
-     * Default components
+     * Default components.
      *
      * @var array
      */
@@ -32,7 +34,6 @@ class StandardStrategy implements Strategy
 
     /**
      * @param $component
-     * @return mixed
      */
     public function provide($component)
     {
@@ -45,14 +46,14 @@ class StandardStrategy implements Strategy
     public function initialize(Configuration $configuration)
     {
         // start up the service locator
-        $this->container = new Container;
+        $this->container = new Container();
 
         foreach ($this->default_components as $k => $v) {
             if ($k == 'parser.login' && $configuration->getRetsVersion()->isAtLeast1_8()) {
                 $v = \PHRETS\Parsers\Login\OneEight::class;
             }
 
-            $this->container->singleton($k, fn() => new $v);
+            $this->container->singleton($k, fn () => new $v());
         }
     }
 

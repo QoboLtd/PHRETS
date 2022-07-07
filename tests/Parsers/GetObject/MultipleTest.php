@@ -1,15 +1,14 @@
 <?php
 
 use GuzzleHttp\Psr7\Response;
-use PHRETS\Parsers\GetObject\Multiple;
-use PHRETS\Http\Response as PHRETSResponse;
 use PHPUnit\Framework\TestCase;
+use PHRETS\Http\Response as PHRETSResponse;
+use PHRETS\Parsers\GetObject\Multiple;
 
 class MultipleTest extends TestCase
 {
-
     /** @test * */
-    public function it_breaks_things_apart()
+    public function itBreaksThingsApart()
     {
         $headers = [
                 'Server' => [
@@ -30,13 +29,13 @@ class MultipleTest extends TestCase
                 'Content-Length' => [
                         0 => '1249',
                 ],
-                'Date' => array(
+                'Date' => [
                         0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
-                ),
+                ],
         ];
         $body = json_decode(file_get_contents('tests/Fixtures/GetObject/Multiple1.txt', true));
 
-        $parser = new Multiple;
+        $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));
 
         $this->assertSame(5, $collection->count());
@@ -48,16 +47,16 @@ class MultipleTest extends TestCase
     }
 
     /** @test **/
-    public function it_handles_empty_bodies()
+    public function itHandlesEmptyBodies()
     {
-        $parser = new Multiple;
+        $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, [], null)));
 
         $this->assertInstanceOf('Illuminate\\Support\\Collection', $collection);
     }
 
     /** @test **/
-    public function it_handles_unquoted_boundaries()
+    public function itHandlesUnquotedBoundaries()
     {
         $headers = [
                 'Server' => [
@@ -78,13 +77,13 @@ class MultipleTest extends TestCase
                 'Content-Length' => [
                         0 => '1249',
                 ],
-                'Date' => array(
+                'Date' => [
                         0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
-                ),
+                ],
         ];
         $body = json_decode(file_get_contents('tests/Fixtures/GetObject/Multiple1.txt', true));
 
-        $parser = new Multiple;
+        $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));
 
         $this->assertSame(5, $collection->count());

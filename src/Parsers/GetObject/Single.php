@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Parsers\GetObject;
+<?php
+
+namespace PHRETS\Parsers\GetObject;
 
 use PHRETS\Http\Response;
 use PHRETS\Models\BaseObject;
@@ -8,7 +10,7 @@ class Single
 {
     public function parse(Response $response)
     {
-        $obj = new BaseObject;
+        $obj = new BaseObject();
         $obj->setContent(($response->getBody()) ? $response->getBody()->__toString() : null);
         $obj->setContentDescription($response->getHeader('Content-Description'));
         $obj->setContentSubDescription($response->getHeader('Content-Sub-Description'));
@@ -21,16 +23,16 @@ class Single
 
         if ($this->isError($response)) {
             $xml = $response->xml();
-            
-            $error = new RETSError;
-            
+
+            $error = new RETSError();
+
             if (isset($xml['ReplyCode'])) {
                 $error->setCode((string) $xml['ReplyCode']);
             }
             if (isset($xml['ReplyText'])) {
                 $error->setMessage((string) $xml['ReplyText']);
             }
-            
+
             $obj->setError($error);
         }
 

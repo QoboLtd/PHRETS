@@ -1,7 +1,9 @@
-<?php namespace PHRETS\Parsers\GetMetadata;
+<?php
 
-use PHRETS\Http\Response;
+namespace PHRETS\Parsers\GetMetadata;
+
 use Illuminate\Support\Collection;
+use PHRETS\Http\Response;
 use PHRETS\Session;
 
 class ResourceClass extends Base
@@ -12,11 +14,11 @@ class ResourceClass extends Base
         $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 
-        $collection = new Collection;
+        $collection = new Collection();
 
         if ($xml->METADATA) {
             foreach ($xml->METADATA->{'METADATA-CLASS'}->Class as $key => $value) {
-                $metadata = new \PHRETS\Models\Metadata\ResourceClass;
+                $metadata = new \PHRETS\Models\Metadata\ResourceClass();
                 $metadata->setSession($rets);
                 /** @var \PHRETS\Models\Metadata\ResourceClass $obj */
                 $obj = $this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-CLASS'});

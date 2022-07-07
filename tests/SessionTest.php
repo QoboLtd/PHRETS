@@ -1,15 +1,15 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Session;
-use PHPUnit\Framework\TestCase;
 
-class SessionTest extends TestCase {
-
+class SessionTest extends TestCase
+{
     /** @test **/
-    public function it_builds()
+    public function itBuilds()
     {
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
@@ -19,10 +19,10 @@ class SessionTest extends TestCase {
     /**
      * @test
      */
-    public function it_detects_invalid_configurations()
+    public function itDetectsInvalidConfigurations()
     {
         $this->expectException(\PHRETS\Exceptions\MissingConfiguration::class);
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
@@ -30,9 +30,9 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_gives_back_the_login_url()
+    public function itGivesBackTheLoginUrl()
     {
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
@@ -41,10 +41,10 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_tracks_capabilities()
+    public function itTracksCapabilities()
     {
         $login_url = 'http://www.reso.org/login';
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl($login_url);
 
         $s = new Session($c);
@@ -54,9 +54,9 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_disables_redirects_when_desired()
+    public function itDisablesRedirectsWhenDesired()
     {
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
         $c->setOption('disable_follow_location', true);
 
@@ -66,7 +66,7 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_uses_the_set_logger()
+    public function itUsesTheSetLogger()
     {
         $logger = $this->createMock(\Monolog\Logger::class);
 
@@ -76,7 +76,7 @@ class SessionTest extends TestCase {
             [$this->equalTo('Message'), $this->equalTo(['Context'])]
         );
 
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
@@ -86,13 +86,13 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_fixes_the_logger_context_automatically()
+    public function itFixesTheLoggerContextAutomatically()
     {
         $logger = $this->createMock(\Monolog\Logger::class);
         // just expect that a debug message is spit out
         $logger->expects($this->atLeastOnce())->method('debug')->with($this->matchesRegularExpression('/logger/'));
 
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
@@ -100,9 +100,9 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_loads_a_cookie_jar()
+    public function itLoadsACookieJar()
     {
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
@@ -110,14 +110,14 @@ class SessionTest extends TestCase {
     }
 
     /** @test **/
-    public function it_allows_overriding_the_cookie_jar()
+    public function itAllowsOverridingTheCookieJar()
     {
-        $c = new Configuration;
+        $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
 
-        $jar = new \GuzzleHttp\Cookie\CookieJar;
+        $jar = new \GuzzleHttp\Cookie\CookieJar();
         $s->setCookieJar($jar);
 
         $this->assertSame($jar, $s->getCookieJar());

@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Http;
+<?php
+
+namespace PHRETS\Http;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;

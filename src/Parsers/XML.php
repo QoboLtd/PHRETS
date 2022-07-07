@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Parsers;
+<?php
+
+namespace PHRETS\Parsers;
 
 use PHRETS\Http\Response;
 use Psr\Http\Message\ResponseInterface;

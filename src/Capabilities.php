@@ -1,4 +1,6 @@
-<?php namespace PHRETS;
+<?php
+
+namespace PHRETS;
 
 class Capabilities
 {
@@ -7,6 +9,7 @@ class Capabilities
     /**
      * @param $name
      * @param $uri
+     *
      * @return $this
      */
     public function add($name, $uri)
@@ -31,11 +34,13 @@ class Capabilities
         }
 
         $this->capabilities[$name] = $uri;
+
         return $this;
     }
 
     /**
      * @param $name
+     *
      * @return null
      */
     public function get($name)

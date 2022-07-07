@@ -1,14 +1,14 @@
 <?php
 
-use PHRETS\Models\Metadata\Resource;
 use PHPUnit\Framework\TestCase;
+use PHRETS\Models\Metadata\Resource;
 
-class ResourceTest extends TestCase {
-
+class ResourceTest extends TestCase
+{
     /** @test **/
-    public function it_holds()
+    public function itHolds()
     {
-        $metadata = new Resource;
+        $metadata = new Resource();
         $metadata->setDescription('Test Description');
 
         $this->assertSame('Test Description', $metadata->getDescription());
@@ -17,24 +17,24 @@ class ResourceTest extends TestCase {
     /**
      * @test
      **/
-    public function it_doesnt_like_bad_methods()
+    public function itDoesntLikeBadMethods()
     {
         $this->expectException(BadMethodCallException::class);
-        $metadata = new Resource;
+        $metadata = new Resource();
         $metadata->totallyBogus();
     }
 
     /** @test **/
-    public function it_returns_null_for_unrecognized_attributes()
+    public function itReturnsNullForUnrecognizedAttributes()
     {
-        $metadata = new Resource;
+        $metadata = new Resource();
         $this->assertNull($metadata->getSomethingFake());
     }
 
     /** @test **/
-    public function it_works_like_an_array()
+    public function itWorksLikeAnArray()
     {
-        $metadata = new Resource;
+        $metadata = new Resource();
         $metadata->setDescription('Test Description');
 
         $this->assertTrue(isset($metadata['Description']));
@@ -42,12 +42,12 @@ class ResourceTest extends TestCase {
     }
 
     /** @test **/
-    public function it_sets_like_an_array()
+    public function itSetsLikeAnArray()
     {
-        $metadata = new Resource;
-        $metadata['Description'] = "Array setter";
+        $metadata = new Resource();
+        $metadata['Description'] = 'Array setter';
 
-        $this->assertSame("Array setter", $metadata->getDescription());
+        $this->assertSame('Array setter', $metadata->getDescription());
 
         unset($metadata['Description']);
 

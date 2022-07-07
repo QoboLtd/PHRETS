@@ -1,7 +1,9 @@
-<?php namespace PHRETS\Parsers\Search;
+<?php
 
-use PHRETS\Http\Response;
+namespace PHRETS\Parsers\Search;
+
 use PHRETS\Exceptions\AutomaticPaginationError;
+use PHRETS\Http\Response;
 use PHRETS\Models\Search\Results;
 use PHRETS\Session;
 
@@ -18,8 +20,8 @@ class RecursiveOneX
         while ($this->continuePaginating($rets, $parameters, $rs)) {
             $pms = $parameters;
 
-            $rets->debug("Continuing pagination...");
-            $rets->debug("Current count collected already: " . $rs->count());
+            $rets->debug('Continuing pagination...');
+            $rets->debug('Current count collected already: ' . $rs->count());
 
             $resource = $pms['SearchType'];
             $class = $pms['Class'];
@@ -51,6 +53,7 @@ class RecursiveOneX
 
     /**
      * @param $parameters
+     *
      * @return bool
      */
     protected function continuePaginating(Session $rets, $parameters, Results $rs)
@@ -60,6 +63,7 @@ class RecursiveOneX
 
     /**
      * @param $parameters
+     *
      * @return int
      */
     protected function getNewOffset(Session $rets, $parameters, Results $rs)

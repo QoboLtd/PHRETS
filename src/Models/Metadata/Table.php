@@ -1,8 +1,10 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 /**
- * Class Table
- * @package PHRETS\Models\Metadata
+ * Class Table.
+ *
  * @method string getSystemName
  * @method string getStandardName
  * @method string getLongName

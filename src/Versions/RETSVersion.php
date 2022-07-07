@@ -1,14 +1,16 @@
-<?php namespace PHRETS\Versions;
+<?php
+
+namespace PHRETS\Versions;
 
 use PHRETS\Exceptions\InvalidRETSVersion;
 
 class RETSVersion implements \Stringable
 {
-    final const VERSION_1_5 = '1.5';
-    final const VERSION_1_7 = '1.7';
-    final const VERSION_1_7_1 = '1.7.1';
-    final const VERSION_1_7_2 = '1.7.2';
-    final const VERSION_1_8 = '1.8';
+    final public const VERSION_1_5 = '1.5';
+    final public const VERSION_1_7 = '1.7';
+    final public const VERSION_1_7_1 = '1.7.1';
+    final public const VERSION_1_7_2 = '1.7.2';
+    final public const VERSION_1_8 = '1.8';
 
     protected $number;
     protected $valid_versions = [
@@ -21,7 +23,9 @@ class RETSVersion implements \Stringable
 
     /**
      * @param $version
+     *
      * @return $this
+     *
      * @throws InvalidRETSVersion
      */
     public function setVersion($version)
@@ -30,12 +34,10 @@ class RETSVersion implements \Stringable
         if (!in_array($this->number, $this->valid_versions)) {
             throw new InvalidRETSVersion("RETS version '{$version}' given is not understood");
         }
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getVersion()
     {
         return $this->number;
@@ -54,7 +56,7 @@ class RETSVersion implements \Stringable
      */
     public function is1_5()
     {
-        return ($this->number == self::VERSION_1_5);
+        return $this->number == self::VERSION_1_5;
     }
 
     /**
@@ -62,7 +64,7 @@ class RETSVersion implements \Stringable
      */
     public function is1_7()
     {
-        return ($this->number == self::VERSION_1_7);
+        return $this->number == self::VERSION_1_7;
     }
 
     /**
@@ -70,7 +72,7 @@ class RETSVersion implements \Stringable
      */
     public function is1_7_2()
     {
-        return ($this->number == self::VERSION_1_7_2);
+        return $this->number == self::VERSION_1_7_2;
     }
 
     /**
@@ -78,16 +80,17 @@ class RETSVersion implements \Stringable
      */
     public function is1_8()
     {
-        return ($this->number == self::VERSION_1_8);
+        return $this->number == self::VERSION_1_8;
     }
 
     /**
      * @param $version
+     *
      * @return bool
      */
     public function isAtLeast($version)
     {
-        return (version_compare($this->number, $version) >= 0);
+        return version_compare($this->number, $version) >= 0;
     }
 
     /**
@@ -121,7 +124,7 @@ class RETSVersion implements \Stringable
     {
         return $this->isAtLeast(self::VERSION_1_8);
     }
-    
+
     /**
      * @return array
      */
@@ -130,9 +133,6 @@ class RETSVersion implements \Stringable
         return $this->valid_versions;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->asHeader();

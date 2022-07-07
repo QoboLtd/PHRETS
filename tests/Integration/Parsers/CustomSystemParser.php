@@ -7,7 +7,7 @@ class CustomSystemParser
 {
     public function parse(Session $rets, Response $response)
     {
-        $metadata = new \PHRETS\Models\Metadata\System;
+        $metadata = new \PHRETS\Models\Metadata\System();
 
         $metadata->setSession($rets);
         $metadata->setSystemId('custom');

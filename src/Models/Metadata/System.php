@@ -1,8 +1,10 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 /**
- * Class System
- * @package PHRETS\Models\Metadata
+ * Class System.
+ *
  * @method string getSystemID
  * @method string getSystemDescription
  * @method string getTimeZoneOffset
@@ -21,6 +23,7 @@ class System extends Base
 
     /**
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Resource[]
+     *
      * @throws \PHRETS\Exceptions\MetadataNotFound
      */
     public function getResources(): \Illuminate\Support\Collection|array

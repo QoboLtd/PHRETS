@@ -3,16 +3,16 @@
 class StrategyIntegrationTest extends BaseIntegration
 {
     /** @test */
-    public function it_supports_custom_parsers()
+    public function itSupportsCustomParsers()
     {
         $this->session->Login();
 
-        /**
+        /*
          * set a custom parser
          */
         $this->session->setParser(
             \PHRETS\Strategies\Strategy::PARSER_METADATA_SYSTEM,
-            new CustomSystemParser
+            new CustomSystemParser()
         );
 
         $system = $this->session->GetSystemMetadata();
@@ -21,11 +21,11 @@ class StrategyIntegrationTest extends BaseIntegration
     }
 
     /** @test */
-    public function it_supports_custom_xml_parser()
+    public function itSupportsCustomXmlParser()
     {
         $this->session->Login();
 
-        /**
+        /*
          * set a custom parser
          */
         $this->session->setParser(

@@ -1,4 +1,6 @@
-<?php namespace PHRETS\Parsers\Search;
+<?php
+
+namespace PHRETS\Parsers\Search;
 
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Record;
@@ -14,7 +16,7 @@ class OneX
         $parser = $rets->getConfiguration()->getStrategy()->provide(Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 
-        $rs = new Results;
+        $rs = new Results();
         $rs->setSession($rets)
             ->setResource($parameters['SearchType'])
             ->setClass($parameters['Class']);
@@ -50,6 +52,7 @@ class OneX
     /**
      * @param $xml
      * @param $parameters
+     *
      * @return string
      */
     protected function getDelimiter(Session $rets, $xml, $parameters)
@@ -60,13 +63,15 @@ class OneX
         } else {
             // assume tab delimited since it wasn't given
             $rets->debug('Assuming TAB delimiter since none specified in response');
-            return chr("09");
+
+            return chr('09');
         }
     }
 
     /**
      * @param $xml
      * @param $parameters
+     *
      * @return string|null
      */
     protected function getRestrictedIndicator(Session $rets, &$xml, $parameters)
@@ -114,7 +119,7 @@ class OneX
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
 
-        $r = new Record;
+        $r = new Record();
         $field_data = (string) $line;
 
         // Take out the first delimiter
@@ -133,13 +138,14 @@ class OneX
             // assign each value to it's name retrieved in the COLUMNS earlier
             $r->set($name, $field_data[$key]);
         }
+
         return $r;
     }
 
     protected function getTotalCount(Session $rets, &$xml, $parameters)
     {
         if (property_exists($xml, 'COUNT') && $xml->COUNT !== null) {
-            return (int)"{$xml->COUNT->attributes()->Records}";
+            return (int) "{$xml->COUNT->attributes()->Records}";
         } else {
             return null;
         }

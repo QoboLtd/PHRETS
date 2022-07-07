@@ -1,17 +1,17 @@
 <?php
 
-use PHRETS\Parsers\Login\OneEight;
 use PHPUnit\Framework\TestCase;
+use PHRETS\Parsers\Login\OneEight;
 
-class OneEightTest extends TestCase {
-
+class OneEightTest extends TestCase
+{
     /** @var OneEight */
     protected $parser;
 
     public function setUp(): void
     {
-        $this->parser = new OneEight;
-        $this->parser->parse("
+        $this->parser = new OneEight();
+        $this->parser->parse('
 Info=MEMBERNAME;Character;
 Info=USERID;Character;1234567890
 Info=USERLEVEL;Int;25
@@ -37,36 +37,36 @@ Logout=/Logout.asmx/Logout
 Search=/Search.asmx/Search
 GetMetadata=/GetMetadata.asmx/GetMetadata
 GetPayloadList=/GetPayloadList.asmx/GetPayloadList
-        ");
+        ');
     }
 
     /** @test **/
-    public function it_sees_all_transactions()
+    public function itSeesAllTransactions()
     {
         $this->assertSame(7, count($this->parser->getCapabilities()));
     }
 
     /** @test **/
-    public function it_sees_core_transactions()
+    public function itSeesCoreTransactions()
     {
         $this->assertSame('/Search.asmx/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/Logout.asmx/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
     /** @test **/
-    public function it_sees_all_details()
+    public function itSeesAllDetails()
     {
         $this->assertSame(18, count($this->parser->getDetails()));
     }
 
     /** @test **/
-    public function it_sees_user_details()
+    public function itSeesUserDetails()
     {
         $this->assertSame('RESOWG', $this->parser->getDetails()['USER']);
     }
 
     /** @test **/
-    public function it_casts_details()
+    public function itCastsDetails()
     {
         $this->assertIsBool($this->parser->getDetails()['BROKERRECIPFLAG']);
         $this->assertIsInt($this->parser->getDetails()['SUL']);

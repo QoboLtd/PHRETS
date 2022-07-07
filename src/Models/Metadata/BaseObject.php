@@ -1,8 +1,10 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 /**
- * Class Object
- * @package PHRETS\Models\Metadata
+ * Class Object.
+ *
  * @method string getMetadataEntryID
  * @method string getVisibleName
  * @method string getObjectTimeStamp
