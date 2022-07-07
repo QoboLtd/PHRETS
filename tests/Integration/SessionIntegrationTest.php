@@ -35,7 +35,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->session->Login();
 
         // find something in the login response that we can count on
-        $this->assertRegExp('/NotificationFeed/', $this->session->getLastResponse());
+        $this->assertMatchesRegularExpression('/NotificationFeed/', $this->session->getLastResponse());
     }
 
     /** @test **/
@@ -61,7 +61,7 @@ class SessionIntegrationTest extends BaseIntegration
         $bulletin = $session->Login();
 
         $this->assertInstanceOf('\PHRETS\Models\Bulletin', $bulletin);
-        $this->assertRegExp('/found an Action/', $bulletin->getBody());
+        $this->assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
     }
 
     /** @test **/
@@ -124,7 +124,7 @@ class SessionIntegrationTest extends BaseIntegration
 
         $this->assertCount(1, $container);
         $last_request = $container[count($container) - 1];
-        $this->assertRegExp('/Digest/', implode(', ', $last_request['request']->getHeader('RETS-UA-Authorization')));
+        $this->assertMatchesRegularExpression('/Digest/', implode(', ', $last_request['request']->getHeader('RETS-UA-Authorization')));
         $this->assertArrayHasKey('Accept', $last_request['request']->getHeaders());
     }
 
