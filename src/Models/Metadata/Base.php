@@ -86,8 +86,7 @@ abstract class Base implements \ArrayAccess
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
             if (strtolower($attr) == strtolower($offset)) {
@@ -106,8 +105,7 @@ abstract class Base implements \ArrayAccess
      * </p>
      * @return mixed Can return all value types.
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
             if (strtolower($attr) == strtolower($offset)) {
@@ -129,8 +127,7 @@ abstract class Base implements \ArrayAccess
      * </p>
      * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->values[$offset] = $value;
     }
@@ -144,8 +141,7 @@ abstract class Base implements \ArrayAccess
      * </p>
      * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         if ($this->offsetExists($offset)) {
             unset($this->values[$offset]);

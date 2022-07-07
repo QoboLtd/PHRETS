@@ -18,11 +18,11 @@ class Multiple
         $body = "\r\n" . $response->getBody()->__toString() . "\r\n";
 
         // multipart
-        preg_match('/boundary\=\"(.*?)\"/', $response->getHeader('Content-Type'), $matches);
+        preg_match('/boundary\=\"(.*?)\"/', (string) $response->getHeader('Content-Type'), $matches);
         if (isset($matches[1])) {
             $boundary = $matches[1];
         } else {
-            preg_match('/boundary\=(.*?)(\s|$|\;)/', $response->getHeader('Content-Type'), $matches);
+            preg_match('/boundary\=(.*?)(\s|$|\;)/', (string) $response->getHeader('Content-Type'), $matches);
             if (isset($matches[1])) {
                 $boundary = $matches[1];
             } else {
@@ -30,7 +30,7 @@ class Multiple
             }
         }
         // strip quotes off of the boundary
-        $boundary = preg_replace('/^\"(.*?)\"$/', '\1', $boundary);
+        $boundary = preg_replace('/^\"(.*?)\"$/', '\1', (string) $boundary);
 
         // clean up the body to remove a reamble and epilogue
         $body = preg_replace('/^(.*?)\r\n--' . $boundary . '\r\n/', "\r\n--{$boundary}\r\n", $body);

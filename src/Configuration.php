@@ -229,8 +229,8 @@ class Configuration
     {
         $ua_a1 = md5($this->getUserAgent() .':'. $this->getUserAgentPassword());
         return md5(
-            trim($ua_a1) .'::'. trim($session->getRetsSessionId()) .
-            ':'. trim($this->getRetsVersion()->asHeader())
+            trim((string) $ua_a1) .'::'. trim((string) $session->getRetsSessionId()) .
+            ':'. trim((string) $this->getRetsVersion()->asHeader())
         );
     }
 
