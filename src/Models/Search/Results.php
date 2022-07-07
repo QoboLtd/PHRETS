@@ -49,7 +49,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param Record $record
      * @param null $keyed_by
      */
     public function addRecord(Record $record, $keyed_by = null)
@@ -263,22 +262,15 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return $this->results->offsetGet($offset);
     }
 
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset) {
-            $this->addRecord($value, function () use ($offset) { return $offset; });
+            $this->addRecord($value, fn() => $offset);
         } else {
             $this->addRecord($value);
         }
     }
 
-    /**
-     * @param mixed $offset
-     */
     public function offsetUnset(mixed $offset): void
     {
         $this->results->offsetUnset($offset);
@@ -336,7 +328,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         $l = [];
         foreach ($this->results as $r) {
             $v = $r->get($field);
-            if ($v and !$r->isRestricted($field)) {
+            if ($v && !$r->isRestricted($field)) {
                 $l[] = $v;
             }
         }
@@ -378,7 +370,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      */
     public function toJSON()
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
     /**

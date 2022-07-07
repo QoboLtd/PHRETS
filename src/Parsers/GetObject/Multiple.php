@@ -23,11 +23,7 @@ class Multiple
             $boundary = $matches[1];
         } else {
             preg_match('/boundary\=(.*?)(\s|$|\;)/', (string) $response->getHeader('Content-Type'), $matches);
-            if (isset($matches[1])) {
-                $boundary = $matches[1];
-            } else {
-                $boundary = null;
-            }
+            $boundary = $matches[1] ?? null;
         }
         // strip quotes off of the boundary
         $boundary = preg_replace('/^\"(.*?)\"$/', '\1', (string) $boundary);

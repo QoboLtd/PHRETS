@@ -78,7 +78,7 @@ class Table extends Base
     /**
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\LookupType[]
      */
-    public function getLookupValues()
+    public function getLookupValues(): \Illuminate\Support\Collection|array
     {
         return $this->session->GetLookupValues($this->getResource(), $this->getLookupName());
     }

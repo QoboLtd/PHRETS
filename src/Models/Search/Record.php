@@ -1,6 +1,6 @@
 <?php namespace PHRETS\Models\Search;
 
-class Record implements \ArrayAccess
+class Record implements \ArrayAccess, \Stringable
 {
     protected $resource;
     protected $class;
@@ -14,7 +14,7 @@ class Record implements \ArrayAccess
      */
     public function get($field)
     {
-        return (array_key_exists((string)$field, $this->values)) ? $this->values[(string)$field] : null;
+        return $this->values[(string)$field] ?? null;
     }
 
     /**
@@ -45,7 +45,6 @@ class Record implements \ArrayAccess
     }
 
     /**
-     * @param Results $results
      * @return $this
      */
     public function setParent(Results $results)
@@ -94,28 +93,23 @@ class Record implements \ArrayAccess
      */
     public function toJson()
     {
-        return json_encode($this->values);
+        return json_encode($this->values, JSON_THROW_ON_ERROR);
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toJson();
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
     public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->values);
     }
 
     /**
-     * @param mixed $offset
      * @return null|string
      */
     public function offsetGet(mixed $offset): mixed
@@ -123,18 +117,11 @@ class Record implements \ArrayAccess
         return $this->get($offset);
     }
 
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->set($offset, $value);
     }
 
-    /**
-     * @param mixed $offset
-     */
     public function offsetUnset(mixed $offset): void
     {
         if (array_key_exists($offset, $this->values)) {

@@ -7,8 +7,8 @@ class OneFive extends OneX
         $name = null;
         $value = null;
 
-        if (strpos($line, '=') !== false) {
-            @list($name, $value) = explode("=", $line, 2);
+        if (str_contains((string) $line, '=')) {
+            @[$name, $value] = explode("=", (string) $line, 2);
         }
 
         return [trim($name), trim($value)];

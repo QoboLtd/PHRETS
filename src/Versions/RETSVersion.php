@@ -2,13 +2,13 @@
 
 use PHRETS\Exceptions\InvalidRETSVersion;
 
-class RETSVersion
+class RETSVersion implements \Stringable
 {
-    const VERSION_1_5 = '1.5';
-    const VERSION_1_7 = '1.7';
-    const VERSION_1_7_1 = '1.7.1';
-    const VERSION_1_7_2 = '1.7.2';
-    const VERSION_1_8 = '1.8';
+    final const VERSION_1_5 = '1.5';
+    final const VERSION_1_7 = '1.7';
+    final const VERSION_1_7_1 = '1.7.1';
+    final const VERSION_1_7_2 = '1.7.2';
+    final const VERSION_1_8 = '1.8';
 
     protected $number;
     protected $valid_versions = [
@@ -26,7 +26,7 @@ class RETSVersion
      */
     public function setVersion($version)
     {
-        $this->number = str_replace('RETS/', '', $version);
+        $this->number = str_replace('RETS/', '', (string) $version);
         if (!in_array($this->number, $this->valid_versions)) {
             throw new InvalidRETSVersion("RETS version '{$version}' given is not understood");
         }
@@ -133,7 +133,7 @@ class RETSVersion
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->asHeader();
     }

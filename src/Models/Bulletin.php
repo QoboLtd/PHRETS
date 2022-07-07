@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Arr;
 
-class Bulletin
+class Bulletin implements \Stringable
 {
     protected $body = null;
     protected $details = [];
@@ -12,7 +12,7 @@ class Bulletin
      */
     public function __construct($details = [])
     {
-        if ($details and is_array($details)) {
+        if ($details && is_array($details)) {
             $this->details = array_change_key_case($details, CASE_UPPER);
         }
     }
@@ -37,7 +37,7 @@ class Bulletin
 
     public function setDetail($name, $value)
     {
-        $this->details[strtoupper($name)] = $value;
+        $this->details[strtoupper((string) $name)] = $value;
         return $this;
     }
 
@@ -47,7 +47,7 @@ class Bulletin
      */
     public function getDetail($name)
     {
-        return Arr::get($this->details, strtoupper($name));
+        return Arr::get($this->details, strtoupper((string) $name));
     }
 
     /**
@@ -93,7 +93,7 @@ class Bulletin
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->body;
     }

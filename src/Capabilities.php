@@ -11,8 +11,10 @@ class Capabilities
      */
     public function add($name, $uri)
     {
-        $parse_results = parse_url($uri);
-        if (!array_key_exists('host', $parse_results) or !$parse_results['host']) {
+        $parts = [];
+        $new_uri = null;
+        $parse_results = parse_url((string) $uri);
+        if (!array_key_exists('host', $parse_results) || !$parse_results['host']) {
             // relative URL given, so build this into an absolute URL
             $login_url = $this->get('Login');
             if (!$login_url) {
@@ -38,6 +40,6 @@ class Capabilities
      */
     public function get($name)
     {
-        return (array_key_exists($name, $this->capabilities)) ? $this->capabilities[$name] : null;
+        return $this->capabilities[$name] ?? null;
     }
 }

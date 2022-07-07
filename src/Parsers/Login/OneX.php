@@ -11,20 +11,20 @@ abstract class OneX
 
     public function parse($body)
     {
-        $lines = explode("\r\n", $body);
+        $lines = explode("\r\n", (string) $body);
         if (empty($lines[3])) {
-            $lines = explode("\n", $body);
+            $lines = explode("\n", (string) $body);
         }
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!$line) {
+            if ($line === '' || $line === '0') {
                 continue;
             }
 
-            list($name, $value) = $this->readLine($line);
+            [$name, $value] = $this->readLine($line);
             if ($name) {
-                if (in_array($name, $this->valid_transactions) or preg_match('/^X\-/', $name)) {
+                if (in_array($name, $this->valid_transactions) || preg_match('/^X\-/', (string) $name)) {
                     $this->capabilities[$name] = $value;
                 } else {
                     $this->details[$name] = $value;

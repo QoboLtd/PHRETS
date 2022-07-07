@@ -20,8 +20,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class Session
 {
-    /** @var Configuration */
-    protected $configuration;
     /** @var Capabilities */
     protected $capabilities;
     /** @var Client */
@@ -34,11 +32,8 @@ class Session
     /** @var ResponseInterface */
     protected $last_response;
 
-    public function __construct(Configuration $configuration)
+    public function __construct(protected Configuration $configuration)
     {
-        // save the configuration along with this session
-        $this->configuration = $configuration;
-
         $defaults = [];
 
         // start up our Guzzle HTTP client
@@ -59,7 +54,7 @@ class Session
     public function setLogger($logger)
     {
         $this->logger = $logger;
-        $this->debug("Loading " . get_class($logger) . " logger");
+        $this->debug("Loading " . $logger::class . " logger");
     }
 
     /**
@@ -69,7 +64,7 @@ class Session
      */
     public function Login()
     {
-        if (!$this->configuration or !$this->configuration->valid()) {
+        if (!$this->configuration || !$this->configuration->valid()) {
             throw new MissingConfiguration("Cannot issue Login without a valid configuration loaded");
         }
 
@@ -115,7 +110,7 @@ class Session
      * @return Collection|BaseObject[]
      * @throws Exceptions\CapabilityUnavailable
      */
-    public function GetObject($resource, $type, $content_ids, $object_ids = '*', $location = 0)
+    public function GetObject($resource, $type, $content_ids, $object_ids = '*', $location = 0): \Illuminate\Support\Collection|array
     {
         $request_id = GetObject::ids($content_ids, $object_ids);
 
@@ -157,9 +152,8 @@ class Session
      * @param string $resource_id
      * @throws Exceptions\CapabilityUnavailable
      * @throws Exceptions\MetadataNotFound
-     * @return Collection|\PHRETS\Models\Metadata\Resource
      */
-    public function GetResourcesMetadata($resource_id = null)
+    public function GetResourcesMetadata($resource_id = null): \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Resource
     {
         $result = $this->MakeMetadataRequest('METADATA-RESOURCE', 0, 'metadata.resource');
 
@@ -193,7 +187,7 @@ class Session
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Table[]
      * @throws Exceptions\CapabilityUnavailable
      */
-    public function GetTableMetadata($resource_id, $class_id, $keyed_by = 'SystemName')
+    public function GetTableMetadata($resource_id, $class_id, $keyed_by = 'SystemName'): \Illuminate\Support\Collection|array
     {
         return $this->MakeMetadataRequest('METADATA-TABLE', $resource_id . ':' . $class_id, 'metadata.table', $keyed_by);
     }
@@ -263,14 +257,14 @@ class Session
             'QueryType' => 'DMQL2',
             'Count' => 1,
             'Format' => 'COMPACT-DECODED',
-            'Limit' => 99999999,
+            'Limit' => 99_999_999,
             'StandardNames' => 0,
         ];
 
         $parameters = array_merge($defaults, $optional_parameters);
 
         // if the Select parameter given is an array, format it as it needs to be
-        if (array_key_exists('Select', $parameters) and is_array($parameters['Select'])) {
+        if (array_key_exists('Select', $parameters) && is_array($parameters['Select'])) {
             $parameters['Select'] = implode(',', $parameters['Select']);
         }
 
@@ -318,6 +312,7 @@ class Session
      */
     protected function request($capability, $options = [], $is_retry = false)
     {
+        $response = null;
         $url = $this->capabilities->get($capability);
 
         if (!$url) {
@@ -339,7 +334,7 @@ class Session
             /** @var ResponseInterface $response */
             if ($this->configuration->readOption('use_post_method')) {
                 $this->debug('Using POST method per use_post_method option');
-                $query = (array_key_exists('query', $options)) ? $options['query'] : null;
+                $query = $options['query'] ?? null;
 
                 // do not send query options in url, only in form_params
                 $local_options = $options;
@@ -391,23 +386,21 @@ class Session
 
         if ($response->getHeader('Set-Cookie')) {
             $cookie = $response->getHeader('Set-Cookie');
-            if ($cookie) {
-                if (preg_match('/RETS-Session-ID\=(.*?)(\;|\s+|$)/', $cookie, $matches)) {
-                    $this->rets_session_id = $matches[1];
-                }
+            if ($cookie && preg_match('/RETS-Session-ID\=(.*?)(\;|\s+|$)/', (string) $cookie, $matches)) {
+                $this->rets_session_id = $matches[1];
             }
         }
 
         $this->debug('Response: HTTP ' . $response->getStatusCode());
 
-        if (stripos($response->getHeader('Content-Type'), 'text/xml') !== false and $capability != 'GetObject') {
+        if (stripos((string) $response->getHeader('Content-Type'), 'text/xml') !== false && $capability != 'GetObject') {
             $parser = $this->grab(Strategy::PARSER_XML);
             $xml = $parser->parse($response);
 
-            if ($xml and isset($xml['ReplyCode'])) {
+            if ($xml && isset($xml['ReplyCode'])) {
                 $rc = (string)$xml['ReplyCode'];
 
-                if ($rc == "20037" and $capability != 'Login') {
+                if ($rc == "20037" && $capability != 'Login') {
                     // must make Login request again.  let's handle this automatically
 
                     if ($this->getConfiguration()->readOption('disable_auto_retry')) {
@@ -438,8 +431,8 @@ class Session
             }
         }
 
-        if ($this->getConfiguration()->readOption('getobject_auto_retry') and $capability == 'GetObject') {
-            if (stripos($response->getHeader('Content-Type'), 'multipart') !== false) {
+        if ($this->getConfiguration()->readOption('getobject_auto_retry') && $capability == 'GetObject') {
+            if (stripos((string) $response->getHeader('Content-Type'), 'multipart') !== false) {
                 $parser = $this->grab(Strategy::PARSER_OBJECT_MULTIPLE);
                 $collection = $parser->parse($response);
             } else {
@@ -451,7 +444,7 @@ class Session
 
             /** @var BaseObject[] $collection */
             foreach ($collection as $object) {
-                if ($object->isError() and $object->getError()->getCode() == '20037') {
+                if ($object->isError() && $object->getError()->getCode() == '20037') {
                     if ($is_retry) {
                         // this attempt was already a retry, so let's stop here
                         $this->debug("Request retry failed.  Won't retry again");
@@ -518,7 +511,6 @@ class Session
     }
 
     /**
-     * @param CookieJarInterface $cookie_jar
      * @return $this
      */
     public function setCookieJar(CookieJarInterface $cookie_jar)

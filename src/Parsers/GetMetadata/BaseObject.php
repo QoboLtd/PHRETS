@@ -14,14 +14,12 @@ class BaseObject extends Base
 
         $collection = new Collection;
 
-        if ($xml->METADATA) {
-            if ($xml->METADATA->{'METADATA-OBJECT'}) {
-                foreach ($xml->METADATA->{'METADATA-OBJECT'}->Object as $key => $value) {
-                    $metadata = new \PHRETS\Models\Metadata\BaseObject;
-                    $metadata->setSession($rets);
-                    $obj = $this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-OBJECT'});
-                    $collection->put($obj->getObjectType(), $obj);
-                }
+        if ($xml->METADATA && $xml->METADATA->{'METADATA-OBJECT'}) {
+            foreach ($xml->METADATA->{'METADATA-OBJECT'}->Object as $key => $value) {
+                $metadata = new \PHRETS\Models\Metadata\BaseObject;
+                $metadata->setSession($rets);
+                $obj = $this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-OBJECT'});
+                $collection->put($obj->getObjectType(), $obj);
             }
         }
 

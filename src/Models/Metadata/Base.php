@@ -35,12 +35,12 @@ abstract class Base implements \ArrayAccess
      */
     public function __call($name, $args = [])
     {
-        $name = strtolower($name);
+        $name = strtolower((string) $name);
         $action = substr($name, 0, 3);
 
         if ($action === 'set') {
             foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-                if (strtolower('set' . $attr) == $name) {
+                if (strtolower('set' . $attr) === $name) {
                     $this->values[$attr] = $args[0];
                     break;
                 }
@@ -48,7 +48,7 @@ abstract class Base implements \ArrayAccess
             return $this;
         } elseif ($action === 'get') {
             foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-                if (strtolower('get' . $attr) == $name) {
+                if (strtolower('get' . $attr) === $name) {
                     return Arr::get($this->values, $attr);
                 }
             }
@@ -89,7 +89,7 @@ abstract class Base implements \ArrayAccess
     public function offsetExists(mixed $offset): bool
     {
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-            if (strtolower($attr) == strtolower($offset)) {
+            if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return true;
             }
         }
@@ -108,7 +108,7 @@ abstract class Base implements \ArrayAccess
     public function offsetGet(mixed $offset): mixed
     {
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-            if (strtolower($attr) == strtolower($offset)) {
+            if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return Arr::get($this->values, $attr);
             }
         }
@@ -125,7 +125,6 @@ abstract class Base implements \ArrayAccess
      * @param mixed $value <p>
      * The value to set.
      * </p>
-     * @return void
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -139,7 +138,6 @@ abstract class Base implements \ArrayAccess
      * @param mixed $offset <p>
      * The offset to unset.
      * </p>
-     * @return void
      */
     public function offsetUnset(mixed $offset): void
     {

@@ -30,11 +30,11 @@ class GetObject
     protected static function split($value, $dash_ranges = true)
     {
         if (!is_array($value)) {
-            if (stripos($value, ':') !== false) {
-                $value = array_map('trim', explode(':', $value));
-            } elseif (stripos($value, ',') !== false) {
-                $value = array_map('trim', explode(',', $value));
-            } elseif ($dash_ranges and preg_match('/(\d+)\-(\d+)/', $value, $matches)) {
+            if (stripos((string) $value, ':') !== false) {
+                $value = array_map('trim', explode(':', (string) $value));
+            } elseif (stripos((string) $value, ',') !== false) {
+                $value = array_map('trim', explode(',', (string) $value));
+            } elseif ($dash_ranges && preg_match('/(\d+)\-(\d+)/', (string) $value, $matches)) {
                 $value = range($matches[1], $matches[2]);
             } else {
                 $value = [$value];

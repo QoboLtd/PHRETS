@@ -40,7 +40,6 @@ class StandardStrategy implements Strategy
     }
 
     /**
-     * @param Configuration $configuration
      * @return void
      */
     public function initialize(Configuration $configuration)
@@ -49,11 +48,11 @@ class StandardStrategy implements Strategy
         $this->container = new Container;
 
         foreach ($this->default_components as $k => $v) {
-            if ($k == 'parser.login' and $configuration->getRetsVersion()->isAtLeast1_8()) {
+            if ($k == 'parser.login' && $configuration->getRetsVersion()->isAtLeast1_8()) {
                 $v = \PHRETS\Parsers\Login\OneEight::class;
             }
 
-            $this->container->singleton($k, function () use ($v) { return new $v; });
+            $this->container->singleton($k, fn() => new $v);
         }
     }
 

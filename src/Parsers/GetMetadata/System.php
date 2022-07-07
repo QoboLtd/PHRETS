@@ -19,28 +19,28 @@ class System extends Base
         $configuration = $rets->getConfiguration();
 
         if ($configuration->getRetsVersion()->is1_5()) {
-            if (isset($base->System->SystemID)) {
+            if (property_exists($base->System, 'SystemID') && $base->System->SystemID !== null) {
                 $metadata->setSystemId((string)$base->System->SystemID);
             }
-            if (isset($base->System->SystemDescription)) {
+            if (property_exists($base->System, 'SystemDescription') && $base->System->SystemDescription !== null) {
                 $metadata->setSystemDescription((string)$base->System->SystemDescription);
             }
         } else {
-            if (isset($base->SYSTEM->attributes()->SystemID)) {
+            if (property_exists($base->SYSTEM->attributes(), 'SystemID') && $base->SYSTEM->attributes()->SystemID !== null) {
                 $metadata->setSystemId((string)$base->SYSTEM->attributes()->SystemID);
             }
-            if (isset($base->SYSTEM->attributes()->SystemDescription)) {
+            if (property_exists($base->SYSTEM->attributes(), 'SystemDescription') && $base->SYSTEM->attributes()->SystemDescription !== null) {
                 $metadata->setSystemDescription((string)$base->SYSTEM->attributes()->SystemDescription);
             }
-            if (isset($base->SYSTEM->attributes()->TimeZoneOffset)) {
+            if (property_exists($base->SYSTEM->attributes(), 'TimeZoneOffset') && $base->SYSTEM->attributes()->TimeZoneOffset !== null) {
                 $metadata->setTimezoneOffset((string)$base->SYSTEM->attributes()->TimeZoneOffset);
             }
         }
 
-        if (isset($base->SYSTEM->Comments)) {
+        if (property_exists($base->SYSTEM, 'Comments') && $base->SYSTEM->Comments !== null) {
             $metadata->setComments((string)$base->SYSTEM->Comments);
         }
-        if (isset($base->attributes()->Version)) {
+        if (property_exists($base->attributes(), 'Version') && $base->attributes()->Version !== null) {
             $metadata->setVersion((string)$xml->METADATA->{'METADATA-SYSTEM'}->attributes()->Version);
         }
 

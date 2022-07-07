@@ -66,7 +66,7 @@ class Resource extends Base
     /**
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\ResourceClass[]
      */
-    public function getClasses()
+    public function getClasses(): \Illuminate\Support\Collection|array
     {
         return $this->getSession()->GetClassesMetadata($this->getResourceID());
     }
@@ -74,7 +74,7 @@ class Resource extends Base
     /**
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
      */
-    public function getObject()
+    public function getObject(): \Illuminate\Support\Collection|array
     {
         return $this->getSession()->GetObjectMetadata($this->getResourceID());
     }

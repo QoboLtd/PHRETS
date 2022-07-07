@@ -23,7 +23,7 @@ class System extends Base
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Resource[]
      * @throws \PHRETS\Exceptions\MetadataNotFound
      */
-    public function getResources()
+    public function getResources(): \Illuminate\Support\Collection|array
     {
         return $this->getSession()->GetResourcesMetadata();
     }

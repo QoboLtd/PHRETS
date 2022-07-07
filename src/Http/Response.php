@@ -12,12 +12,9 @@ use Psr\Http\Message\StreamInterface;
  */
 class Response
 {
-	protected $response = null;
-
-	public function __construct(ResponseInterface $response)
-	{
-		$this->response = $response;
-	}
+	public function __construct(protected ResponseInterface $response)
+ {
+ }
 
 	public function xml()
 	{

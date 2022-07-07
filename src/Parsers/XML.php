@@ -7,7 +7,7 @@ class XML
 {
     public function parse($string)
     {
-        if ($string instanceof ResponseInterface or $string instanceof Response) {
+        if ($string instanceof ResponseInterface || $string instanceof Response) {
             $string = $string->getBody()->__toString();
         }
 

@@ -48,14 +48,13 @@ class OneX
     }
 
     /**
-     * @param Session $rets
      * @param $xml
      * @param $parameters
      * @return string
      */
     protected function getDelimiter(Session $rets, $xml, $parameters)
     {
-        if (isset($xml->DELIMITER)) {
+        if (property_exists($xml, 'DELIMITER') && $xml->DELIMITER !== null) {
             // delimiter found so we have at least a COLUMNS row to parse
             return chr("{$xml->DELIMITER->attributes()->value}");
         } else {
@@ -66,7 +65,6 @@ class OneX
     }
 
     /**
-     * @param Session $rets
      * @param $xml
      * @param $parameters
      * @return string|null
@@ -89,12 +87,12 @@ class OneX
         $column_names = "{$xml->COLUMNS[0]}";
 
         // Take out the first delimiter
-        if (substr($column_names, 0, $delimLength) == $delim) {
+        if (substr($column_names, 0, $delimLength) === $delim) {
             $column_names = substr($column_names, $delimLength);
         }
 
         // Take out the last delimiter
-        if (substr($column_names, -$delimLength) == $delim) {
+        if (substr($column_names, -$delimLength) === $delim) {
             $column_names = substr($column_names, 0, -$delimLength);
         }
 
@@ -104,7 +102,7 @@ class OneX
 
     protected function parseRecords(Session $rets, &$xml, $parameters, Results $rs)
     {
-        if (isset($xml->DATA)) {
+        if (property_exists($xml, 'DATA') && $xml->DATA !== null) {
             foreach ($xml->DATA as $line) {
                 $rs->addRecord($this->parseRecordFromLine($rets, $xml, $parameters, $line, $rs));
             }
@@ -120,12 +118,12 @@ class OneX
         $field_data = (string) $line;
 
         // Take out the first delimiter
-        if (substr($field_data, 0, $delimLength) == $delim) {
+        if (substr($field_data, 0, $delimLength) === $delim) {
             $field_data = substr($field_data, $delimLength);
         }
 
         // Take out the last delimiter
-        if (substr($field_data, -$delimLength) == $delim) {
+        if (substr($field_data, -$delimLength) === $delim) {
             $field_data = substr($field_data, 0, -$delimLength);
         }
 
@@ -140,7 +138,7 @@ class OneX
 
     protected function getTotalCount(Session $rets, &$xml, $parameters)
     {
-        if (isset($xml->COUNT)) {
+        if (property_exists($xml, 'COUNT') && $xml->COUNT !== null) {
             return (int)"{$xml->COUNT->attributes()->Records}";
         } else {
             return null;
@@ -149,6 +147,6 @@ class OneX
 
     protected function foundMaxRows(Session $rets, &$xml, $parameters)
     {
-        return isset($xml->MAXROWS);
+        return property_exists($xml, 'MAXROWS') && $xml->MAXROWS !== null;
     }
 }

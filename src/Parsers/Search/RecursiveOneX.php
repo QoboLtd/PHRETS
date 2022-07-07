@@ -23,7 +23,7 @@ class RecursiveOneX
 
             $resource = $pms['SearchType'];
             $class = $pms['Class'];
-            $query = (array_key_exists('Query', $pms)) ? $pms['Query'] : null;
+            $query = $pms['Query'] ?? null;
 
             $pms['Offset'] = $this->getNewOffset($rets, $parameters, $rs);
 
@@ -50,9 +50,7 @@ class RecursiveOneX
     }
 
     /**
-     * @param Session $rets
      * @param $parameters
-     * @param Results $rs
      * @return bool
      */
     protected function continuePaginating(Session $rets, $parameters, Results $rs)
@@ -61,9 +59,7 @@ class RecursiveOneX
     }
 
     /**
-     * @param Session $rets
      * @param $parameters
-     * @param Results $rs
      * @return int
      */
     protected function getNewOffset(Session $rets, $parameters, Results $rs)
@@ -72,8 +68,6 @@ class RecursiveOneX
     }
 
     /**
-     * @param Results $big
-     * @param Results $small
      * @return bool
      */
     protected function isPaginationBroken(Results $big, Results $small)
@@ -81,8 +75,8 @@ class RecursiveOneX
         $big_first = $big->first();
         $small_first = $small->first();
 
-        if ($big_first and $small_first) {
-            return $big_first->toArray() == $small_first->toArray();
+        if ($big_first && $small_first) {
+            return $big_first->toArray() === $small_first->toArray();
         }
 
         return false;

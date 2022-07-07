@@ -7,8 +7,8 @@ use PHRETS\Versions\RETSVersion;
 
 class Configuration
 {
-    const AUTH_BASIC = 'basic';
-    const AUTH_DIGEST = 'digest';
+    public const AUTH_BASIC = 'basic';
+    public const AUTH_DIGEST = 'digest';
 
     protected $username;
     protected $password;
@@ -152,7 +152,7 @@ class Configuration
      */
     public function readOption($name)
     {
-        return (array_key_exists($name, $this->options)) ? $this->options[$name] : null;
+        return $this->options[$name] ?? null;
     }
 
     /**
@@ -193,10 +193,7 @@ class Configuration
      */
     public function valid()
     {
-        if (!$this->getLoginUrl() or !$this->getUsername()) {
-            return false;
-        }
-        return true;
+        return $this->getLoginUrl() && $this->getUsername();
     }
 
     /**
@@ -211,7 +208,6 @@ class Configuration
     }
 
     /**
-     * @param Strategies\Strategy $strategy
      * @return $this
      */
     public function setStrategy(Strategy $strategy)
@@ -222,7 +218,6 @@ class Configuration
     }
 
     /**
-     * @param Session $session
      * @return string
      */
     public function userAgentDigestHash(Session $session)

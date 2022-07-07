@@ -176,8 +176,8 @@ class BaseObject
 
         $headers = array_change_key_case($headers, CASE_UPPER);
 
-        if (array_key_exists(strtoupper($name), $headers)) {
-            $method = 'set' . $headers[strtoupper($name)];
+        if (array_key_exists(strtoupper((string) $name), $headers)) {
+            $method = 'set' . $headers[strtoupper((string) $name)];
             $this->$method($value);
         }
     }
@@ -187,7 +187,7 @@ class BaseObject
      */
     public function getSize()
     {
-        return strlen($this->getContent());
+        return strlen((string) $this->getContent());
     }
 
     /**
@@ -227,7 +227,6 @@ class BaseObject
     }
 
     /**
-     * @param RETSError $error
      * @return $this
      */
     public function setError(RETSError $error)
