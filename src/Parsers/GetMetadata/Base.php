@@ -2,9 +2,11 @@
 
 namespace PHRETS\Parsers\GetMetadata;
 
+use PHRETS\Models\Metadata\Base as BaseModel;
+
 class Base
 {
-    protected function loadFromXml(\PHRETS\Models\Metadata\Base $model, $xml, $attributes = null)
+    protected function loadFromXml(BaseModel $model, $xml, $attributes = null): BaseModel
     {
         foreach ($model->getXmlAttributes() as $attr) {
             if (isset($attributes[$attr])) {

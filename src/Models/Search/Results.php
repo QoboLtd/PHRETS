@@ -7,45 +7,42 @@ use Closure;
 use Countable;
 use Illuminate\Support\Collection;
 use IteratorAggregate;
+use League\Csv\CannotInsertRecord;
 use League\Csv\Writer;
+use PHRETS\Exceptions\CapabilityUnavailable;
+use PHRETS\Session;
 use SplTempFileObject;
 use Traversable;
 
 class Results implements Countable, ArrayAccess, IteratorAggregate
 {
-    protected $resource;
-    protected $class;
-    /** @var \PHRETS\Session */
-    protected $session;
-    protected $metadata = null;
-    protected $total_results_count = 0;
-    protected $returned_results_count = 0;
-    protected $error = null;
-    /** @var \Illuminate\Support\Collection|\PHRETS\Models\Search\Record[] */
-    protected $results;
-    protected $headers = [];
-    protected $restricted_indicator = '****';
-    protected $maxrows_reached = false;
+    protected ?string $resource = '';
+    protected ?string $class = '';
+    protected ?Session $session = null;
+    protected mixed $metadata = null;
+    protected int $total_results_count = 0;
+    protected int $returned_results_count = 0;
+    protected mixed $error = null;
+    /** @var Collection|Record[] */
+    protected Collection|array $results;
+    protected array $headers = [];
+    protected string $restricted_indicator = '****';
+    protected bool $maxrows_reached = false;
 
     public function __construct()
     {
         $this->results = new Collection();
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
 
     /**
-     * @param array $headers
-     *
      * @return $this
      */
-    public function setHeaders($headers)
+    public function setHeaders(array $headers): static
     {
         $this->headers = $headers;
 
@@ -89,10 +86,8 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      * Grab a record by it's tracked key.
      *
      * @param $key_id
-     *
-     * @return Record
      */
-    public function find($key_id)
+    public function find($key_id): ?Record
     {
         return $this->results->get($key_id);
     }
@@ -110,27 +105,22 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      *
      * @return $this
      */
-    public function setError($error)
+    public function setError($error): static
     {
         $this->error = $error;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getReturnedResultsCount()
+    public function getReturnedResultsCount(): int
     {
         return $this->returned_results_count;
     }
 
     /**
-     * @param int $returned_results_count
-     *
      * @return $this
      */
-    public function setReturnedResultsCount($returned_results_count)
+    public function setReturnedResultsCount(int $returned_results_count): static
     {
         if (is_int($returned_results_count) == false) {
             throw new \InvalidArgumentException('$returned_results_count should be an integer');
@@ -141,20 +131,15 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getTotalResultsCount()
+    public function getTotalResultsCount(): int
     {
         return $this->total_results_count;
     }
 
     /**
-     * @param int $total_results_count
-     *
      * @return $this
      */
-    public function setTotalResultsCount($total_results_count)
+    public function setTotalResultsCount(int $total_results_count): static
     {
         if (is_int($total_results_count) == false) {
             throw new \InvalidArgumentException('$total_results_count should be an integer');
@@ -165,40 +150,30 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): ?string
     {
         return $this->class;
     }
 
     /**
-     * @param string $class
-     *
      * @return $this
      */
-    public function setClass($class)
+    public function setClass(string $class): static
     {
         $this->class = $class;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getResource()
+    public function getResource(): ?string
     {
         return $this->resource;
     }
 
     /**
-     * @param string $resource
-     *
      * @return $this
      */
-    public function setResource($resource)
+    public function setResource(string $resource): static
     {
         $this->resource = $resource;
 
@@ -206,19 +181,17 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return \PHRETS\Session
+     * @return Session
      */
-    public function getSession()
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
     /**
-     * @param \PHRETS\Session $session
-     *
      * @return $this
      */
-    public function setSession($session)
+    public function setSession(Session $session): static
     {
         $this->session = $session;
 
@@ -227,6 +200,8 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @return null
+     *
+     * @throws CapabilityUnavailable
      */
     public function getMetadata()
     {
@@ -242,17 +217,14 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      *
      * @return $this
      */
-    public function setMetadata($metadata)
+    public function setMetadata($metadata): static
     {
         $this->metadata = $metadata;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRestrictedIndicator()
+    public function getRestrictedIndicator(): string
     {
         return $this->restricted_indicator;
     }
@@ -262,7 +234,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      *
      * @return $this
      */
-    public function setRestrictedIndicator($indicator)
+    public function setRestrictedIndicator($indicator): static
     {
         $this->restricted_indicator = $indicator;
 
@@ -304,38 +276,27 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param callable $callback
      * @param null $default
-     *
-     * @return Record|null
      */
-    public function first(Closure $callback = null, $default = null)
+    public function first(Closure $callback = null, $default = null): ?Record
     {
         return $this->results->first($callback, $default);
     }
 
-    /**
-     * @return Record|null
-     */
-    public function last()
+    public function last(): ?Record
     {
         return $this->results->last();
     }
 
-    /**
-     * @return bool
-     */
-    public function isMaxRowsReached()
+    public function isMaxRowsReached(): bool
     {
         return $this->maxrows_reached == true;
     }
 
     /**
-     * @param bool $boolean
-     *
      * @return $this
      */
-    public function setMaxRowsReached($boolean = true)
+    public function setMaxRowsReached(bool $boolean = true): static
     {
         $this->maxrows_reached = $boolean;
 
@@ -346,10 +307,8 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      * Returns an array containing the values from the given field.
      *
      * @param $field
-     *
-     * @return array
      */
-    public function lists($field)
+    public function lists($field): array
     {
         $l = [];
         foreach ($this->results as $r) {
@@ -365,9 +324,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Return results as a large prepared CSV string.
      *
-     * @return string
+     * @throws CannotInsertRecord
      */
-    public function toCSV()
+    public function toCSV(): string
     {
         // create a temporary file so we can write the CSV out
         $writer = Writer::createFromFileObject(new SplTempFileObject());
@@ -393,19 +352,17 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Return results as a JSON string.
      *
-     * @return string
+     * @throws \JsonException
      */
-    public function toJSON()
+    public function toJSON(): string
     {
         return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
     /**
      * Return results as a simple array.
-     *
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [];
         foreach ($this->results as $r) {

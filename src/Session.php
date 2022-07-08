@@ -260,7 +260,7 @@ class Session
      *
      * @throws Exceptions\CapabilityUnavailable
      */
-    public function Search($resource_id, $class_id, $dmql_query, $optional_parameters = [], $recursive = false)
+    public function Search($resource_id, $class_id, $dmql_query, $optional_parameters = [], $recursive = false): Models\Search\Results
     {
         $dmql_query = Search::dmql($dmql_query);
 

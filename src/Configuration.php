@@ -174,7 +174,7 @@ class Configuration
             'http_authentication' => 'HttpAuthenticationMethod',
         ];
 
-        $me = new static();
+        $me = new self();
 
         foreach ($variables as $k => $m) {
             if (array_key_exists($k, $configuration)) {

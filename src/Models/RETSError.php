@@ -4,43 +4,33 @@ namespace PHRETS\Models;
 
 class RETSError
 {
-    protected $code;
-    protected $message;
+    protected string $code;
+    protected string $message;
 
-    /**
-     * @return string
-     */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
     /**
-     * @param string $code
-     *
      * @return $this
      */
-    public function setCode($code)
+    public function setCode(string $code): static
     {
         $this->code = (int) $code;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * @param string $message
-     *
      * @return $this
      */
-    public function setMessage($message)
+    public function setMessage(string $message): static
     {
         $this->message = $message;
 

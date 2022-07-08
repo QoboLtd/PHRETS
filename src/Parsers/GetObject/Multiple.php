@@ -8,7 +8,7 @@ use PHRETS\Http\Response as PHRETSResponse;
 
 class Multiple
 {
-    public function parse(PHRETSResponse $response)
+    public function parse(PHRETSResponse $response): Collection
     {
         $collection = new Collection();
 

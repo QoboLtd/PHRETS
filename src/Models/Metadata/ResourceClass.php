@@ -2,6 +2,9 @@
 
 namespace PHRETS\Models\Metadata;
 
+use Illuminate\Support\Collection;
+use PHRETS\Exceptions\CapabilityUnavailable;
+
 /**
  * Class ResourceClass.
  *
@@ -23,7 +26,7 @@ namespace PHRETS\Models\Metadata;
  */
 class ResourceClass extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'ClassName',
         'VisibleName',
         'StandardName',
@@ -37,16 +40,18 @@ class ResourceClass extends Base
         'DeletedFlagValue',
         'HasKeyIndex',
     ];
-    protected $attributes = [
+    protected array $attributes = [
         'Version',
         'Date',
         'Resource',
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Table[]
+     * @return Collection|Table[]
+     *
+     * @throws CapabilityUnavailable
      */
-    public function getTable(): \Illuminate\Support\Collection|array
+    public function getTable(): Collection|array
     {
         return $this->getSession()->GetTableMetadata($this->getResource(), $this->getClassName());
     }

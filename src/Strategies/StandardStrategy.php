@@ -3,16 +3,15 @@
 namespace PHRETS\Strategies;
 
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use PHRETS\Configuration;
 
 class StandardStrategy implements Strategy
 {
     /**
      * Default components.
-     *
-     * @var array
      */
-    protected $default_components = [
+    protected array $default_components = [
         Strategy::PARSER_LOGIN => \PHRETS\Parsers\Login\OneFive::class,
         Strategy::PARSER_OBJECT_SINGLE => \PHRETS\Parsers\GetObject\Single::class,
         Strategy::PARSER_OBJECT_MULTIPLE => \PHRETS\Parsers\GetObject\Multiple::class,
@@ -27,15 +26,14 @@ class StandardStrategy implements Strategy
         Strategy::PARSER_XML => \PHRETS\Parsers\XML::class,
     ];
 
-    /**
-     * @var \Illuminate\Container\Container
-     */
-    protected $container;
+    protected Container $container;
 
     /**
      * @param $component
+     *
+     * @throws BindingResolutionException
      */
-    public function provide($component)
+    public function provide($component): mixed
     {
         return $this->container->make($component);
     }
@@ -57,10 +55,7 @@ class StandardStrategy implements Strategy
         }
     }
 
-    /**
-     * @return Container
-     */
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->container;
     }

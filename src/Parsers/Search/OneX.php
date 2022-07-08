@@ -5,14 +5,15 @@ namespace PHRETS\Parsers\Search;
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
+use PHRETS\Parsers\XML;
 use PHRETS\Session;
 use PHRETS\Strategies\Strategy;
 
 class OneX
 {
-    public function parse(Session $rets, Response $response, $parameters)
+    public function parse(Session $rets, Response $response, $parameters): Results
     {
-        /** @var \PHRETS\Parsers\XML $parser */
+        /** @var XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 
@@ -52,10 +53,8 @@ class OneX
     /**
      * @param $xml
      * @param $parameters
-     *
-     * @return string
      */
-    protected function getDelimiter(Session $rets, $xml, $parameters)
+    protected function getDelimiter(Session $rets, $xml, $parameters): string
     {
         if (property_exists($xml, 'DELIMITER') && $xml->DELIMITER !== null) {
             // delimiter found so we have at least a COLUMNS row to parse
@@ -71,10 +70,8 @@ class OneX
     /**
      * @param $xml
      * @param $parameters
-     *
-     * @return string|null
      */
-    protected function getRestrictedIndicator(Session $rets, &$xml, $parameters)
+    protected function getRestrictedIndicator(Session $rets, &$xml, $parameters): ?string
     {
         if (array_key_exists('RestrictedIndicator', $parameters)) {
             return $parameters['RestrictedIndicator'];
@@ -83,7 +80,7 @@ class OneX
         }
     }
 
-    protected function getColumnNames(Session $rets, &$xml, $parameters)
+    protected function getColumnNames(Session $rets, &$xml, $parameters): array
     {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
@@ -114,7 +111,7 @@ class OneX
         }
     }
 
-    protected function parseRecordFromLine(Session $rets, &$xml, $parameters, &$line, Results $rs)
+    protected function parseRecordFromLine(Session $rets, &$xml, $parameters, &$line, Results $rs): Record
     {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
@@ -142,7 +139,7 @@ class OneX
         return $r;
     }
 
-    protected function getTotalCount(Session $rets, &$xml, $parameters)
+    protected function getTotalCount(Session $rets, &$xml, $parameters): ?int
     {
         if (property_exists($xml, 'COUNT') && $xml->COUNT !== null) {
             return (int) "{$xml->COUNT->attributes()->Records}";
@@ -151,7 +148,7 @@ class OneX
         }
     }
 
-    protected function foundMaxRows(Session $rets, &$xml, $parameters)
+    protected function foundMaxRows(Session $rets, &$xml, $parameters): bool
     {
         return property_exists($xml, 'MAXROWS') && $xml->MAXROWS !== null;
     }

@@ -4,12 +4,7 @@ namespace PHRETS\Interpreters;
 
 class GetObject
 {
-    /**
-     * @param $content_ids
-     * @param $object_ids
-     * @returns array
-     */
-    public static function ids($content_ids, $object_ids)
+    public static function ids(mixed $content_ids, mixed $object_ids): array
     {
         $result = [];
 
@@ -23,13 +18,7 @@ class GetObject
         return $result;
     }
 
-    /**
-     * @param $value
-     * @param bool $dash_ranges
-     *
-     * @return array
-     */
-    protected static function split($value, $dash_ranges = true)
+    protected static function split(mixed $value, bool $dash_ranges = true): array
     {
         if (!is_array($value)) {
             if (stripos((string) $value, ':') !== false) {

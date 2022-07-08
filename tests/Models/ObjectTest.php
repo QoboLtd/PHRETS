@@ -64,14 +64,14 @@ class ObjectTest extends TestCase
     public function itMarksErrors()
     {
         $e = new \PHRETS\Models\RETSError();
-        $e->setCode(1234);
+        $e->setCode('1234');
         $e->setMessage('Test Error Message');
 
         $o = new BaseObject();
         $this->assertFalse($o->isError());
         $o->setError($e);
         $this->assertTrue($o->isError());
-        $this->assertSame(1234, $o->getError()->getCode());
+        $this->assertSame('1234', $o->getError()->getCode());
         $this->assertSame('Test Error Message', $o->getError()->getMessage());
     }
 }

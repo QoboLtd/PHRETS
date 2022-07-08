@@ -4,7 +4,7 @@ namespace PHRETS;
 
 class Capabilities
 {
-    protected $capabilities = [];
+    protected array $capabilities = [];
 
     /**
      * @param $name
@@ -12,7 +12,7 @@ class Capabilities
      *
      * @return $this
      */
-    public function add($name, $uri)
+    public function add($name, $uri): static
     {
         $parts = [];
         $new_uri = null;

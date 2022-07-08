@@ -2,57 +2,45 @@
 
 namespace PHRETS\Models\Search;
 
+use JsonException;
+
 class Record implements \ArrayAccess, \Stringable
 {
-    protected $resource;
-    protected $class;
-    protected $fields = [];
-    protected $restricted_value = '****';
-    protected $values = [];
+    protected ?string $resource = '';
+    protected ?string $class = '';
+    protected array $fields = [];
+    protected ?string $restricted_value = '****';
+    protected array $values = [];
 
-    /**
-     * @param $field
-     *
-     * @return string|null
-     */
-    public function get($field)
+    public function get(string $field): ?string
     {
-        return $this->values[(string) $field] ?? null;
+        return $this->values[$field] ?? null;
     }
 
     /**
-     * @param $field
      * @param $value
      */
-    public function set($field, $value)
+    public function set(string $field, $value)
     {
-        $this->values[(string) $field] = $value;
+        $this->values[$field] = $value;
     }
 
-    /**
-     * @param $field
-     */
-    public function remove($field)
+    public function remove(string $field)
     {
-        unset($this->values[(string) $field]);
+        unset($this->values[$field]);
     }
 
-    /**
-     * @param $field
-     *
-     * @return bool
-     */
-    public function isRestricted($field)
+    public function isRestricted(string $field): bool
     {
         $val = $this->get($field);
 
-        return $val == $this->restricted_value;
+        return $val === $this->restricted_value;
     }
 
     /**
      * @return $this
      */
-    public function setParent(Results $results)
+    public function setParent(Results $results): static
     {
         $this->resource = $results->getResource();
         $this->class = $results->getClass();
@@ -62,46 +50,37 @@ class Record implements \ArrayAccess, \Stringable
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getResource()
+    public function getResource(): string
     {
         return $this->resource;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * @return array
-     */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->values;
     }
 
     /**
-     * @return string
+     * @throws JsonException
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->values, JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function __toString(): string
     {
         return $this->toJson();
@@ -112,10 +91,7 @@ class Record implements \ArrayAccess, \Stringable
         return array_key_exists($offset, $this->values);
     }
 
-    /**
-     * @return string|null
-     */
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset): ?string
     {
         return $this->get($offset);
     }

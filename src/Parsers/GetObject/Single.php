@@ -8,7 +8,7 @@ use PHRETS\Models\RETSError;
 
 class Single
 {
-    public function parse(Response $response)
+    public function parse(Response $response): BaseObject
     {
         $obj = new BaseObject();
         $obj->setContent(($response->getBody()) ? $response->getBody()->__toString() : null);
@@ -39,14 +39,14 @@ class Single
         return $obj;
     }
 
-    protected function isError(Response $response)
+    protected function isError(Response $response): bool
     {
         if ($response->getHeader('RETS-Error') == 1) {
             return true;
         }
 
-        $content_type = $response->getHeader('Content-Type');
-        if ($content_type && str_contains((string) $content_type, 'text/xml')) {
+        $content_type = (string) $response->getHeader('Content-Type');
+        if ($content_type && str_contains($content_type, 'text/xml')) {
             $xml = $response->xml();
 
             if (isset($xml['ReplyCode']) && $xml['ReplyCode'] != 0) {

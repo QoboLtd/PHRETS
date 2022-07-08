@@ -3,17 +3,22 @@
 namespace PHRETS\Parsers\Search;
 
 use PHRETS\Exceptions\AutomaticPaginationError;
+use PHRETS\Exceptions\CapabilityUnavailable;
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Results;
 use PHRETS\Session;
 
 class RecursiveOneX
 {
-    public function parse(Session $rets, Response $response, $parameters)
+    /**
+     * @throws CapabilityUnavailable
+     * @throws AutomaticPaginationError
+     */
+    public function parse(Session $rets, Response $response, $parameters): Results
     {
         // we're given the first response automatically, so parse this and start the recursion
 
-        /** @var \PHRETS\Parsers\Search\OneX $parser */
+        /** @var OneX $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide('parser.search');
         $rs = $parser->parse($rets, $response, $parameters);
 
@@ -33,7 +38,6 @@ class RecursiveOneX
             unset($pms['Class']);
             unset($pms['Query']);
 
-            /** @var Results $inner_rs */
             $inner_rs = $rets->Search($resource, $class, $query, $pms, false);
             $rs->setTotalResultsCount($inner_rs->getTotalResultsCount());
             $rs->setMaxRowsReached($inner_rs->isMaxRowsReached());
@@ -53,28 +57,21 @@ class RecursiveOneX
 
     /**
      * @param $parameters
-     *
-     * @return bool
      */
-    protected function continuePaginating(Session $rets, $parameters, Results $rs)
+    protected function continuePaginating(Session $rets, $parameters, Results $rs): bool
     {
         return $rs->isMaxRowsReached();
     }
 
     /**
      * @param $parameters
-     *
-     * @return int
      */
-    protected function getNewOffset(Session $rets, $parameters, Results $rs)
+    protected function getNewOffset(Session $rets, $parameters, Results $rs): int
     {
         return $rs->getReturnedResultsCount() + 1;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isPaginationBroken(Results $big, Results $small)
+    protected function isPaginationBroken(Results $big, Results $small): bool
     {
         $big_first = $big->first();
         $small_first = $small->first();

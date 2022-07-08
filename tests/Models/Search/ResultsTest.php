@@ -147,8 +147,11 @@ class ResultsTest extends TestCase
     public function itHoldsASession()
     {
         $rs = new Results();
-        $rs->setSession('test');
-        $this->assertSame('test', $rs->getSession());
+        $config = new \PHRETS\Configuration();
+        $config->setLoginUrl('https://www.test-rets.com/login');
+        $session = new \PHRETS\Session($config);
+        $rs->setSession($session);
+        $this->assertSame($session, $rs->getSession());
     }
 
     /** @test **/

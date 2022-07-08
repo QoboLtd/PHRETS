@@ -19,7 +19,7 @@ namespace PHRETS\Models\Metadata;
  */
 class BaseObject extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'MetadataEntryID',
         'VisibleName',
         'ObjectTimeStamp',
@@ -29,7 +29,7 @@ class BaseObject extends Base
         'MIMEType',
         'Description',
     ];
-    protected $attributes = [
+    protected array $attributes = [
         'Version',
         'Date',
         'Resource',

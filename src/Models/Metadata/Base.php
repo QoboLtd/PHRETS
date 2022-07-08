@@ -3,19 +3,16 @@
 namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Arr;
+use PHRETS\Session;
 
 abstract class Base implements \ArrayAccess
 {
-    /** @var \PHRETS\Session */
-    protected $session;
-    protected $elements = [];
-    protected $attributes = [];
-    protected $values = [];
+    protected Session $session;
+    protected array $elements = [];
+    protected array $attributes = [];
+    protected array $values = [];
 
-    /**
-     * @return \PHRETS\Session
-     */
-    public function getSession()
+    public function getSession(): Session
     {
         return $this->session;
     }
@@ -23,7 +20,7 @@ abstract class Base implements \ArrayAccess
     /**
      * @return $this
      */
-    public function setSession($session)
+    public function setSession(Session $session): static
     {
         $this->session = $session;
 
@@ -31,12 +28,9 @@ abstract class Base implements \ArrayAccess
     }
 
     /**
-     * @param $name
-     * @param array $args
-     *
      * @return $this|mixed|null
      */
-    public function __call($name, $args = [])
+    public function __call(mixed $name, array $args = [])
     {
         $name = strtolower((string) $name);
         $action = substr($name, 0, 3);
@@ -63,18 +57,12 @@ abstract class Base implements \ArrayAccess
         throw new \BadMethodCallException();
     }
 
-    /**
-     * @return array
-     */
-    public function getXmlElements()
+    public function getXmlElements(): array
     {
         return $this->elements;
     }
 
-    /**
-     * @return array
-     */
-    public function getXmlAttributes()
+    public function getXmlAttributes(): array
     {
         return $this->attributes;
     }

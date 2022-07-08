@@ -4,3 +4,4 @@ composer.lock
 coverage/
 .phpunit.result.cache
 rector.php
+.php-cs-fixer.cache

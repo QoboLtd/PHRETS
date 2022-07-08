@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 class OneEight extends OneX
 {
-    public function readLine($line)
+    public function readLine($line): array
     {
         $name = null;
         $value = null;

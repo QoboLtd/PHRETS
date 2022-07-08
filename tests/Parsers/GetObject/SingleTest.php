@@ -29,7 +29,7 @@ class SingleTest extends TestCase
         $obj = $parser->parse($single);
 
         $this->assertTrue($obj->isError());
-        $this->assertSame(20203, $obj->getError()->getCode());
+        $this->assertSame('20203', $obj->getError()->getCode());
         $this->assertSame('RETS Server: Some error', $obj->getError()->getMessage());
     }
 

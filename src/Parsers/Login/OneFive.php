@@ -4,7 +4,7 @@ namespace PHRETS\Parsers\Login;
 
 class OneFive extends OneX
 {
-    public function readLine($line)
+    public function readLine($line): array
     {
         $name = null;
         $value = null;

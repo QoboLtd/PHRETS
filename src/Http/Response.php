@@ -2,8 +2,10 @@
 
 namespace PHRETS\Http;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use SimpleXMLElement;
 
 /**
  * Class Response.
@@ -17,22 +19,25 @@ class Response
     {
     }
 
-    public function xml()
+    /**
+     * @throws Exception
+     */
+    public function xml(): SimpleXMLElement
     {
         $body = (string) $this->response->getBody();
 
         // Remove any carriage return / newline in XML response.
         $body = trim($body);
 
-        return new \SimpleXMLElement($body);
+        return new SimpleXMLElement($body);
     }
 
-    public function __call($method, $args = [])
+    public function __call($method, array $args = [])
     {
         return call_user_func_array([$this->response, $method], $args);
     }
 
-    public function getHeader($name)
+    public function getHeader(string $name): ?string
     {
         $headers = $this->response->getHeader($name);
 

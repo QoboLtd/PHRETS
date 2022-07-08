@@ -16,13 +16,13 @@ namespace PHRETS\Models\Metadata;
  */
 class LookupType extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'MetadataEntryID',
         'LongValue',
         'ShortValue',
         'Value',
     ];
-    protected $attributes = [
+    protected array $attributes = [
         'Version',
         'Date',
         'Resource',

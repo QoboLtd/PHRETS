@@ -4,14 +4,14 @@ namespace PHRETS\Parsers\Login;
 
 abstract class OneX
 {
-    protected $capabilities = [];
-    protected $details = [];
-    protected $valid_transactions = [
+    protected array $capabilities = [];
+    protected array $details = [];
+    protected array $valid_transactions = [
         'Action', 'ChangePassword', 'GetObject', 'Login', 'LoginComplete', 'Logout', 'Search', 'GetMetadata',
         'ServerInformation', 'Update', 'PostObject', 'GetPayloadList',
     ];
 
-    public function parse($body)
+    public function parse($body): void
     {
         $lines = explode("\r\n", (string) $body);
         if (empty($lines[3])) {
@@ -35,18 +35,12 @@ abstract class OneX
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getCapabilities()
+    public function getCapabilities(): array
     {
         return $this->capabilities;
     }
 
-    /**
-     * @return array
-     */
-    public function getDetails()
+    public function getDetails(): array
     {
         return $this->details;
     }

@@ -6,20 +6,17 @@ use Illuminate\Support\Arr;
 
 class Bulletin implements \Stringable
 {
-    protected $body = null;
-    protected $details = [];
+    protected ?string $body = null;
+    protected array $details = [];
 
-    /**
-     * @param array $details
-     */
-    public function __construct($details = [])
+    public function __construct(array $details = [])
     {
         if ($details && is_array($details)) {
             $this->details = array_change_key_case($details, CASE_UPPER);
         }
     }
 
-    public function getBody()
+    public function getBody(): ?string
     {
         return $this->body;
     }
@@ -27,26 +24,23 @@ class Bulletin implements \Stringable
     /**
      * @return $this
      */
-    public function setBody($body)
+    public function setBody($body): static
     {
         $this->body = $body;
 
         return $this;
     }
 
-    public function setDetail($name, $value)
+    public function setDetail(string $name, $value): static
     {
-        $this->details[strtoupper((string) $name)] = $value;
+        $this->details[strtoupper($name)] = $value;
 
         return $this;
     }
 
-    /**
-     * @param $name
-     */
-    public function getDetail($name)
+    public function getDetail(string $name): mixed
     {
-        return Arr::get($this->details, strtoupper((string) $name));
+        return Arr::get($this->details, strtoupper($name));
     }
 
     public function getMemberName()
