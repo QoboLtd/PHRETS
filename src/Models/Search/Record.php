@@ -12,7 +12,7 @@ class Record implements \ArrayAccess, \Stringable
     protected ?string $restricted_value = '****';
     protected array $values = [];
 
-    public function get(string $field): ?string
+    public function get(string $field): mixed
     {
         return $this->values[$field] ?? null;
     }

@@ -6,7 +6,7 @@ class BaseObject
 {
     protected ?string $content_type = null;
     protected ?string $content_id = null;
-    protected ?string $object_id = null;
+    protected string|int|null $object_id = null;
     protected ?string $mime_version = null;
     protected ?string $location = null;
     protected ?string $content_description = null;
@@ -120,7 +120,7 @@ class BaseObject
         return $this;
     }
 
-    public function getObjectId(): ?string
+    public function getObjectId(): string|int|null
     {
         return $this->object_id;
     }
@@ -128,7 +128,7 @@ class BaseObject
     /**
      * @return $this
      */
-    public function setObjectId(?string $object_id): static
+    public function setObjectId(string|int|null $object_id): static
     {
         $this->object_id = $object_id;
 
