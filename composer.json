@@ -1,5 +1,5 @@
 {
-  "name": "troydavisson/phrets",
+  "name": "maxlipsky-ca/phrets-php8",
   "type": "library",
   "license": "MIT",
   "description": "RETS library in PHP",
@@ -7,12 +7,17 @@
     "rets",
     "mls"
   ],
-  "homepage": "http://github.com/troydavisson/PHRETS",
+  "homepage": "https://github.com/maxlipsky-ca/PHRETS-PHP8",
   "authors": [
     {
       "name": "Troy Davisson",
       "email": "troy.davisson@gmail.com",
       "homepage": "http://troda.com",
+      "role": "Developer"
+    },
+    {
+      "name": "Max Lispky",
+      "email": "maxlipsky@gmail.com",
       "role": "Developer"
     }
   ],
