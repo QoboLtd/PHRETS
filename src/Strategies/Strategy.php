@@ -16,6 +16,7 @@ interface Strategy
     public const PARSER_METADATA_CLASS = 'parser.metadata.class';
     public const PARSER_METADATA_TABLE = 'parser.metadata.table';
     public const PARSER_METADATA_OBJECT = 'parser.metadata.object';
+    public const PARSER_METADATA_LOOKUP = 'parser.metadata.lookup';
     public const PARSER_METADATA_LOOKUPTYPE = 'parser.metadata.lookuptype';
     public const PARSER_XML = 'parser.xml';
 

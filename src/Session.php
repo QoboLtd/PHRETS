@@ -211,6 +211,16 @@ class Session
 
     /**
      * @param $resource_id
+     * @return mixed
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     */
+    public function GetLookups($resource_id)
+    {
+        return $this->MakeMetadataRequest('METADATA-LOOKUP', $resource_id, 'metadata.lookup');
+    }
+
+    /**
+     * @param $resource_id
      * @param $lookup_name
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
