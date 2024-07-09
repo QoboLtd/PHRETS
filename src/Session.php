@@ -304,6 +304,30 @@ class Session
         return $parser->parse($this, $response, $parameters);
     }
 
+    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, $delimiter = '09')
+    {
+        $parameters = [
+            'Resource' => $resource_id,
+            'ClassName' => $class_id,
+            'Action' => $action,
+            'Validate' => $validation_mode,
+            'Delimiter' => $delimiter,
+            'Record' => $data,
+        ];
+
+        if ($warning_response) {
+            $parameters['WarningResponse'] = $warning_response;
+        }
+
+        $response = $this->request('Update', [
+            'form_params' => $parameters,
+        ]);
+
+        $parser = $this->grab(Strategy::PARSER_UPDATE);
+
+        return $parser->parse($this, $response, $parameters);
+    }
+
     /**
      * @return bool
      *
@@ -357,10 +381,14 @@ class Session
         $this->last_request_url = $url;
 
         try {
-            /* @var ResponseInterface $response */
-            if ($this->configuration->readOption('use_post_method')) {
-                $this->debug('Using POST method per use_post_method option');
-                $query = $options['query'] ?? null;
+            if ($this->configuration->readOption('use_post_method') || array_key_exists('form_params', $options)) {
+                if (array_key_exists('form_params', $options)) {
+                    $this->debug('Using POST method per form_params option');
+                    $query = $options['form_params'];
+                } else {
+                    $this->debug('Using POST method per use_post_method option');
+                    $query = (array_key_exists('query', $options)) ? $options['query'] : null;
+                }
 
                 // do not send query options in url, only in form_params
                 $local_options = $options;
@@ -447,6 +475,11 @@ class Session
 
                         return $this->request($capability, $options, true);
                     }
+                }
+
+                // Return validation errors for parsing.
+                if($rc === '20301' && $capability === 'Update') {
+                    return $response;
                 }
 
                 // 20201 - No records found - not exception worthy in my mind
