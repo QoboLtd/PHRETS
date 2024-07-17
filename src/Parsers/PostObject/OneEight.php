@@ -1,11 +1,11 @@
-<?php namespace PHRETS\Parsers\Update;
+<?php namespace PHRETS\Parsers\PostObject;
 
 use PHRETS\Http\Response;
 use PHRETS\Session;
 
 class OneEight
 {
-    public function parse(Session $rets, Response $response, $parameters)
+    public function parse(Session $rets, Response $response)
     {
         $xml = $response->xml();
 

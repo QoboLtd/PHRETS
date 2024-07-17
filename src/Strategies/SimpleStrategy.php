@@ -25,6 +25,7 @@ class SimpleStrategy implements Strategy
         Strategy::PARSER_METADATA_LOOKUP => \PHRETS\Parsers\GetMetadata\Lookup::class,
         Strategy::PARSER_METADATA_LOOKUPTYPE => \PHRETS\Parsers\GetMetadata\LookupType::class,
         Strategy::PARSER_UPDATE => \PHRETS\Parsers\Update\OneEight::class,
+        Strategy::PARSER_OBJECT_POST => \PHRETS\Parsers\PostObject\OneEight::class,
         Strategy::PARSER_XML => \PHRETS\Parsers\XML::class,
     ];
 

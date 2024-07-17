@@ -328,6 +328,25 @@ class Session
         return $parser->parse($this, $response, $parameters);
     }
 
+    public function PostObject($resource, $type, $content_type, $action, mixed $body, array $attributes = [])
+    {
+        $headers = array_merge([
+            'Resource' => $resource,
+            'Type' => $type,
+            'Content-Type' => $content_type,
+            'UpdateAction' => $action,
+        ], $attributes);
+
+        $response = $this->request('PostObject', [
+            'headers' => $headers,
+            'body' => $body,
+        ]);
+
+        $parser = $this->grab(Strategy::PARSER_OBJECT_POST);
+
+        return $parser->parse($this, $response);
+    }
+
     /**
      * @return bool
      *
@@ -381,7 +400,14 @@ class Session
         $this->last_request_url = $url;
 
         try {
-            if ($this->configuration->readOption('use_post_method') || array_key_exists('form_params', $options)) {
+            if (strtolower($capability) === 'postobject') {
+                $this->debug('Using POST method per body option');
+
+                $response = $this->client->request('POST', $url, [
+                    'headers' => $options['headers'],
+                    'body' => $options['body'],
+                ]);
+            } elseif ($this->configuration->readOption('use_post_method') || array_key_exists('form_params', $options)) {
                 if (array_key_exists('form_params', $options)) {
                     $this->debug('Using POST method per form_params option');
                     $query = $options['form_params'];
@@ -478,7 +504,7 @@ class Session
                 }
 
                 // Return validation errors for parsing.
-                if($rc === '20301' && $capability === 'Update') {
+                if ($rc === '20301' && $capability === 'Update') {
                     return $response;
                 }
 
