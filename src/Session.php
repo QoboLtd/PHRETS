@@ -504,7 +504,7 @@ class Session
                 }
 
                 // Return validation errors for parsing.
-                if ($rc === '20301' && $capability === 'Update') {
+                if (in_array($rc, ['20301', '20303']) && $capability === 'Update') {
                     return $response;
                 }
 
