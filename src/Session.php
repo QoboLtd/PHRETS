@@ -526,8 +526,8 @@ class Session
                     }
                 }
 
-                // Return validation errors for parsing.
-                if (in_array($rc, ['20301', '20303']) && $capability === 'Update') {
+                // Return validation errors for parsing Update requests.
+                if ($capability === 'Update') {
                     return $response;
                 }
 
