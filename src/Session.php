@@ -333,7 +333,7 @@ class Session
         }
 
         $response = $this->request('Update', [
-            'form_params' => array_merge($formParams, $parameters),
+            'form_params' => array_merge($form_params, $parameters),
         ]);
 
         $parser = $this->grab(Strategy::PARSER_UPDATE);
