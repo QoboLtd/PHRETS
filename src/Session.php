@@ -312,12 +312,12 @@ class Session
      * @param string|null $warning_response
      * @param int $validation_mode
      * @param string $delimiter
-     * @param array $formParams
+     * @param array $form_params
      * @return mixed
      * @throws CapabilityUnavailable
      * @throws RETSException
      */
-    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, $delimiter = '09', array $formParams = [])
+    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, string $delimiter = '09', array $form_params = [])
     {
         $parameters = [
             'Resource' => $resource_id,
