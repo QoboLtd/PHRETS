@@ -311,12 +311,13 @@ class Session
      * @param string $data
      * @param string|null $warning_response
      * @param int $validation_mode
-     * @param $delimiter
+     * @param string $delimiter
+     * @param array $formParams
      * @return mixed
      * @throws CapabilityUnavailable
      * @throws RETSException
      */
-    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, $delimiter = '09')
+    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, $delimiter = '09', array $formParams = [])
     {
         $parameters = [
             'Resource' => $resource_id,
@@ -332,7 +333,7 @@ class Session
         }
 
         $response = $this->request('Update', [
-            'form_params' => $parameters,
+            'form_params' => array_merge($formParams, $parameters),
         ]);
 
         $parser = $this->grab(Strategy::PARSER_UPDATE);
