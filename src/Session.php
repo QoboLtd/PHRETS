@@ -317,7 +317,7 @@ class Session
      * @throws CapabilityUnavailable
      * @throws RETSException
      */
-    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, string $delimiter = '09', array $form_params = [])
+    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, string $delimiter = '09', array $additional_parameters = [])
     {
         $parameters = [
             'Resource' => $resource_id,
@@ -333,7 +333,7 @@ class Session
         }
 
         $response = $this->request('Update', [
-            'form_params' => array_merge($form_params, $parameters),
+            'form_params' => array_merge($additional_parameters, $parameters),
         ]);
 
         $parser = $this->grab(Strategy::PARSER_UPDATE);
