@@ -211,6 +211,16 @@ class Session
 
     /**
      * @param $resource_id
+     * @return mixed
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     */
+    public function GetLookups($resource_id)
+    {
+        return $this->MakeMetadataRequest('METADATA-LOOKUP', $resource_id, 'metadata.lookup');
+    }
+
+    /**
+     * @param $resource_id
      * @param $lookup_name
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
@@ -295,6 +305,73 @@ class Session
     }
 
     /**
+     * @param $resource_id
+     * @param $class_id
+     * @param $action
+     * @param string $data
+     * @param string|null $warning_response
+     * @param int $validation_mode
+     * @param string $delimiter
+     * @param array $additional_parameters
+     * @return mixed
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\RETSException
+     */
+    public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, string $delimiter = '09', array $additional_parameters = [])
+    {
+        $parameters = [
+            'Resource' => $resource_id,
+            'ClassName' => $class_id,
+            'Action' => $action,
+            'Validate' => $validation_mode,
+            'Delimiter' => $delimiter,
+            'Record' => $data,
+        ];
+
+        if ($warning_response) {
+            $parameters['WarningResponse'] = $warning_response;
+        }
+
+        $response = $this->request('Update', [
+            'form_params' => array_merge($additional_parameters, $parameters),
+        ]);
+
+        $parser = $this->grab(Strategy::PARSER_UPDATE);
+
+        return $parser->parse($this, $response, $parameters);
+    }
+
+    /**
+     * @param $resource
+     * @param $type
+     * @param $content_type
+     * @param $action
+     * @param mixed $body
+     * @param array $attributes
+     * @return mixed
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\RETSException
+     */
+    public function PostObject($resource, $type, $content_type, $action, mixed $body, array $attributes = [])
+    {
+        $headers = array_merge([
+            'Resource' => $resource,
+            'Type' => $type,
+            'Content-Type' => $content_type,
+            'UpdateAction' => $action,
+        ], $attributes);
+
+        $response = $this->request('PostObject', [
+            'headers' => $headers,
+            'body' => $body,
+        ]);
+
+        $parser = $this->grab(Strategy::PARSER_OBJECT_POST);
+
+        return $parser->parse($this, $response);
+    }
+
+    /**
      * @return bool
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
@@ -347,10 +424,21 @@ class Session
         $this->last_request_url = $url;
 
         try {
-            /* @var ResponseInterface $response */
-            if ($this->configuration->readOption('use_post_method')) {
-                $this->debug('Using POST method per use_post_method option');
-                $query = $options['query'] ?? null;
+            if (strtolower($capability) === 'postobject') {
+                $this->debug('Using POST method per body option');
+
+                $response = $this->client->request('POST', $url, [
+                    'headers' => $options['headers'],
+                    'body' => $options['body'],
+                ]);
+            } elseif ($this->configuration->readOption('use_post_method') || array_key_exists('form_params', $options)) {
+                if (array_key_exists('form_params', $options)) {
+                    $this->debug('Using POST method per form_params option');
+                    $query = $options['form_params'];
+                } else {
+                    $this->debug('Using POST method per use_post_method option');
+                    $query = (array_key_exists('query', $options)) ? $options['query'] : null;
+                }
 
                 // do not send query options in url, only in form_params
                 $local_options = $options;
@@ -437,6 +525,11 @@ class Session
 
                         return $this->request($capability, $options, true);
                     }
+                }
+
+                // Return validation errors for parsing Update requests.
+                if (in_array(strtolower($capability), ['update', 'postobject'])) {
+                    return $response;
                 }
 
                 // 20201 - No records found - not exception worthy in my mind
