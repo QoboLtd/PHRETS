@@ -40,7 +40,6 @@
     "phpunit/phpunit": "^9.5",
     "monolog/monolog": "^3.8",
     "phpstan/phpstan": "^2.0",
-    "friendsofphp/php-cs-fixer": "^3.8",
     "squizlabs/php_codesniffer": "^3.7",
     "slevomat/coding-standard": "^8.15"
   },
