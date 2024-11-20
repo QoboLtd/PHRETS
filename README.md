@@ -1,11 +1,12 @@
-Note: If you're looking for version 1, please see the "1.x" branch.  Otherwise, it's highly recommended that you use version 2+.
+This is a fork of [troydavisson/PHRETS](https://github.com/troydavisson/PHRETS)
 
-[![Latest Stable Version](https://poser.pugx.org/troydavisson/PHRETS/v/stable.png)](https://packagist.org/packages/troydavisson/PHRETS)
-[![Total Downloads](https://poser.pugx.org/troydavisson/PHRETS/downloads.png)](https://packagist.org/packages/troydavisson/PHRETS)
-[![Build Status](https://travis-ci.org/troydavisson/PHRETS.svg?branch=2)](https://travis-ci.org/troydavisson/PHRETS)
-[![Documentation Status](https://readthedocs.org/projects/phrets/badge/?version=latest)](https://readthedocs.org/projects/phrets/?badge=latest)
+The purpose of this fork is to:
 
-[![ScreenShot](http://troda.com/newfeatures.png)](http://youtu.be/115mx-9jYVM)
+1. support modern PHP versions
+2. Allow the library to be used without too many dependencies.
+3. Improve type safety and static analysis.
+4. Gather improvements/fixes from other forks into the same codebase.
+
 
 PHRETS
 ======
@@ -68,23 +69,28 @@ PHRETS provides PHP developers a way to integrate RETS functionality directly wi
 * HTTP Header management
 * Authentication
 * Session/Cookie management
-* PHP 5.6, 7.0, 7.1 and 7.2 supported
+* PHP 8.2+ supported
 
 ### Installation
 
-The easiest way to get started is using [Composer](http://getcomposer.org) to install [troydavisson/phrets](https://packagist.org/packages/troydavisson/phrets):
+The easiest way to get started is using [Composer](http://getcomposer.org) to install 
 
 ```js
 {
+    "repositories": [
+        {
+          "type": "git",
+          "url": "https://github.com/QoboLtd/PHRETS.git"
+        }
+    ],
     "require": {
-        "troydavisson/phrets": "2.*"
+        "qoboltd/phrets": "^2.0"
     }
 }
 ```
  
-
 ### Get Help
-The best place to ask for help is either our [Slack channel](http://phrets.troda.com/) or in our [Google Group](http://groups.google.com/group/phrets).  Please leave GitHub's issue tracker for bugs with the library.
+Please use the GitHub's issue tracker for bugs/suggestions.
 
 ### Disclaimer  
 In many cases, the capabilities provided by this library are dependent on these features being properly implemented by the RETS server you're accessing.  The RETS specification defines how clients and servers communicate, and if a server is doing something unexpected, this library may not work without tweaking some options.
