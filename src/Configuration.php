@@ -4,7 +4,6 @@ namespace PHRETS;
 
 use PHRETS\Exceptions\InvalidConfiguration;
 use PHRETS\Strategies\SimpleStrategy;
-use PHRETS\Strategies\StandardStrategy;
 use PHRETS\Strategies\Strategy;
 use PHRETS\Versions\RETSVersion;
 

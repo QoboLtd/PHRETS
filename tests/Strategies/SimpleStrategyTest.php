@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Strategies\SimpleStrategy;
-use PHRETS\Strategies\StandardStrategy;
 
 class SimpleStrategyTest extends TestCase
 {

@@ -1,7 +1,6 @@
 <?php
 
 use PHRETS\Strategies\SimpleStrategy;
-use PHRETS\Strategies\StandardStrategy;
 
 class StrategyIntegrationTest extends BaseIntegration
 {
