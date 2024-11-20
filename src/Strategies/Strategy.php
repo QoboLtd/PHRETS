@@ -20,9 +20,9 @@ interface Strategy
     public const PARSER_XML = 'parser.xml';
 
     /**
-     * @param $component
+     * @param string $component
      */
-    public function provide($component);
+    public function provide(string $component);
 
     public function initialize(Configuration $configuration);
 }

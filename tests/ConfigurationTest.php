@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
+use PHRETS\Strategies\SimpleStrategy;
 
 class ConfigurationTest extends TestCase
 {
@@ -96,7 +97,7 @@ class ConfigurationTest extends TestCase
     public function itAllowsOverridingTheStrategy()
     {
         $config = new Configuration();
-        $strategy = new \PHRETS\Strategies\StandardStrategy();
+        $strategy = new SimpleStrategy();
         $strategy->initialize($config);
         $config->setStrategy($strategy);
 
