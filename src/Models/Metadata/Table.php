@@ -3,7 +3,6 @@
 namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Collection;
-use PHRETS\Exceptions\CapabilityUnavailable;
 
 /**
  * Class Table.
@@ -81,9 +80,9 @@ class Table extends Base
     ];
 
     /**
-     * @return Collection|LookupType[]
+     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\LookupType[]
      *
-     * @throws CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function getLookupValues(): Collection|array
     {

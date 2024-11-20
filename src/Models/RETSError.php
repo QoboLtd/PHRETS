@@ -13,11 +13,11 @@ class RETSError
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setCode(string $code): static
+    public function setCode(string $code): self
     {
-        $this->code = (int) $code;
+        $this->code = $code;
 
         return $this;
     }
@@ -28,9 +28,9 @@ class RETSError
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setMessage(string $message): static
+    public function setMessage(string $message): self
     {
         $this->message = $message;
 

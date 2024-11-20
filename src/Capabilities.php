@@ -4,19 +4,22 @@ namespace PHRETS;
 
 class Capabilities
 {
+    /**
+     * @var array<string,string>
+     */
     protected array $capabilities = [];
 
     /**
-     * @param $name
-     * @param $uri
+     * @param string $name
+     * @param string $uri
      *
-     * @return $this
+     * @return self
      */
-    public function add($name, $uri): static
+    public function add(string $name, string $uri): self
     {
         $parts = [];
         $new_uri = null;
-        $parse_results = parse_url((string) $uri);
+        $parse_results = parse_url($uri);
         if (!array_key_exists('host', $parse_results) || !$parse_results['host']) {
             // relative URL given, so build this into an absolute URL
             $login_url = $this->get('Login');
@@ -39,11 +42,11 @@ class Capabilities
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
-     * @return null
+     * @return ?string
      */
-    public function get($name)
+    public function get(string $name): ?string
     {
         return $this->capabilities[$name] ?? null;
     }

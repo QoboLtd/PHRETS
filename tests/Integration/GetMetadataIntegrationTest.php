@@ -27,7 +27,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
 
         $system = $session->GetSystemMetadata();
         $this->assertTrue($system instanceof \PHRETS\Models\Metadata\System);
-        $this->assertSame('demomls', $system->getSystemId());
+        $this->assertSame('demomls', $system->getSystemID());
     }
 
     /** @test **/
@@ -44,7 +44,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     public function itSeesSomeAttributes()
     {
         $system = $this->session->GetSystemMetadata();
-        $this->assertSame('demomls', $system->getSystemId());
+        $this->assertSame('demomls', $system->getSystemID());
         $this->assertSame('-05:00', $system->getTimeZoneOffset());
     }
 

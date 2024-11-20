@@ -17,8 +17,7 @@ class Configuration
     protected $login_url;
     protected $user_agent = 'PHRETS/2.6.4';
     protected $user_agent_password;
-    /** @var RETSVersion */
-    protected $rets_version;
+    protected RETSVersion $rets_version;
     protected $http_authentication = 'digest';
     /** @var \PHRETS\Strategies\Strategy */
     protected $strategy;
@@ -62,7 +61,7 @@ class Configuration
     }
 
     /**
-     * @return RETSVersion
+     * @return \PHRETS\Versions\RETSVersion
      */
     public function getRetsVersion()
     {
@@ -156,13 +155,13 @@ class Configuration
     }
 
     /**
-     * @param array $configuration
+     * @param array<string,string> $configuration
      *
-     * @return static
+     * @return self
      *
-     * @throws Exceptions\InvalidConfiguration
+     * @throws \PHRETS\Exceptions\InvalidConfiguration
      */
-    public static function load($configuration = [])
+    public static function load(array $configuration = []): self
     {
         $variables = [
             'username' => 'Username',
@@ -199,7 +198,7 @@ class Configuration
     }
 
     /**
-     * @return Strategies\Strategy
+     * @return \PHRETS\Strategies\Strategy
      */
     public function getStrategy()
     {

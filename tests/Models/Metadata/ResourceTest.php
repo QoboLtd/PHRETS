@@ -21,6 +21,7 @@ class ResourceTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
         $metadata = new Resource();
+        // @phpstan-ignore-next-line method.notFound
         $metadata->totallyBogus();
     }
 
@@ -28,6 +29,7 @@ class ResourceTest extends TestCase
     public function itReturnsNullForUnrecognizedAttributes()
     {
         $metadata = new Resource();
+        // @phpstan-ignore-next-line method.notFound
         $this->assertNull($metadata->getSomethingFake());
     }
 

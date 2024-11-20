@@ -2,16 +2,15 @@
 
 namespace PHRETS\Http;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use SimpleXMLElement;
 
 /**
  * Class Response.
  *
- * @method ResponseInterface|StreamInterface getBody
- * @method array getHeaders
+ * @method int getStatusCode()
+ * @method \Psr\Http\Message\StreamInterface getBody()
+ * @method array getHeaders()
  */
 class Response
 {
@@ -20,7 +19,7 @@ class Response
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function xml(): SimpleXMLElement
     {

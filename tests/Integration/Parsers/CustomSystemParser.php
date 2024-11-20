@@ -10,7 +10,7 @@ class CustomSystemParser
         $metadata = new \PHRETS\Models\Metadata\System();
 
         $metadata->setSession($rets);
-        $metadata->setSystemId('custom');
+        $metadata->setSystemID('custom');
 
         return $metadata;
     }

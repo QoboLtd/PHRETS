@@ -44,7 +44,7 @@ class SearchIntegrationTest extends BaseIntegration
     /** @test **/
     public function itLimitsFields()
     {
-        /** @var PHRETS\Models\Search\Results $results */
+        /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => 'LIST_1,LIST_105']);
         $this->assertContains('LIST_1', $results->getHeaders());
         $this->assertCount(2, $results->getHeaders());
@@ -54,7 +54,7 @@ class SearchIntegrationTest extends BaseIntegration
     /** @test **/
     public function itLimitsFieldsWithAnArray()
     {
-        /** @var PHRETS\Models\Search\Results $results */
+        /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
         $this->assertContains('LIST_1', $results->getHeaders());
         $this->assertCount(2, $results->getHeaders());
@@ -64,7 +64,7 @@ class SearchIntegrationTest extends BaseIntegration
     /** @test **/
     public function itProvidesAccessToAssociatedMetadata()
     {
-        /** @var PHRETS\Models\Search\Results $results */
+        /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
         $this->assertInstanceOf('\Illuminate\Support\Collection', $results->getMetadata());
         $this->assertInstanceOf('\PHRETS\Models\Metadata\Table', $results->getMetadata()->first());

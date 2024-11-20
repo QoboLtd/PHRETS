@@ -3,7 +3,6 @@
 namespace PHRETS\Strategies;
 
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use PHRETS\Configuration;
 
 class StandardStrategy implements Strategy
@@ -31,7 +30,7 @@ class StandardStrategy implements Strategy
     /**
      * @param $component
      *
-     * @throws BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function provide($component): mixed
     {

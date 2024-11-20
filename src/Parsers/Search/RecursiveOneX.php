@@ -3,7 +3,6 @@
 namespace PHRETS\Parsers\Search;
 
 use PHRETS\Exceptions\AutomaticPaginationError;
-use PHRETS\Exceptions\CapabilityUnavailable;
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Results;
 use PHRETS\Session;
@@ -11,14 +10,14 @@ use PHRETS\Session;
 class RecursiveOneX
 {
     /**
-     * @throws CapabilityUnavailable
-     * @throws AutomaticPaginationError
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\AutomaticPaginationError
      */
     public function parse(Session $rets, Response $response, $parameters): Results
     {
         // we're given the first response automatically, so parse this and start the recursion
 
-        /** @var OneX $parser */
+        /** @var \PHRETS\Parsers\Search\OneX $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide('parser.search');
         $rs = $parser->parse($rets, $response, $parameters);
 

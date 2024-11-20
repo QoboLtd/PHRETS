@@ -3,7 +3,6 @@
 namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Collection;
-use PHRETS\Exceptions\CapabilityUnavailable;
 
 /**
  * Class Resource.
@@ -34,6 +33,7 @@ use PHRETS\Exceptions\CapabilityUnavailable;
  * @method string getValidationExternalDate()
  * @method string getVersion()
  * @method string getDate()
+ * @method void setDescription(string $description)
  */
 class Resource extends Base
 {
@@ -69,9 +69,9 @@ class Resource extends Base
     ];
 
     /**
-     * @return Collection|ResourceClass[]
+     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\ResourceClass[]
      *
-     * @throws CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function getClasses(): Collection|array
     {
@@ -79,9 +79,9 @@ class Resource extends Base
     }
 
     /**
-     * @return Collection|BaseObject[]
+     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
      *
-     * @throws CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function getObject(): Collection|array
     {

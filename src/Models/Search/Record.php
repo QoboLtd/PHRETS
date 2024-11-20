@@ -2,8 +2,6 @@
 
 namespace PHRETS\Models\Search;
 
-use JsonException;
-
 class Record implements \ArrayAccess, \Stringable
 {
     protected ?string $resource = '';
@@ -71,7 +69,7 @@ class Record implements \ArrayAccess, \Stringable
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function toJson(): string
     {
@@ -79,7 +77,7 @@ class Record implements \ArrayAccess, \Stringable
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function __toString(): string
     {
