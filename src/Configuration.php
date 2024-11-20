@@ -3,6 +3,7 @@
 namespace PHRETS;
 
 use PHRETS\Exceptions\InvalidConfiguration;
+use PHRETS\Strategies\SimpleStrategy;
 use PHRETS\Strategies\StandardStrategy;
 use PHRETS\Strategies\Strategy;
 use PHRETS\Versions\RETSVersion;
@@ -19,8 +20,7 @@ class Configuration
     protected $user_agent_password;
     protected RETSVersion $rets_version;
     protected $http_authentication = 'digest';
-    /** @var \PHRETS\Strategies\Strategy */
-    protected $strategy;
+    protected ?Strategy $strategy = null;
     protected $options = [];
 
     public function __construct()
@@ -202,8 +202,8 @@ class Configuration
      */
     public function getStrategy()
     {
-        if (!$this->strategy) {
-            $this->setStrategy(new StandardStrategy());
+        if ($this->strategy === null) {
+            $this->setStrategy(new SimpleStrategy());
         }
 
         return $this->strategy;

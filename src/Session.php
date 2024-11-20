@@ -16,7 +16,6 @@ use PHRETS\Http\Response;
 use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
 use PHRETS\Models\Bulletin;
-use PHRETS\Strategies\StandardStrategy;
 use PHRETS\Strategies\Strategy;
 
 class Session
@@ -600,14 +599,5 @@ class Session
         }
 
         return $defaults;
-    }
-
-    public function setParser(string $parser_name, $parser_object)
-    {
-        $strategy = $this->getConfiguration()->getStrategy();
-        assert($strategy instanceof StandardStrategy);
-
-        $container = $strategy->getContainer();
-        $container->instance($parser_name, $parser_object);
     }
 }

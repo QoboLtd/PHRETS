@@ -32,7 +32,6 @@
     "ext-simplexml": "*",
     "guzzlehttp/guzzle": "^7.2",
     "illuminate/collections": "^11.0",
-    "illuminate/container": "^11.0",
     "league/csv": "^9.7",
     "psr/log": "^3.0"
   },
