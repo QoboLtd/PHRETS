@@ -33,7 +33,7 @@ class StrategyIntegrationTest extends BaseIntegration
             new CustomXMLParser()
         );
 
-        /** @var PHRETS\Models\Search\Results $results */
+        /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
         $this->assertContains('LIST_10000', $results->getHeaders());
         $this->assertNotContains('LIST_1', $results->getHeaders());

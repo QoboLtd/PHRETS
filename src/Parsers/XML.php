@@ -2,14 +2,13 @@
 
 namespace PHRETS\Parsers;
 
-use Exception;
 use PHRETS\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 
 class XML
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function parse($string): \SimpleXMLElement
     {

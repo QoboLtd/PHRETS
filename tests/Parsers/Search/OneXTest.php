@@ -9,7 +9,7 @@ use PHRETS\Session;
 
 class OneXTest extends TestCase
 {
-    /** @var PHRETS\Models\Search\Results */
+    /** @var \PHRETS\Models\Search\Results */
     protected $results;
 
     public function setUp(): void

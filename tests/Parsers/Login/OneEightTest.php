@@ -5,7 +5,7 @@ use PHRETS\Parsers\Login\OneEight;
 
 class OneEightTest extends TestCase
 {
-    /** @var OneEight */
+    /** @var \PHRETS\Parsers\Login\OneEight */
     protected $parser;
 
     public function setUp(): void

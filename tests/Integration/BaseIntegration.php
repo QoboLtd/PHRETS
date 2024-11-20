@@ -1,15 +1,13 @@
 <?php
 
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
-use PHRETS\Session;
 use Psr\Http\Message\RequestInterface;
 
 class BaseIntegration extends TestCase
 {
     protected $client;
-    /** @var Session */
+    /** @var \PHRETS\Session */
     protected $session;
     protected $search_select = [
         'LIST_0', 'LIST_1', 'LIST_5', 'LIST_106', 'LIST_105', 'LIST_15', 'LIST_22', 'LIST_10', 'LIST_30',
@@ -64,7 +62,7 @@ class BaseIntegration extends TestCase
 
     public function attachTo(Client $client)
     {
-        /** @var HandlerStack $stack */
+        /** @var \GuzzleHttp\HandlerStack $stack */
         $stack = $client->getConfig('handler');
         $stack->push($this->onBefore());
         $stack->push($this->onComplete());

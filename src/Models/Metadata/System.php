@@ -3,8 +3,6 @@
 namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Collection;
-use PHRETS\Exceptions\CapabilityUnavailable;
-use PHRETS\Exceptions\MetadataNotFound;
 
 /**
  * Class System.
@@ -33,7 +31,7 @@ class System extends Base
     /**
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Resource[]
      *
-     * @throws MetadataNotFound|CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\MetadataNotFound|\PHRETS\Exceptions\CapabilityUnavailable
      */
     public function getResources(): Collection|array
     {

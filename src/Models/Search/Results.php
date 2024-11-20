@@ -7,9 +7,7 @@ use Closure;
 use Countable;
 use Illuminate\Support\Collection;
 use IteratorAggregate;
-use League\Csv\CannotInsertRecord;
 use League\Csv\Writer;
-use PHRETS\Exceptions\CapabilityUnavailable;
 use PHRETS\Session;
 use SplTempFileObject;
 use Traversable;
@@ -23,7 +21,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     protected int $total_results_count = 0;
     protected int $returned_results_count = 0;
     protected mixed $error = null;
-    /** @var Collection|Record[] */
+    /** @var \Illuminate\Support\Collection|\PHRETS\Models\Search\Record[] */
     protected Collection|array $results;
     protected array $headers = [];
     protected string $restricted_indicator = '****';
@@ -181,7 +179,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return Session
+     * @return \PHRETS\Session
      */
     public function getSession(): ?Session
     {
@@ -201,7 +199,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * @return null
      *
-     * @throws CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function getMetadata()
     {
@@ -324,7 +322,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Return results as a large prepared CSV string.
      *
-     * @throws CannotInsertRecord
+     * @throws \League\Csv\CannotInsertRecord
      */
     public function toCSV(): string
     {

@@ -4,14 +4,13 @@ namespace PHRETS\Parsers\GetMetadata;
 
 use PHRETS\Http\Response;
 use PHRETS\Models\Metadata\System as SystemModel;
-use PHRETS\Parsers\XML;
 use PHRETS\Session;
 
 class System extends Base
 {
     public function parse(Session $rets, Response $response): SystemModel
     {
-        /** @var XML $parser */
+        /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 

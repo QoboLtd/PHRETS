@@ -2,7 +2,6 @@
 
 namespace PHRETS\Http;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use SimpleXMLElement;
 
@@ -20,7 +19,7 @@ class Response
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function xml(): SimpleXMLElement
     {

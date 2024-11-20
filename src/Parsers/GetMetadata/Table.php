@@ -4,14 +4,13 @@ namespace PHRETS\Parsers\GetMetadata;
 
 use Illuminate\Support\Collection;
 use PHRETS\Http\Response;
-use PHRETS\Parsers\XML;
 use PHRETS\Session;
 
 class Table extends Base
 {
     public function parse(Session $rets, Response $response, $keyed_by): Collection
     {
-        /** @var XML $parser */
+        /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 

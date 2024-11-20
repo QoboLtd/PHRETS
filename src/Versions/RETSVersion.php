@@ -26,7 +26,7 @@ class RETSVersion implements \Stringable
      *
      * @return $this
      *
-     * @throws InvalidRETSVersion
+     * @throws \PHRETS\Exceptions\InvalidRETSVersion
      */
     public function setVersion($version): static
     {

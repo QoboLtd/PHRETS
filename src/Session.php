@@ -2,7 +2,6 @@
 
 namespace PHRETS;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\CookieJarInterface;
@@ -16,15 +15,13 @@ use PHRETS\Http\Client as PHRETSClient;
 use PHRETS\Http\Response;
 use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
-use PHRETS\Models\BaseObject;
 use PHRETS\Models\Bulletin;
 use PHRETS\Strategies\StandardStrategy;
 use PHRETS\Strategies\Strategy;
-use Psr\Http\Message\ResponseInterface;
 
 class Session
 {
-    /** @var Capabilities */
+    /** @var \PHRETS\Capabilities */
     protected $capabilities;
     protected ClientInterface $client;
     /** @var \Psr\Log\LoggerInterface */
@@ -60,8 +57,8 @@ class Session
     }
 
     /**
-     * @throws Exceptions\CapabilityUnavailable
-     * @throws Exceptions\MissingConfiguration
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\MissingConfiguration
      * @returns Bulletin
      */
     public function Login()
@@ -113,9 +110,9 @@ class Session
      * @param string $object_ids
      * @param int $location
      *
-     * @return Collection|BaseObject[]
+     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function GetObject($resource, $type, $content_ids, $object_ids = '*', $location = 0): Collection|array
     {
@@ -147,9 +144,9 @@ class Session
     }
 
     /**
-     * @return Models\Metadata\System
+     * @return \PHRETS\Models\Metadata\System
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function GetSystemMetadata()
     {
@@ -159,8 +156,8 @@ class Session
     /**
      * @param string $resource_id
      *
-     * @throws Exceptions\CapabilityUnavailable
-     * @throws Exceptions\MetadataNotFound
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\MetadataNotFound
      */
     public function GetResourcesMetadata($resource_id = null): Collection|\PHRETS\Models\Metadata\Resource
     {
@@ -182,7 +179,7 @@ class Session
     /**
      * @param $resource_id
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function GetClassesMetadata($resource_id)
     {
@@ -196,7 +193,7 @@ class Session
      *
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Table[]
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function GetTableMetadata($resource_id, $class_id, $keyed_by = 'SystemName'): Collection|array
     {
@@ -206,7 +203,7 @@ class Session
     /**
      * @param $resource_id
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function GetObjectMetadata($resource_id)
     {
@@ -217,7 +214,7 @@ class Session
      * @param $resource_id
      * @param $lookup_name
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function GetLookupValues($resource_id, $lookup_name)
     {
@@ -230,7 +227,7 @@ class Session
      * @param $parser
      * @param null $keyed_by
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     protected function MakeMetadataRequest($type, $id, $parser, $keyed_by = null)
     {
@@ -258,7 +255,7 @@ class Session
      *
      * @return \PHRETS\Models\Search\Results
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function Search($resource_id, $class_id, $dmql_query, $optional_parameters = [], $recursive = false): Models\Search\Results
     {
@@ -301,7 +298,7 @@ class Session
     /**
      * @return bool
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function Logout()
     {
@@ -313,7 +310,7 @@ class Session
     /**
      * @return bool
      *
-     * @throws Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function Disconnect()
     {
@@ -327,8 +324,8 @@ class Session
      *
      * @return \PHRETS\Http\Response
      *
-     * @throws CapabilityUnavailable
-     * @throws RETSException
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\RETSException
      */
     protected function request($capability, $options = [], $is_retry = false): Response
     {
@@ -462,7 +459,7 @@ class Session
                 $collection->push($object);
             }
 
-            /** @var BaseObject[] $collection */
+            /** @var \PHRETS\Models\BaseObject[] $collection */
             foreach ($collection as $object) {
                 if ($object->isError() && $object->getError()->getCode() == '20037') {
                     if ($is_retry) {
@@ -493,7 +490,7 @@ class Session
     }
 
     /**
-     * @return Capabilities
+     * @return \PHRETS\Capabilities
      */
     public function getCapabilities()
     {
@@ -501,7 +498,7 @@ class Session
     }
 
     /**
-     * @return Configuration
+     * @return \PHRETS\Configuration
      */
     public function getConfiguration()
     {
@@ -523,7 +520,7 @@ class Session
     }
 
     /**
-     * @return CookieJarInterface
+     * @return \GuzzleHttp\Cookie\CookieJarInterface
      */
     public function getCookieJar()
     {

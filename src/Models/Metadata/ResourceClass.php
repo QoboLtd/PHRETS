@@ -3,7 +3,6 @@
 namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Collection;
-use PHRETS\Exceptions\CapabilityUnavailable;
 
 /**
  * Class ResourceClass.
@@ -47,9 +46,9 @@ class ResourceClass extends Base
     ];
 
     /**
-     * @return Collection|Table[]
+     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Table[]
      *
-     * @throws CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
     public function getTable(): Collection|array
     {

@@ -6,7 +6,7 @@ use PHRETS\Models\Search\Results;
 
 class ResultsTest extends TestCase
 {
-    /** @var Results */
+    /** @var \PHRETS\Models\Search\Results */
     protected $rs;
 
     public function setUp(): void
