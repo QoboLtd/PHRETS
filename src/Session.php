@@ -312,10 +312,10 @@ class Session
      * @param string|null $warning_response
      * @param int $validation_mode
      * @param string $delimiter
-     * @param array $form_params
+     * @param array $additional_parameters
      * @return mixed
-     * @throws CapabilityUnavailable
-     * @throws RETSException
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\RETSException
      */
     public function Update($resource_id, $class_id, $action, string $data, string $warning_response = null, int $validation_mode = 0, string $delimiter = '09', array $additional_parameters = [])
     {
@@ -349,8 +349,8 @@ class Session
      * @param mixed $body
      * @param array $attributes
      * @return mixed
-     * @throws CapabilityUnavailable
-     * @throws RETSException
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\RETSException
      */
     public function PostObject($resource, $type, $content_type, $action, mixed $body, array $attributes = [])
     {
