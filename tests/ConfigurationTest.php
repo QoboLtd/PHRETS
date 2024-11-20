@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Strategies\SimpleStrategy;
+use PHRETS\Strategies\Strategy;
 
 class ConfigurationTest extends TestCase
 {
@@ -89,8 +90,8 @@ class ConfigurationTest extends TestCase
     public function itLoadsAStrategy()
     {
         $config = new Configuration();
-        $this->assertInstanceOf('PHRETS\Strategies\Strategy', $config->getStrategy());
-        $this->assertInstanceOf('PHRETS\Strategies\StandardStrategy', $config->getStrategy());
+        $this->assertInstanceOf(Strategy::class, $config->getStrategy());
+        $this->assertInstanceOf(SimpleStrategy::class, $config->getStrategy());
     }
 
     /** @test **/
