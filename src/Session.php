@@ -17,6 +17,7 @@ use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
 use PHRETS\Models\BaseObject;
 use PHRETS\Models\Bulletin;
+use PHRETS\Strategies\StandardStrategy;
 use PHRETS\Strategies\Strategy;
 use Psr\Http\Message\ResponseInterface;
 
@@ -26,7 +27,7 @@ class Session
     protected $capabilities;
     /** @var Client */
     protected $client;
-    /** @var \PSR\Log\LoggerInterface */
+    /** @var \Psr\Log\LoggerInterface */
     protected $logger;
     protected $rets_session_id;
     protected $cookie_jar;
@@ -162,7 +163,7 @@ class Session
      * @throws Exceptions\CapabilityUnavailable
      * @throws Exceptions\MetadataNotFound
      */
-    public function GetResourcesMetadata($resource_id = null): Collection|Models\Metadata\Resource
+    public function GetResourcesMetadata($resource_id = null): Collection|\PHRETS\Models\Metadata\Resource
     {
         $result = $this->MakeMetadataRequest('METADATA-RESOURCE', 0, 'metadata.resource');
 
@@ -605,10 +606,12 @@ class Session
         return $defaults;
     }
 
-    public function setParser($parser_name, $parser_object)
+    public function setParser(string $parser_name, $parser_object)
     {
-        /** @var Container $container */
-        $container = $this->getConfiguration()->getStrategy()->getContainer();
+        $strategy = $this->getConfiguration()->getStrategy();
+        assert($strategy instanceof StandardStrategy);
+
+        $container = $strategy->getContainer();
         $container->instance($parser_name, $parser_object);
     }
 }

@@ -6,7 +6,7 @@ use PHRETS\Models\Metadata\Base as BaseModel;
 
 class Base
 {
-    protected function loadFromXml(BaseModel $model, $xml, $attributes = null): BaseModel
+    protected function loadFromXml(BaseModel $model, $xml, $attributes = null): void
     {
         foreach ($model->getXmlAttributes() as $attr) {
             if (isset($attributes[$attr])) {
@@ -21,7 +21,5 @@ class Base
                 $model->$method((string) $xml->$attr);
             }
         }
-
-        return $model;
     }
 }

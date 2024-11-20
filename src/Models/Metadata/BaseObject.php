@@ -5,17 +5,17 @@ namespace PHRETS\Models\Metadata;
 /**
  * Class Object.
  *
- * @method string getMetadataEntryID
- * @method string getVisibleName
- * @method string getObjectTimeStamp
- * @method string getObjectCount
- * @method string getObjectType
- * @method string getStandardName
- * @method string getMIMEType
- * @method string getDescription
- * @method string getVersion
- * @method string getDate
- * @method string getResource
+ * @method string getMetadataEntryID()
+ * @method string getVisibleName()
+ * @method string getObjectTimeStamp()
+ * @method string getObjectCount()
+ * @method string getObjectType()
+ * @method string getStandardName()
+ * @method string getMIMEType()
+ * @method string getDescription()
+ * @method string getVersion()
+ * @method string getDate()
+ * @method string getResource()
  */
 class BaseObject extends Base
 {

@@ -29,7 +29,8 @@ class LookupType extends Base
             foreach ($base as $key => $value) {
                 $metadata = new \PHRETS\Models\Metadata\LookupType();
                 $metadata->setSession($rets);
-                $collection->push($this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-LOOKUP_TYPE'}));
+                $this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-LOOKUP_TYPE'});
+                $collection->push($metadata);
             }
         }
 

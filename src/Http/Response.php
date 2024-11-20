@@ -10,8 +10,8 @@ use SimpleXMLElement;
 /**
  * Class Response.
  *
- * @method ResponseInterface|StreamInterface getBody
- * @method array getHeaders
+ * @method \Psr\Http\Message\StreamInterface getBody()
+ * @method array getHeaders()
  */
 class Response
 {

@@ -80,7 +80,7 @@ class SessionIntegrationTest extends BaseIntegration
         $session->Login();
 
         $system = $session->GetSystemMetadata();
-        $this->assertSame('demomls', $system->getSystemId());
+        $this->assertSame('demomls', $system->getSystemID());
 
         $results = $session->Search('Property', 'A', '*', ['Limit' => 1, 'Select' => 'LIST_1']);
         $this->assertCount(1, $results);

@@ -34,6 +34,7 @@ use PHRETS\Exceptions\CapabilityUnavailable;
  * @method string getValidationExternalDate()
  * @method string getVersion()
  * @method string getDate()
+ * @method void setDescription(string $description)
  */
 class Resource extends Base
 {
