@@ -1,5 +1,5 @@
 {
-  "name": "maxlipsky-ca/phrets-php8",
+  "name": "qoboltd/phrets",
   "type": "library",
   "license": "MIT",
   "description": "RETS library in PHP",
@@ -7,8 +7,14 @@
     "rets",
     "mls"
   ],
-  "homepage": "https://github.com/maxlipsky-ca/PHRETS-PHP8",
+  "homepage": "https://github.com/QoboLtd/PHRETS",
   "authors": [
+    {
+      "name": "Qobo Ltd",
+      "email": "hello@qobogroup.com",
+      "homepage": "https://qobogroup.com/",
+      "role": "Developer"
+    },
     {
       "name": "Troy Davisson",
       "email": "troy.davisson@gmail.com",
