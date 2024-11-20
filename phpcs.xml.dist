@@ -13,6 +13,8 @@
         <exclude-pattern>./src/Versions/RETSVersion.php</exclude-pattern>
     </rule>
 
+    <rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses" />
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation" />
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
 

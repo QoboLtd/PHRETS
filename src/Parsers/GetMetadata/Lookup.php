@@ -12,11 +12,11 @@ class Lookup extends Base
         $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 
-        $collection = new Collection;
+        $collection = new Collection();
 
         if ($xml->METADATA) {
             foreach ($xml->METADATA->{'METADATA-LOOKUP'}->Lookup as $key => $value) {
-                $metadata = new \PHRETS\Models\Metadata\Lookup;
+                $metadata = new \PHRETS\Models\Metadata\Lookup();
                 $metadata->setSession($rets);
                 $this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-LOOKUP'});
                 $collection->put($metadata->getLookupName(), $metadata);
