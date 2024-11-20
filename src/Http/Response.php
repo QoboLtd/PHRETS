@@ -40,7 +40,7 @@ class Response
     {
         $headers = $this->response->getHeader($name);
 
-        if ($headers) {
+        if ($headers !== []) {
             return implode('; ', $headers);
         } else {
             return null;

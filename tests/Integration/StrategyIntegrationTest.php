@@ -1,15 +1,16 @@
 <?php
 
+use PHRETS\Parsers\ParserType;
 use PHRETS\Strategies\SimpleStrategy;
 
 class StrategyIntegrationTest extends BaseIntegration
 {
-    private function setParser(string $parser_name, $parser_object)
+    private function setParser(ParserType $parser, mixed $parser_object): void
     {
         $strategy = $this->session->getConfiguration()->getStrategy();
         assert($strategy instanceof SimpleStrategy);
 
-        $strategy->setInstance($parser_name, $parser_object);
+        $strategy->setInstance($parser, $parser_object);
     }
 
     /** @test */
@@ -21,7 +22,7 @@ class StrategyIntegrationTest extends BaseIntegration
          * set a custom parser
          */
         $this->setParser(
-            \PHRETS\Strategies\Strategy::PARSER_METADATA_SYSTEM,
+            ParserType::METADATA_SYSTEM,
             new CustomSystemParser()
         );
 
@@ -39,7 +40,7 @@ class StrategyIntegrationTest extends BaseIntegration
          * set a custom parser
          */
         $this->setParser(
-            \PHRETS\Strategies\Strategy::PARSER_XML,
+            ParserType::XML,
             new CustomXMLParser()
         );
 

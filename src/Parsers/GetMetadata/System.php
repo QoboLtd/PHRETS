@@ -4,6 +4,7 @@ namespace PHRETS\Parsers\GetMetadata;
 
 use PHRETS\Http\Response;
 use PHRETS\Models\Metadata\System as SystemModel;
+use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
 
 class System extends Base
@@ -11,7 +12,7 @@ class System extends Base
     public function parse(Session $rets, Response $response): SystemModel
     {
         /** @var \PHRETS\Parsers\XML $parser */
-        $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
+        $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
         $xml = $parser->parse($response);
 
         $base = $xml->METADATA->{'METADATA-SYSTEM'};

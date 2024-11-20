@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Collection;
 use PHRETS\Http\Response;
+use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
 
 class Lookup extends Base
@@ -9,7 +10,7 @@ class Lookup extends Base
     public function parse(Session $rets, Response $response)
     {
         /** @var \PHRETS\Parsers\XML $parser */
-        $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
+        $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
         $xml = $parser->parse($response);
 
         $collection = new Collection();

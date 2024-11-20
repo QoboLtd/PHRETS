@@ -5,15 +5,15 @@ namespace PHRETS\Parsers\Search;
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
+use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
-use PHRETS\Strategies\Strategy;
 
 class OneX
 {
     public function parse(Session $rets, Response $response, $parameters): Results
     {
         /** @var \PHRETS\Parsers\XML $parser */
-        $parser = $rets->getConfiguration()->getStrategy()->provide(Strategy::PARSER_XML);
+        $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
         $xml = $parser->parse($response);
 
         $rs = new Results();

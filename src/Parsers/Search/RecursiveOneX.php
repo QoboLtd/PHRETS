@@ -5,6 +5,7 @@ namespace PHRETS\Parsers\Search;
 use PHRETS\Exceptions\AutomaticPaginationError;
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Results;
+use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
 
 class RecursiveOneX
@@ -18,7 +19,7 @@ class RecursiveOneX
         // we're given the first response automatically, so parse this and start the recursion
 
         /** @var \PHRETS\Parsers\Search\OneX $parser */
-        $parser = $rets->getConfiguration()->getStrategy()->provide('parser.search');
+        $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::SEARCH);
         $rs = $parser->parse($rets, $response, $parameters);
 
         while ($this->continuePaginating($rets, $parameters, $rs)) {
