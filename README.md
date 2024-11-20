@@ -7,6 +7,10 @@ The purpose of this fork is to:
 3. Improve type safety and static analysis.
 4. Gather improvements/fixes from other forks into the same codebase.
 
+Includes changes from the following forks:
+- [maxlipsky-ca/PHRETS-PHP8](https://github.com/maxlipsky-ca/PHRETS-PHP8)
+- [ocusellinc/PHRETS](https://github.com/ocusellinc/PHRETS)
+
 
 PHRETS
 ======
