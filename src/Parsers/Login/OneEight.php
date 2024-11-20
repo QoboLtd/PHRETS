@@ -2,8 +2,6 @@
 
 namespace PHRETS\Parsers\Login;
 
-use Illuminate\Support\Str;
-
 class OneEight extends OneX
 {
     public function readLine($line): array
@@ -22,7 +20,7 @@ class OneEight extends OneX
             [$info_token_name, $info_token_value] = explode(';', $value, 2);
             $info_token_type = null;
             // see if the optional 3rd part was given
-            if (Str::contains($info_token_value, ';')) {
+            if (str_contains($info_token_value, ';')) {
                 // they included the optional type
                 [$info_token_type, $info_token_value] = explode(';', $info_token_value);
 
