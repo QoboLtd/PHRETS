@@ -1,14 +1,16 @@
-<?php namespace PHRETS\Parsers\Login;
+<?php
+
+namespace PHRETS\Parsers\Login;
 
 class OneFive extends OneX
 {
-    public function readLine($line)
+    public function readLine($line): array
     {
         $name = null;
         $value = null;
 
-        if (strpos($line, '=') !== false) {
-            @list($name, $value) = explode("=", $line, 2);
+        if (str_contains((string) $line, '=')) {
+            @[$name, $value] = explode('=', (string) $line, 2);
         }
 
         return [trim($name), trim($value)];

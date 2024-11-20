@@ -1,18 +1,23 @@
-<?php namespace PHRETS;
+<?php
+
+namespace PHRETS;
 
 class Capabilities
 {
-    protected $capabilities = [];
+    protected array $capabilities = [];
 
     /**
      * @param $name
      * @param $uri
+     *
      * @return $this
      */
-    public function add($name, $uri)
+    public function add($name, $uri): static
     {
-        $parse_results = parse_url($uri);
-        if (!array_key_exists('host', $parse_results) or !$parse_results['host']) {
+        $parts = [];
+        $new_uri = null;
+        $parse_results = parse_url((string) $uri);
+        if (!array_key_exists('host', $parse_results) || !$parse_results['host']) {
             // relative URL given, so build this into an absolute URL
             $login_url = $this->get('Login');
             if (!$login_url) {
@@ -29,15 +34,17 @@ class Capabilities
         }
 
         $this->capabilities[$name] = $uri;
+
         return $this;
     }
 
     /**
      * @param $name
+     *
      * @return null
      */
     public function get($name)
     {
-        return (array_key_exists($name, $this->capabilities)) ? $this->capabilities[$name] : null;
+        return $this->capabilities[$name] ?? null;
     }
 }

@@ -1,31 +1,32 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Versions\RETSVersion;
 
-class RETSVersionTest extends PHPUnit_Framework_TestCase {
-
+class RETSVersionTest extends TestCase
+{
     /** @test **/
-    public function it_loads()
+    public function itLoads()
     {
-        $this->assertSame('1.7.2', (new RETSVersion)->setVersion('1.7.2')->getVersion());
+        $this->assertSame('1.7.2', (new RETSVersion())->setVersion('1.7.2')->getVersion());
     }
 
     /** @test **/
-    public function it_cleans()
+    public function itCleans()
     {
-        $this->assertSame('1.7.2', (new RETSVersion)->setVersion('RETS/1.7.2')->getVersion());
+        $this->assertSame('1.7.2', (new RETSVersion())->setVersion('RETS/1.7.2')->getVersion());
     }
 
     /** @test **/
-    public function it_makes_the_header()
+    public function itMakesTheHeader()
     {
-        $this->assertSame('RETS/1.7.2', (new RETSVersion)->setVersion('1.7.2')->asHeader());
+        $this->assertSame('RETS/1.7.2', (new RETSVersion())->setVersion('1.7.2')->asHeader());
     }
 
     /** @test **/
-    public function it_is_15()
+    public function itIs15()
     {
-        $v = new RETSVersion;
+        $v = new RETSVersion();
         $v->setVersion('RETS/1.5');
 
         $this->assertTrue($v->is1_5());
@@ -33,9 +34,9 @@ class RETSVersionTest extends PHPUnit_Framework_TestCase {
     }
 
     /** @test **/
-    public function it_is_17()
+    public function itIs17()
     {
-        $v = new RETSVersion;
+        $v = new RETSVersion();
         $v->setVersion('RETS/1.7');
 
         $this->assertTrue($v->is1_7());
@@ -46,9 +47,9 @@ class RETSVersionTest extends PHPUnit_Framework_TestCase {
     }
 
     /** @test **/
-    public function it_is_172()
+    public function itIs172()
     {
-        $v = new RETSVersion;
+        $v = new RETSVersion();
         $v->setVersion('RETS/1.7.2');
 
         $this->assertFalse($v->is1_7());
@@ -60,9 +61,9 @@ class RETSVersionTest extends PHPUnit_Framework_TestCase {
     }
 
     /** @test **/
-    public function it_is_18()
+    public function itIs18()
     {
-        $v = new RETSVersion;
+        $v = new RETSVersion();
         $v->setVersion('RETS/1.8');
 
         $this->assertTrue($v->is1_8());
@@ -75,9 +76,9 @@ class RETSVersionTest extends PHPUnit_Framework_TestCase {
     }
 
     /** @test **/
-    public function it_compares()
+    public function itCompares()
     {
-        $v = new RETSVersion;
+        $v = new RETSVersion();
         $v->setVersion('RETS/1.8');
 
         $this->assertTrue($v->isAtLeast('1.5'));
@@ -87,20 +88,20 @@ class RETSVersionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @test
-     * @expectedException \PHRETS\Exceptions\InvalidRETSVersion
      * **/
-    public function it_fails_bad_versions()
+    public function itFailsBadVersions()
     {
-        $v = new RETSVersion;
+        $this->expectException(\PHRETS\Exceptions\InvalidRETSVersion::class);
+        $v = new RETSVersion();
         $v->setVersion('2.0');
     }
 
     /** @test **/
-    public function it_converts_to_string()
+    public function itConvertsToString()
     {
-        $v = new RETSVersion;
+        $v = new RETSVersion();
         $v->setVersion('1.7.2');
 
-        $this->assertSame('RETS/1.7.2', (string)$v);
+        $this->assertSame('RETS/1.7.2', (string) $v);
     }
 }

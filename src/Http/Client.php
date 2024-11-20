@@ -1,16 +1,15 @@
-<?php namespace PHRETS\Http;
+<?php
+
+namespace PHRETS\Http;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 
 class Client
 {
-    protected static $client;
+    protected static ?GuzzleClient $client = null;
 
-    /**
-     * @return GuzzleClient
-     */
-    public static function make($options = [])
+    public static function make(array $options = []): GuzzleClient
     {
         if (!self::$client) {
             self::$client = new GuzzleClient($options);

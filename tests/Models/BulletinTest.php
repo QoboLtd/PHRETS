@@ -1,19 +1,20 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Bulletin;
 
-class BulletinTest extends PHPUnit_Framework_TestCase {
-
+class BulletinTest extends TestCase
+{
     /** @test **/
-    public function it_holds()
+    public function itHolds()
     {
-        $this->assertSame('Hello World', (new Bulletin)->setBody('Hello World')->getBody());
+        $this->assertSame('Hello World', (new Bulletin())->setBody('Hello World')->getBody());
     }
 
     /** @test **/
-    public function it_turns_itself_into_a_string()
+    public function itTurnsItselfIntoAString()
     {
-        $this->assertSame('Hello World', (string)(new Bulletin)->setBody('Hello World'));
+        $this->assertSame('Hello World', (string) (new Bulletin())->setBody('Hello World'));
     }
 
     public function testDetailsAreMadeAvailable()

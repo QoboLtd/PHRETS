@@ -3,7 +3,7 @@
 class GetObjectIntegrationTest extends BaseIntegration
 {
     /** @test */
-    public function it_fetches_objects()
+    public function itFetchesObjects()
     {
         $objects = $this->session->GetObject('Property', 'Photo', '14-52', '*', 0);
         $this->assertTrue($objects instanceof \Illuminate\Support\Collection);
@@ -11,7 +11,7 @@ class GetObjectIntegrationTest extends BaseIntegration
     }
 
     /** @test */
-    public function it_fetches_primary_object()
+    public function itFetchesPrimaryObject()
     {
         $objects = $this->session->GetObject('Property', 'Photo', '00-1669', 0, 1);
         $this->assertTrue($objects instanceof \Illuminate\Support\Collection);
@@ -25,14 +25,14 @@ class GetObjectIntegrationTest extends BaseIntegration
     }
 
     /** @test **/
-    public function it_sees_primary_as_preferred()
+    public function itSeesPrimaryAsPreferred()
     {
         $object = $this->session->GetPreferredObject('Property', 'Photo', '00-1669', 1);
         $this->assertTrue($object->isPreferred());
     }
 
     /** @test */
-    public function it_sees_locations_despite_xml_being_returned()
+    public function itSeesLocationsDespiteXmlBeingReturned()
     {
         $object = $this->session->GetObject('Property', 'Photo', 'URLS-WITH-XML', '*', 1);
 

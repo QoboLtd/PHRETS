@@ -1,20 +1,23 @@
-<?php namespace PHRETS\Parsers\Search;
+<?php
+
+namespace PHRETS\Parsers\Search;
 
 use PHRETS\Http\Response;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
+use PHRETS\Parsers\XML;
 use PHRETS\Session;
 use PHRETS\Strategies\Strategy;
 
 class OneX
 {
-    public function parse(Session $rets, Response $response, $parameters)
+    public function parse(Session $rets, Response $response, $parameters): Results
     {
-        /** @var \PHRETS\Parsers\XML $parser */
+        /** @var XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 
-        $rs = new Results;
+        $rs = new Results();
         $rs->setSession($rets)
             ->setResource($parameters['SearchType'])
             ->setClass($parameters['Class']);
@@ -48,30 +51,27 @@ class OneX
     }
 
     /**
-     * @param Session $rets
      * @param $xml
      * @param $parameters
-     * @return string
      */
-    protected function getDelimiter(Session $rets, $xml, $parameters)
+    protected function getDelimiter(Session $rets, $xml, $parameters): string
     {
-        if (isset($xml->DELIMITER)) {
+        if (property_exists($xml, 'DELIMITER') && $xml->DELIMITER !== null) {
             // delimiter found so we have at least a COLUMNS row to parse
             return chr("{$xml->DELIMITER->attributes()->value}");
         } else {
             // assume tab delimited since it wasn't given
             $rets->debug('Assuming TAB delimiter since none specified in response');
-            return chr("09");
+
+            return chr('09');
         }
     }
 
     /**
-     * @param Session $rets
      * @param $xml
      * @param $parameters
-     * @return string|null
      */
-    protected function getRestrictedIndicator(Session $rets, &$xml, $parameters)
+    protected function getRestrictedIndicator(Session $rets, &$xml, $parameters): ?string
     {
         if (array_key_exists('RestrictedIndicator', $parameters)) {
             return $parameters['RestrictedIndicator'];
@@ -80,7 +80,7 @@ class OneX
         }
     }
 
-    protected function getColumnNames(Session $rets, &$xml, $parameters)
+    protected function getColumnNames(Session $rets, &$xml, $parameters): array
     {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
@@ -89,12 +89,12 @@ class OneX
         $column_names = "{$xml->COLUMNS[0]}";
 
         // Take out the first delimiter
-        if (substr($column_names, 0, $delimLength) == $delim) {
+        if (substr($column_names, 0, $delimLength) === $delim) {
             $column_names = substr($column_names, $delimLength);
         }
 
         // Take out the last delimiter
-        if (substr($column_names, -$delimLength) == $delim) {
+        if (substr($column_names, -$delimLength) === $delim) {
             $column_names = substr($column_names, 0, -$delimLength);
         }
 
@@ -104,28 +104,28 @@ class OneX
 
     protected function parseRecords(Session $rets, &$xml, $parameters, Results $rs)
     {
-        if (isset($xml->DATA)) {
+        if (property_exists($xml, 'DATA') && $xml->DATA !== null) {
             foreach ($xml->DATA as $line) {
                 $rs->addRecord($this->parseRecordFromLine($rets, $xml, $parameters, $line, $rs));
             }
         }
     }
 
-    protected function parseRecordFromLine(Session $rets, &$xml, $parameters, &$line, Results $rs)
+    protected function parseRecordFromLine(Session $rets, &$xml, $parameters, &$line, Results $rs): Record
     {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
 
-        $r = new Record;
+        $r = new Record();
         $field_data = (string) $line;
 
         // Take out the first delimiter
-        if (substr($field_data, 0, $delimLength) == $delim) {
+        if (substr($field_data, 0, $delimLength) === $delim) {
             $field_data = substr($field_data, $delimLength);
         }
 
         // Take out the last delimiter
-        if (substr($field_data, -$delimLength) == $delim) {
+        if (substr($field_data, -$delimLength) === $delim) {
             $field_data = substr($field_data, 0, -$delimLength);
         }
 
@@ -135,20 +135,21 @@ class OneX
             // assign each value to it's name retrieved in the COLUMNS earlier
             $r->set($name, $field_data[$key]);
         }
+
         return $r;
     }
 
-    protected function getTotalCount(Session $rets, &$xml, $parameters)
+    protected function getTotalCount(Session $rets, &$xml, $parameters): ?int
     {
-        if (isset($xml->COUNT)) {
-            return (int)"{$xml->COUNT->attributes()->Records}";
+        if (property_exists($xml, 'COUNT') && $xml->COUNT !== null) {
+            return (int) "{$xml->COUNT->attributes()->Records}";
         } else {
             return null;
         }
     }
 
-    protected function foundMaxRows(Session $rets, &$xml, $parameters)
+    protected function foundMaxRows(Session $rets, &$xml, $parameters): bool
     {
-        return isset($xml->MAXROWS);
+        return property_exists($xml, 'MAXROWS') && $xml->MAXROWS !== null;
     }
 }

@@ -1,145 +1,107 @@
-<?php namespace PHRETS\Models\Search;
+<?php
 
-class Record implements \ArrayAccess
+namespace PHRETS\Models\Search;
+
+use JsonException;
+
+class Record implements \ArrayAccess, \Stringable
 {
-    protected $resource;
-    protected $class;
-    protected $fields = [];
-    protected $restricted_value = '****';
-    protected $values = [];
+    protected ?string $resource = '';
+    protected ?string $class = '';
+    protected array $fields = [];
+    protected ?string $restricted_value = '****';
+    protected array $values = [];
 
-    /**
-     * @param $field
-     * @return string|null
-     */
-    public function get($field)
+    public function get(string $field): mixed
     {
-        return (array_key_exists((string)$field, $this->values)) ? $this->values[(string)$field] : null;
+        return $this->values[$field] ?? null;
     }
 
     /**
-     * @param $field
      * @param $value
      */
-    public function set($field, $value)
+    public function set(string $field, $value)
     {
-        $this->values[(string)$field] = $value;
+        $this->values[$field] = $value;
     }
 
-    /**
-    * @param $field
-    */
-    public function remove($field)
+    public function remove(string $field)
     {
-      unset($this->values[(string)$field]);
+        unset($this->values[$field]);
     }
 
-    /**
-     * @param $field
-     * @return bool
-     */
-    public function isRestricted($field)
+    public function isRestricted(string $field): bool
     {
         $val = $this->get($field);
-        return ($val == $this->restricted_value);
+
+        return $val === $this->restricted_value;
     }
 
     /**
-     * @param Results $results
      * @return $this
      */
-    public function setParent(Results $results)
+    public function setParent(Results $results): static
     {
         $this->resource = $results->getResource();
         $this->class = $results->getClass();
         $this->restricted_value = $results->getRestrictedIndicator();
         $this->fields = $results->getHeaders();
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getResource()
+    public function getResource(): string
     {
         return $this->resource;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * @return array
-     */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->values;
     }
 
     /**
-     * @return string
+     * @throws JsonException
      */
-    public function toJson()
+    public function toJson(): string
     {
-        return json_encode($this->values);
+        return json_encode($this->values, JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @return string
+     * @throws JsonException
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toJson();
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->values);
     }
 
-    /**
-     * @param mixed $offset
-     * @return null|string
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): ?string
     {
         return $this->get($offset);
     }
 
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->set($offset, $value);
     }
 
-    /**
-     * @param mixed $offset
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         if (array_key_exists($offset, $this->values)) {
             unset($this->values[$offset]);

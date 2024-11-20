@@ -1,18 +1,21 @@
-<?php namespace PHRETS\Parsers\GetMetadata;
+<?php
 
-use PHRETS\Http\Response;
+namespace PHRETS\Parsers\GetMetadata;
+
 use Illuminate\Support\Collection;
+use PHRETS\Http\Response;
+use PHRETS\Parsers\XML;
 use PHRETS\Session;
 
 class LookupType extends Base
 {
-    public function parse(Session $rets, Response $response)
+    public function parse(Session $rets, Response $response): Collection
     {
-        /** @var \PHRETS\Parsers\XML $parser */
+        /** @var XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(\PHRETS\Strategies\Strategy::PARSER_XML);
         $xml = $parser->parse($response);
 
-        $collection = new Collection;
+        $collection = new Collection();
 
         if ($xml->METADATA) {
 
@@ -24,7 +27,7 @@ class LookupType extends Base
             }
 
             foreach ($base as $key => $value) {
-                $metadata = new \PHRETS\Models\Metadata\LookupType;
+                $metadata = new \PHRETS\Models\Metadata\LookupType();
                 $metadata->setSession($rets);
                 $collection->push($this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-LOOKUP_TYPE'}));
             }

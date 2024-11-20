@@ -1,24 +1,24 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 
-class RecordTest extends PHPUnit_Framework_TestCase
+class RecordTest extends TestCase
 {
-
     /** @test **/
-    public function it_holds_values()
+    public function itHoldsValues()
     {
-        $r = new Record;
+        $r = new Record();
         $r->set('name', 'value');
 
         $this->assertSame('value', $r->get('name'));
     }
 
     /** @test **/
-    public function it_holds_multiple_values()
+    public function itHoldsMultipleValues()
     {
-        $r = new Record;
+        $r = new Record();
         $r->set('one', '1');
         $r->set(2, 'two');
         $r->set(3, 'three');
@@ -29,12 +29,12 @@ class RecordTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_detects_restricted_values()
+    public function itDetectsRestrictedValues()
     {
-        $rs = new Results;
+        $rs = new Results();
         $rs->setRestrictedIndicator('RESTRICTED');
 
-        $r = new Record;
+        $r = new Record();
         $r->set('name', 'value');
         $r->set('another', $rs->getRestrictedIndicator());
         $rs->addRecord($r);
@@ -44,9 +44,9 @@ class RecordTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_changes_to_array()
+    public function itChangesToArray()
     {
-        $r = new Record;
+        $r = new Record();
         $r->set('ListingID', '123456789');
         $r->set('MLS', 'demo');
 
@@ -54,25 +54,25 @@ class RecordTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_changes_to_json()
+    public function itChangesToJson()
     {
-        $r = new Record;
+        $r = new Record();
         $r->set('ListingID', '123456789');
         $r->set('MLS', 'demo');
 
         $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', $r->toJson());
-        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', (string)$r);
+        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', (string) $r);
     }
 
     /** @test **/
-    public function it_accesses_parent_given_attributes()
+    public function itAccessesParentGivenAttributes()
     {
-        $rs = new Results;
+        $rs = new Results();
         $rs->setResource('Property');
         $rs->setClass('A');
         $rs->setHeaders(['LIST_1', 'LIST_2', 'LIST_3']);
 
-        $r = new Record;
+        $r = new Record();
         $rs->addRecord($r);
 
         foreach ($rs as $r) {
@@ -83,9 +83,9 @@ class RecordTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_allows_array_access()
+    public function itAllowsArrayAccess()
     {
-        $r = new Record;
+        $r = new Record();
         $r->set('one', '1');
         $r->set(2, 'two');
         $r->set(3, 'three');

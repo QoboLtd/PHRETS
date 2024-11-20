@@ -1,8 +1,14 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
+
+use Illuminate\Support\Collection;
+use PHRETS\Exceptions\CapabilityUnavailable;
+use PHRETS\Exceptions\MetadataNotFound;
 
 /**
- * Class System
- * @package PHRETS\Models\Metadata
+ * Class System.
+ *
  * @method string getSystemID
  * @method string getSystemDescription
  * @method string getTimeZoneOffset
@@ -11,7 +17,7 @@
  */
 class System extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'SystemID',
         'SystemDescription',
         'TimeZoneOffset',
@@ -20,10 +26,11 @@ class System extends Base
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Resource[]
-     * @throws \PHRETS\Exceptions\MetadataNotFound
+     * @return Collection|resource[]
+     *
+     * @throws MetadataNotFound|CapabilityUnavailable
      */
-    public function getResources()
+    public function getResources(): Collection|array
     {
         return $this->getSession()->GetResourcesMetadata();
     }

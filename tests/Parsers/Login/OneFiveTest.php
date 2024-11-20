@@ -1,16 +1,17 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Parsers\Login\OneFive;
 
-class OneFiveTest extends PHPUnit_Framework_TestCase {
-
+class OneFiveTest extends TestCase
+{
     /** @var OneFive */
     protected $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->parser = new OneFive;
-        $this->parser->parse("
+        $this->parser = new OneFive();
+        $this->parser->parse('
 MemberName=UNKNOWN
 User=unk,MASTER,4,1234567890
 Broker=UNKNOWN
@@ -22,36 +23,36 @@ GetMetadata=/rets1_5/GetMetadata
 X-SampleLinks=/rets1_5/Links
 GetObject=/rets1_5/GetObject
 Logout=/rets1_5/Logout
-        ");
+        ');
     }
 
     /** @test **/
-    public function it_sees_all_transactions()
+    public function itSeesAllTransactions()
     {
         $this->assertSame(6, count($this->parser->getCapabilities()));
     }
 
     /** @test **/
-    public function it_sees_core_transactions()
+    public function itSeesCoreTransactions()
     {
         $this->assertSame('/rets1_5/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/rets1_5/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
     /** @test **/
-    public function it_sees_custom_transactions()
+    public function itSeesCustomTransactions()
     {
         $this->assertSame('/rets1_5/Links', $this->parser->getCapabilities()['X-SampleLinks']);
     }
 
     /** @test **/
-    public function it_sees_all_details()
+    public function itSeesAllDetails()
     {
         $this->assertSame(5, count($this->parser->getDetails()));
     }
 
     /** @test **/
-    public function it_sees_user_details()
+    public function itSeesUserDetails()
     {
         $this->assertSame('unk,MASTER,4,1234567890', $this->parser->getDetails()['User']);
     }

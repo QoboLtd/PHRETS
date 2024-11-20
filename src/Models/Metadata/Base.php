@@ -1,151 +1,150 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 use Illuminate\Support\Arr;
+use PHRETS\Session;
 
 abstract class Base implements \ArrayAccess
 {
-    /** @var \PHRETS\Session */
-    protected $session;
-    protected $elements = [];
-    protected $attributes = [];
-    protected $values = [];
+    protected Session $session;
+    protected array $elements = [];
+    protected array $attributes = [];
+    protected array $values = [];
 
-    /**
-     * @return \PHRETS\Session
-     */
-    public function getSession()
+    public function getSession(): Session
     {
         return $this->session;
     }
 
     /**
-     * @param mixed $session
      * @return $this
      */
-    public function setSession($session)
+    public function setSession(Session $session): static
     {
         $this->session = $session;
+
         return $this;
     }
 
     /**
-     * @param $name
-     * @param array $args
      * @return $this|mixed|null
      */
-    public function __call($name, $args = [])
+    public function __call(mixed $name, array $args = [])
     {
-        $name = strtolower($name);
+        $name = strtolower((string) $name);
         $action = substr($name, 0, 3);
 
         if ($action === 'set') {
             foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-                if (strtolower('set' . $attr) == $name) {
+                if (strtolower('set' . $attr) === $name) {
                     $this->values[$attr] = $args[0];
                     break;
                 }
             }
+
             return $this;
         } elseif ($action === 'get') {
             foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-                if (strtolower('get' . $attr) == $name) {
+                if (strtolower('get' . $attr) === $name) {
                     return Arr::get($this->values, $attr);
                 }
             }
+
             return null;
         }
 
-        throw new \BadMethodCallException;
+        throw new \BadMethodCallException();
     }
 
-    /**
-     * @return array
-     */
-    public function getXmlElements()
+    public function getXmlElements(): array
     {
         return $this->elements;
     }
 
-    /**
-     * @return array
-     */
-    public function getXmlAttributes()
+    public function getXmlAttributes(): array
     {
         return $this->attributes;
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * Whether a offset exists.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
      * @param mixed $offset <p>
      * An offset to check for.
      * </p>
-     * @return boolean true on success or false on failure.
+     *
+     * @return bool true on success or false on failure.
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-            if (strtolower($attr) == strtolower($offset)) {
+            if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * Offset to retrieve.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetget.php
+     *
      * @param mixed $offset <p>
      * The offset to retrieve.
      * </p>
+     *
      * @return mixed Can return all value types.
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
-            if (strtolower($attr) == strtolower($offset)) {
+            if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return Arr::get($this->values, $attr);
             }
         }
+
         return null;
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * Offset to set.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetset.php
+     *
      * @param mixed $offset <p>
      * The offset to assign the value to.
      * </p>
      * @param mixed $value <p>
      * The value to set.
      * </p>
-     * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->values[$offset] = $value;
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * Offset to unset.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
      * @param mixed $offset <p>
      * The offset to unset.
      * </p>
-     * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         if ($this->offsetExists($offset)) {
             unset($this->values[$offset]);

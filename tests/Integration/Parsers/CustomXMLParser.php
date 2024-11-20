@@ -12,6 +12,7 @@ class CustomXMLParser
         }
 
         $string = str_replace('LIST_1', 'LIST_10000', $string);
+
         return new \SimpleXMLElement((string) $string);
     }
 }

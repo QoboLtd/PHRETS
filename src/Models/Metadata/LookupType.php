@@ -1,8 +1,9 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
 
 /**
- * Class LookupType
- * @package PHRETS\Models\Metadata
+ * Class LookupType.
  *
  * @method string getValue
  * @method string getLongValue
@@ -15,13 +16,13 @@
  */
 class LookupType extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'MetadataEntryID',
         'LongValue',
         'ShortValue',
         'Value',
     ];
-    protected $attributes = [
+    protected array $attributes = [
         'Version',
         'Date',
         'Resource',

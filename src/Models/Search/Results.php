@@ -1,54 +1,55 @@
-<?php namespace PHRETS\Models\Search;
+<?php
 
-use Closure;
-use Illuminate\Support\Collection;
-use Countable;
+namespace PHRETS\Models\Search;
+
 use ArrayAccess;
+use Closure;
+use Countable;
+use Illuminate\Support\Collection;
 use IteratorAggregate;
+use League\Csv\CannotInsertRecord;
 use League\Csv\Writer;
+use PHRETS\Exceptions\CapabilityUnavailable;
+use PHRETS\Session;
 use SplTempFileObject;
+use Traversable;
 
 class Results implements Countable, ArrayAccess, IteratorAggregate
 {
-    protected $resource;
-    protected $class;
-    /** @var \PHRETS\Session */
-    protected $session;
-    protected $metadata = null;
-    protected $total_results_count = 0;
-    protected $returned_results_count = 0;
-    protected $error = null;
-    /** @var \Illuminate\Support\Collection|\PHRETS\Models\Search\Record[] */
-    protected $results;
-    protected $headers = [];
-    protected $restricted_indicator = '****';
-    protected $maxrows_reached = false;
+    protected ?string $resource = '';
+    protected ?string $class = '';
+    protected ?Session $session = null;
+    protected mixed $metadata = null;
+    protected int $total_results_count = 0;
+    protected int $returned_results_count = 0;
+    protected mixed $error = null;
+    /** @var Collection|Record[] */
+    protected Collection|array $results;
+    protected array $headers = [];
+    protected string $restricted_indicator = '****';
+    protected bool $maxrows_reached = false;
 
     public function __construct()
     {
-        $this->results = new Collection;
+        $this->results = new Collection();
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
 
     /**
-     * @param array $headers
      * @return $this
      */
-    public function setHeaders($headers)
+    public function setHeaders(array $headers): static
     {
         $this->headers = $headers;
+
         return $this;
     }
 
     /**
-     * @param Record $record
      * @param null $keyed_by
      */
     public function addRecord(Record $record, $keyed_by = null)
@@ -68,26 +69,25 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Set which field's value will be used to key the records by
+     * Set which field's value will be used to key the records by.
      *
      * @param $field
      */
     public function keyResultsBy($field)
     {
         $results = clone $this->results;
-        $this->results = new Collection;
+        $this->results = new Collection();
         foreach ($results as $r) {
             $this->addRecord($r, $field);
         }
     }
 
     /**
-     * Grab a record by it's tracked key
+     * Grab a record by it's tracked key.
      *
      * @param $key_id
-     * @return Record
      */
-    public function find($key_id)
+    public function find($key_id): ?Record
     {
         return $this->results->get($key_id);
     }
@@ -102,272 +102,234 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * @param null $error
+     *
      * @return $this
      */
-    public function setError($error)
+    public function setError($error): static
     {
         $this->error = $error;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getReturnedResultsCount()
+    public function getReturnedResultsCount(): int
     {
         return $this->returned_results_count;
     }
 
     /**
-     * @param int $returned_results_count
      * @return $this
      */
-    public function setReturnedResultsCount($returned_results_count)
+    public function setReturnedResultsCount(int $returned_results_count): static
     {
         if (is_int($returned_results_count) == false) {
             throw new \InvalidArgumentException('$returned_results_count should be an integer');
         }
 
         $this->returned_results_count = $returned_results_count;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getTotalResultsCount()
+    public function getTotalResultsCount(): int
     {
         return $this->total_results_count;
     }
 
     /**
-     * @param int $total_results_count
      * @return $this
      */
-    public function setTotalResultsCount($total_results_count)
+    public function setTotalResultsCount(int $total_results_count): static
     {
         if (is_int($total_results_count) == false) {
             throw new \InvalidArgumentException('$total_results_count should be an integer');
         }
 
         $this->total_results_count = $total_results_count;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): ?string
     {
         return $this->class;
     }
 
     /**
-     * @param string $class
      * @return $this
      */
-    public function setClass($class)
+    public function setClass(string $class): static
     {
         $this->class = $class;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getResource()
+    public function getResource(): ?string
     {
         return $this->resource;
     }
 
     /**
-     * @param string $resource
      * @return $this
      */
-    public function setResource($resource)
+    public function setResource(string $resource): static
     {
         $this->resource = $resource;
+
         return $this;
     }
 
     /**
-     * @return \PHRETS\Session
+     * @return Session
      */
-    public function getSession()
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
     /**
-     * @param \PHRETS\Session $session
      * @return $this
      */
-    public function setSession($session)
+    public function setSession(Session $session): static
     {
         $this->session = $session;
+
         return $this;
     }
 
     /**
      * @return null
+     *
+     * @throws CapabilityUnavailable
      */
     public function getMetadata()
     {
         if (!$this->metadata) {
             $this->metadata = $this->session->GetTableMetadata($this->getResource(), $this->getClass());
         }
+
         return $this->metadata;
     }
 
     /**
      * @param null $metadata
+     *
      * @return $this
      */
-    public function setMetadata($metadata)
+    public function setMetadata($metadata): static
     {
         $this->metadata = $metadata;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRestrictedIndicator()
+    public function getRestrictedIndicator(): string
     {
         return $this->restricted_indicator;
     }
 
     /**
      * @param $indicator
+     *
      * @return $this
      */
-    public function setRestrictedIndicator($indicator)
+    public function setRestrictedIndicator($indicator): static
     {
         $this->restricted_indicator = $indicator;
+
         return $this;
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return $this->results->getIterator();
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return $this->results->offsetExists($offset);
     }
 
-    /**
-     * @param mixed $offset
-     * @return Record|null
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->results->offsetGet($offset);
     }
 
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset) {
-            $this->addRecord($value, function () use ($offset) { return $offset; });
+            $this->addRecord($value, fn () => $offset);
         } else {
             $this->addRecord($value);
         }
     }
 
-    /**
-     * @param mixed $offset
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         $this->results->offsetUnset($offset);
     }
 
-    /**
-     * @return int
-     */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return $this->results->count();
     }
 
     /**
-     * @param callable $callback
      * @param null $default
-     * @return Record|null
      */
-    public function first(Closure $callback = null, $default = null)
+    public function first(Closure $callback = null, $default = null): ?Record
     {
         return $this->results->first($callback, $default);
     }
 
-    /**
-     * @return Record|null
-     */
-    public function last()
+    public function last(): ?Record
     {
         return $this->results->last();
     }
 
-    /**
-     * @return bool
-     */
-    public function isMaxRowsReached()
+    public function isMaxRowsReached(): bool
     {
-        return ($this->maxrows_reached == true);
+        return $this->maxrows_reached == true;
     }
 
     /**
-     * @param bool $boolean
      * @return $this
      */
-    public function setMaxRowsReached($boolean = true)
+    public function setMaxRowsReached(bool $boolean = true): static
     {
         $this->maxrows_reached = $boolean;
+
         return $this;
     }
 
     /**
-     * Returns an array containing the values from the given field
+     * Returns an array containing the values from the given field.
      *
      * @param $field
-     * @return array
      */
-    public function lists($field)
+    public function lists($field): array
     {
         $l = [];
         foreach ($this->results as $r) {
             $v = $r->get($field);
-            if ($v and !$r->isRestricted($field)) {
+            if ($v && !$r->isRestricted($field)) {
                 $l[] = $v;
             }
         }
+
         return $l;
     }
 
     /**
-     * Return results as a large prepared CSV string
+     * Return results as a large prepared CSV string.
      *
-     * @return string
+     * @throws CannotInsertRecord
      */
-    public function toCSV()
+    public function toCSV(): string
     {
         // create a temporary file so we can write the CSV out
-        $writer = Writer::createFromFileObject(new SplTempFileObject);
+        $writer = Writer::createFromFileObject(new SplTempFileObject());
 
         // add the header line
         $writer->insertOne($this->getHeaders());
@@ -388,26 +350,25 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Return results as a JSON string
+     * Return results as a JSON string.
      *
-     * @return string
+     * @throws \JsonException
      */
-    public function toJSON()
+    public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
     /**
-     * Return results as a simple array
-     *
-     * @return array
+     * Return results as a simple array.
      */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [];
         foreach ($this->results as $r) {
             $result[] = $r->toArray();
         }
+
         return $result;
     }
 }

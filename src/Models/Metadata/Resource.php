@@ -1,8 +1,13 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
+
+use Illuminate\Support\Collection;
+use PHRETS\Exceptions\CapabilityUnavailable;
 
 /**
- * Class Resource
- * @package PHRETS\Models\Metadata
+ * Class Resource.
+ *
  * @method string getResourceID
  * @method string getStandardName
  * @method string getVisibleName
@@ -32,7 +37,7 @@
  */
 class Resource extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'ResourceID',
         'StandardName',
         'VisibleName',
@@ -58,23 +63,27 @@ class Resource extends Base
         'ValidationExternalVersion',
         'ValidationExternalDate',
     ];
-    protected $attributes = [
+    protected array $attributes = [
         'Version',
         'Date',
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\ResourceClass[]
+     * @return Collection|ResourceClass[]
+     *
+     * @throws CapabilityUnavailable
      */
-    public function getClasses()
+    public function getClasses(): Collection|array
     {
         return $this->getSession()->GetClassesMetadata($this->getResourceID());
     }
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
+     * @return Collection|BaseObject[]
+     *
+     * @throws CapabilityUnavailable
      */
-    public function getObject()
+    public function getObject(): Collection|array
     {
         return $this->getSession()->GetObjectMetadata($this->getResourceID());
     }

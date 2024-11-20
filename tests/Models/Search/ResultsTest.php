@@ -1,26 +1,27 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 
-class ResultsTest extends PHPUnit_Framework_TestCase
+class ResultsTest extends TestCase
 {
     /** @var Results */
     protected $rs;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->rs = new Results;
+        $this->rs = new Results();
 
         $this->rs->setHeaders(['id', 'name', 'value']);
 
-        $rc = new Record;
+        $rc = new Record();
         $rc->set('id', 1);
         $rc->set('name', 'left');
         $rc->set('value', 'up');
         $this->rs->addRecord($rc);
 
-        $rc = new Record;
+        $rc = new Record();
         $rc->set('id', 2);
         $rc->set('name', 'right');
         $rc->set('value', 'down');
@@ -28,13 +29,13 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test * */
-    public function it_holds_records()
+    public function itHoldsRecords()
     {
         $this->assertCount(2, $this->rs);
     }
 
     /** @test * */
-    public function it_keys_records()
+    public function itKeysRecords()
     {
         $this->rs->keyResultsBy('id');
 
@@ -44,7 +45,7 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test * */
-    public function it_keys_records_with_closure()
+    public function itKeysRecordsWithClosure()
     {
         $this->rs->keyResultsBy(
             function (Record $record) {
@@ -57,7 +58,7 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_traverses()
+    public function itTraverses()
     {
         $found = false;
         foreach ($this->rs as $rs) {
@@ -69,29 +70,29 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_associates_metadata()
+    public function itAssociatesMetadata()
     {
         $metadata = ['test', 'fields'];
-        $rs = new Results;
+        $rs = new Results();
         $rs->setMetadata($metadata);
 
         $this->assertSame($metadata, $rs->getMetadata());
     }
 
     /** @test **/
-    public function it_tracks_headers()
+    public function itTracksHeaders()
     {
         $fields = ['A', 'B', 'C', 'D', 'E'];
-        $rs = new Results;
+        $rs = new Results();
         $rs->setHeaders($fields);
 
         $this->assertSame($fields, $rs->getHeaders());
     }
 
     /** @test **/
-    public function it_tracks_counts()
+    public function itTracksCounts()
     {
-        $rs = new Results;
+        $rs = new Results();
         $rs->setTotalResultsCount(1000);
         $rs->setReturnedResultsCount(500);
 
@@ -100,9 +101,9 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_tracks_resources_and_classes()
+    public function itTracksResourcesAndClasses()
     {
-        $rs = new Results;
+        $rs = new Results();
         $rs->setResource('Property');
         $rs->setClass('A');
 
@@ -111,15 +112,15 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_allows_array_accessing_keyed_results()
+    public function itAllowsArrayAccessingKeyedResults()
     {
-        $r = new Record;
+        $r = new Record();
         $r->set('id', 'extra');
         $r->set('name', 'test');
 
         $this->rs['extra'] = $r;
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', 'bonus');
         $r->set('name', 'test');
         $this->rs[] = $r;
@@ -133,39 +134,42 @@ class ResultsTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($this->rs['extra']));
         $this->assertTrue(isset($this->rs['bonus']));
     }
-    
+
     /** @test **/
-    public function it_holds_errors()
+    public function itHoldsErrors()
     {
-        $rs = new Results;
+        $rs = new Results();
         $rs->setError('test');
         $this->assertSame('test', $rs->getError());
     }
-    
+
     /** @test **/
-    public function it_holds_a_session()
+    public function itHoldsASession()
     {
-        $rs = new Results;
-        $rs->setSession('test');
-        $this->assertSame('test', $rs->getSession());
+        $rs = new Results();
+        $config = new \PHRETS\Configuration();
+        $config->setLoginUrl('https://www.test-rets.com/login');
+        $session = new \PHRETS\Session($config);
+        $rs->setSession($session);
+        $this->assertSame($session, $rs->getSession());
     }
 
     /** @test **/
-    public function it_gives_a_list()
+    public function itGivesAList()
     {
-        $rs = new Results;
+        $rs = new Results();
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', 'extra');
         $r->set('name', 'test');
         $rs->addRecord($r);
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', 'bonus');
         $r->set('name', 'test');
         $rs->addRecord($r);
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', ''); // this is empty so it won't be included in the resulting list
         $r->set('name', 'another');
         $rs->addRecord($r);
@@ -174,45 +178,45 @@ class ResultsTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function it_gives_a_list_excluding_restricted_values()
+    public function itGivesAListExcludingRestrictedValues()
     {
-        $rs = new Results;
+        $rs = new Results();
         $rs->setRestrictedIndicator('****');
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', 'extra');
         $r->set('name', 'test');
         $rs->addRecord($r);
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', '****');
         $r->set('name', 'test');
         $rs->addRecord($r);
 
-        $r = new Record;
+        $r = new Record();
         $r->set('id', 'bonus');
         $r->set('name', 'test');
         $rs->addRecord($r);
 
         $this->assertSame(['extra', 'bonus'], $rs->lists('id'));
     }
-    
+
     /** @test **/
-    public function it_converts_object_to_CSV()
+    public function itConvertsObjectToCSV()
     {
         $expected = "id,name,value\n1,left,up\n2,right,down\n";
         $this->assertSame($expected, $this->rs->toCSV());
     }
 
     /** @test **/
-    public function it_converts_object_to_JSON()
+    public function itConvertsObjectToJSON()
     {
         $expected = '[{"id":1,"name":"left","value":"up"},{"id":2,"name":"right","value":"down"}]';
         $this->assertSame($expected, $this->rs->toJSON());
     }
 
     /** @test **/
-    public function it_converts_object_to_array()
+    public function itConvertsObjectToArray()
     {
         $expected = [
             ['id' => 1, 'name' => 'left', 'value' => 'up'],

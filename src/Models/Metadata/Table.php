@@ -1,8 +1,13 @@
-<?php namespace PHRETS\Models\Metadata;
+<?php
+
+namespace PHRETS\Models\Metadata;
+
+use Illuminate\Support\Collection;
+use PHRETS\Exceptions\CapabilityUnavailable;
 
 /**
- * Class Table
- * @package PHRETS\Models\Metadata
+ * Class Table.
+ *
  * @method string getSystemName
  * @method string getStandardName
  * @method string getLongName
@@ -38,7 +43,7 @@
  */
 class Table extends Base
 {
-    protected $elements = [
+    protected array $elements = [
         'SystemName',
         'StandardName',
         'LongName',
@@ -68,7 +73,7 @@ class Table extends Base
         'ForeignField',
         'InKeyIndex',
     ];
-    protected $attributes = [
+    protected array $attributes = [
         'Version',
         'Date',
         'Resource',
@@ -76,9 +81,11 @@ class Table extends Base
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\LookupType[]
+     * @return Collection|LookupType[]
+     *
+     * @throws CapabilityUnavailable
      */
-    public function getLookupValues()
+    public function getLookupValues(): Collection|array
     {
         return $this->session->GetLookupValues($this->getResource(), $this->getLookupName());
     }

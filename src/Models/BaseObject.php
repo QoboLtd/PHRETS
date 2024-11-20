@@ -1,167 +1,144 @@
-<?php namespace PHRETS\Models;
+<?php
+
+namespace PHRETS\Models;
 
 class BaseObject
 {
-    protected $content_type;
-    protected $content_id;
-    protected $object_id;
-    protected $mime_version;
-    protected $location;
-    protected $content_description;
-    protected $content_sub_description;
-    protected $content;
-    protected $preferred;
-    protected $error;
+    protected ?string $content_type = null;
+    protected ?string $content_id = null;
+    protected string|int|null $object_id = null;
+    protected ?string $mime_version = null;
+    protected ?string $location = null;
+    protected ?string $content_description = null;
+    protected ?string $content_sub_description = null;
+    protected ?string $content = null;
+    protected mixed $preferred = null;
+    protected ?RETSError $error = null;
 
-    /**
-     * @return mixed
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
     /**
-     * @param mixed $content
      * @return $this
      */
-    public function setContent($content)
+    public function setContent(?string $content): static
     {
         $this->content = $content;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContentDescription()
+    public function getContentDescription(): ?string
     {
         return $this->content_description;
     }
 
     /**
-     * @param mixed $content_description
      * @return $this
      */
-    public function setContentDescription($content_description)
+    public function setContentDescription(?string $content_description): static
     {
         $this->content_description = $content_description;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContentId()
+    public function getContentId(): ?string
     {
         return $this->content_id;
     }
 
     /**
-     * @param mixed $content_id
      * @return $this
      */
-    public function setContentId($content_id)
+    public function setContentId(?string $content_id): static
     {
         $this->content_id = $content_id;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContentSubDescription()
+    public function getContentSubDescription(): ?string
     {
         return $this->content_sub_description;
     }
 
     /**
-     * @param mixed $content_sub_description
      * @return $this
      */
-    public function setContentSubDescription($content_sub_description)
+    public function setContentSubDescription(?string $content_sub_description): static
     {
         $this->content_sub_description = $content_sub_description;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContentType()
+    public function getContentType(): ?string
     {
         return $this->content_type;
     }
 
     /**
-     * @param mixed $content_type
      * @return $this
      */
-    public function setContentType($content_type)
+    public function setContentType(?string $content_type): static
     {
         $this->content_type = $content_type;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLocation()
     {
         return $this->location;
     }
 
     /**
-     * @param mixed $location
      * @return $this
      */
-    public function setLocation($location)
+    public function setLocation(?string $location): static
     {
         $this->location = $location;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMimeVersion()
+    public function getMimeVersion(): ?string
     {
         return $this->mime_version;
     }
 
     /**
-     * @param mixed $mime_version
      * @return $this
      */
-    public function setMimeVersion($mime_version)
+    public function setMimeVersion(?string $mime_version): static
     {
         $this->mime_version = $mime_version;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getObjectId()
+    public function getObjectId(): string|int|null
     {
         return $this->object_id;
     }
 
     /**
-     * @param mixed $object_id
      * @return $this
      */
-    public function setObjectId($object_id)
+    public function setObjectId(string|int|null $object_id): static
     {
         $this->object_id = $object_id;
+
         return $this;
     }
 
     /**
-     * @param $name
      * @param $value
      */
-    public function setFromHeader($name, $value)
+    public function setFromHeader(?string $name, mixed $value)
     {
         $headers = [
             'Content-Description' => 'ContentDescription',
@@ -182,65 +159,51 @@ class BaseObject
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getSize()
+    public function getSize(): int
     {
-        return strlen($this->getContent());
+        return strlen((string) $this->getContent());
     }
 
-    /**
-     * @return mixed
-     */
     public function getPreferred()
     {
         return $this->preferred;
     }
 
     /**
-     * Check whether or not this object is marked as Preferred (primary)
-     *
-     * @return bool
+     * Check whether or not this object is marked as Preferred (primary).
      */
-    public function isPreferred()
+    public function isPreferred(): bool
     {
-        return ($this->getPreferred() == '1');
+        return $this->getPreferred() == '1';
     }
 
     /**
-     * @param mixed $preferred
      * @return $this
      */
-    public function setPreferred($preferred)
+    public function setPreferred(mixed $preferred): static
     {
         $this->preferred = $preferred;
+
         return $this;
     }
 
-    /**
-     * @return \PHRETS\Models\RETSError
-     */
-    public function getError()
+    public function getError(): ?RETSError
     {
         return $this->error;
     }
 
     /**
-     * @param RETSError $error
      * @return $this
      */
-    public function setError(RETSError $error)
+    public function setError(?RETSError $error): static
     {
         $this->error = $error;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isError()
+    public function isError(): bool
     {
-        return ($this->error !== null);
+        return $this->error !== null;
     }
 }

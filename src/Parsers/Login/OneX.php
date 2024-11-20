@@ -1,30 +1,32 @@
-<?php namespace PHRETS\Parsers\Login;
+<?php
+
+namespace PHRETS\Parsers\Login;
 
 abstract class OneX
 {
-    protected $capabilities = [];
-    protected $details = [];
-    protected $valid_transactions = [
+    protected array $capabilities = [];
+    protected array $details = [];
+    protected array $valid_transactions = [
         'Action', 'ChangePassword', 'GetObject', 'Login', 'LoginComplete', 'Logout', 'Search', 'GetMetadata',
-        'ServerInformation', 'Update', 'PostObject', 'GetPayloadList'
+        'ServerInformation', 'Update', 'PostObject', 'GetPayloadList',
     ];
 
-    public function parse($body)
+    public function parse($body): void
     {
-        $lines = explode("\r\n", $body);
+        $lines = explode("\r\n", (string) $body);
         if (empty($lines[3])) {
-            $lines = explode("\n", $body);
+            $lines = explode("\n", (string) $body);
         }
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!$line) {
+            if ($line === '' || $line === '0') {
                 continue;
             }
 
-            list($name, $value) = $this->readLine($line);
+            [$name, $value] = $this->readLine($line);
             if ($name) {
-                if (in_array($name, $this->valid_transactions) or preg_match('/^X\-/', $name)) {
+                if (in_array($name, $this->valid_transactions) || preg_match('/^X\-/', (string) $name)) {
                     $this->capabilities[$name] = $value;
                 } else {
                     $this->details[$name] = $value;
@@ -33,18 +35,12 @@ abstract class OneX
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getCapabilities()
+    public function getCapabilities(): array
     {
         return $this->capabilities;
     }
 
-    /**
-     * @return array
-     */
-    public function getDetails()
+    public function getDetails(): array
     {
         return $this->details;
     }

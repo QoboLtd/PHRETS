@@ -1,31 +1,28 @@
-<?php namespace PHRETS\Strategies;
+<?php
+
+namespace PHRETS\Strategies;
 
 use PHRETS\Configuration;
 
 interface Strategy
 {
-    const PARSER_LOGIN = 'parser.login';
-    const PARSER_OBJECT_SINGLE = 'parser.object.single';
-    const PARSER_OBJECT_MULTIPLE = 'parser.object.multiple';
-    const PARSER_SEARCH = 'parser.search';
-    const PARSER_SEARCH_RECURSIVE = 'parser.search.recursive';
-    const PARSER_METADATA_SYSTEM = 'parser.metadata.system';
-    const PARSER_METADATA_RESOURCE = 'parser.metadata.resource';
-    const PARSER_METADATA_CLASS = 'parser.metadata.class';
-    const PARSER_METADATA_TABLE = 'parser.metadata.table';
-    const PARSER_METADATA_OBJECT = 'parser.metadata.object';
-    const PARSER_METADATA_LOOKUPTYPE = 'parser.metadata.lookuptype';
-    const PARSER_XML = 'parser.xml';
+    public const PARSER_LOGIN = 'parser.login';
+    public const PARSER_OBJECT_SINGLE = 'parser.object.single';
+    public const PARSER_OBJECT_MULTIPLE = 'parser.object.multiple';
+    public const PARSER_SEARCH = 'parser.search';
+    public const PARSER_SEARCH_RECURSIVE = 'parser.search.recursive';
+    public const PARSER_METADATA_SYSTEM = 'parser.metadata.system';
+    public const PARSER_METADATA_RESOURCE = 'parser.metadata.resource';
+    public const PARSER_METADATA_CLASS = 'parser.metadata.class';
+    public const PARSER_METADATA_TABLE = 'parser.metadata.table';
+    public const PARSER_METADATA_OBJECT = 'parser.metadata.object';
+    public const PARSER_METADATA_LOOKUPTYPE = 'parser.metadata.lookuptype';
+    public const PARSER_XML = 'parser.xml';
 
     /**
      * @param $component
-     * @return mixed
      */
     public function provide($component);
 
-    /**
-     * @param Configuration $configuration
-     * @return mixed
-     */
     public function initialize(Configuration $configuration);
 }

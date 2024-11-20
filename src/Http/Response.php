@@ -1,47 +1,50 @@
-<?php namespace PHRETS\Http;
+<?php
 
+namespace PHRETS\Http;
+
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use SimpleXMLElement;
 
 /**
- * Class Response
- * @package PHRETS\Http
+ * Class Response.
  *
  * @method ResponseInterface|StreamInterface getBody
  * @method array getHeaders
  */
 class Response
 {
-	protected $response = null;
+    public function __construct(protected ResponseInterface $response)
+    {
+    }
 
-	public function __construct(ResponseInterface $response)
-	{
-		$this->response = $response;
-	}
+    /**
+     * @throws Exception
+     */
+    public function xml(): SimpleXMLElement
+    {
+        $body = (string) $this->response->getBody();
 
-	public function xml()
-	{
-		$body = (string) $this->response->getBody();
+        // Remove any carriage return / newline in XML response.
+        $body = trim($body);
 
-		// Remove any carriage return / newline in XML response.
-		$body = trim($body);
+        return new SimpleXMLElement($body);
+    }
 
-		return new \SimpleXMLElement($body);
-	}
+    public function __call($method, array $args = [])
+    {
+        return call_user_func_array([$this->response, $method], $args);
+    }
 
-	public function __call($method, $args = [])
-	{
-		return call_user_func_array([$this->response, $method], $args);
-	}
+    public function getHeader(string $name): ?string
+    {
+        $headers = $this->response->getHeader($name);
 
-	public function getHeader($name)
-	{
-		$headers = $this->response->getHeader($name);
-
-		if ($headers) {
-			return implode('; ', $headers);
-		} else {
-			return null;
-		}
-	}
+        if ($headers) {
+            return implode('; ', $headers);
+        } else {
+            return null;
+        }
+    }
 }

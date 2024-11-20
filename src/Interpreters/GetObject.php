@@ -1,14 +1,10 @@
-<?php namespace PHRETS\Interpreters;
+<?php
+
+namespace PHRETS\Interpreters;
 
 class GetObject
 {
-
-    /**
-     * @param $content_ids
-     * @param $object_ids
-     * @returns array
-     */
-    public static function ids($content_ids, $object_ids)
+    public static function ids(mixed $content_ids, mixed $object_ids): array
     {
         $result = [];
 
@@ -22,19 +18,14 @@ class GetObject
         return $result;
     }
 
-    /**
-     * @param $value
-     * @param bool $dash_ranges
-     * @return array
-     */
-    protected static function split($value, $dash_ranges = true)
+    protected static function split(mixed $value, bool $dash_ranges = true): array
     {
         if (!is_array($value)) {
-            if (stripos($value, ':') !== false) {
-                $value = array_map('trim', explode(':', $value));
-            } elseif (stripos($value, ',') !== false) {
-                $value = array_map('trim', explode(',', $value));
-            } elseif ($dash_ranges and preg_match('/(\d+)\-(\d+)/', $value, $matches)) {
+            if (stripos((string) $value, ':') !== false) {
+                $value = array_map('trim', explode(':', (string) $value));
+            } elseif (stripos((string) $value, ',') !== false) {
+                $value = array_map('trim', explode(',', (string) $value));
+            } elseif ($dash_ranges && preg_match('/(\d+)\-(\d+)/', (string) $value, $matches)) {
                 $value = range($matches[1], $matches[2]);
             } else {
                 $value = [$value];

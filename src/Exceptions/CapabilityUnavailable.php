@@ -1,6 +1,7 @@
-<?php namespace PHRETS\Exceptions;
+<?php
+
+namespace PHRETS\Exceptions;
 
 class CapabilityUnavailable extends \Exception
 {
-
 }
