@@ -5,6 +5,7 @@ namespace PHRETS\Strategies;
 use PHRETS\Configuration;
 use PHRETS\Exceptions\ParserNotFound;
 use PHRETS\Parsers\Login\OneEight;
+use PHRETS\Parsers\ParserType;
 
 class SimpleStrategy implements Strategy
 {
@@ -12,21 +13,21 @@ class SimpleStrategy implements Strategy
      * Default components.
      */
     private const CLASSES = [
-        Strategy::PARSER_LOGIN => \PHRETS\Parsers\Login\OneFive::class,
-        Strategy::PARSER_OBJECT_SINGLE => \PHRETS\Parsers\GetObject\Single::class,
-        Strategy::PARSER_OBJECT_MULTIPLE => \PHRETS\Parsers\GetObject\Multiple::class,
-        Strategy::PARSER_SEARCH => \PHRETS\Parsers\Search\OneX::class,
-        Strategy::PARSER_SEARCH_RECURSIVE => \PHRETS\Parsers\Search\RecursiveOneX::class,
-        Strategy::PARSER_METADATA_SYSTEM => \PHRETS\Parsers\GetMetadata\System::class,
-        Strategy::PARSER_METADATA_RESOURCE => \PHRETS\Parsers\GetMetadata\Resource::class,
-        Strategy::PARSER_METADATA_CLASS => \PHRETS\Parsers\GetMetadata\ResourceClass::class,
-        Strategy::PARSER_METADATA_TABLE => \PHRETS\Parsers\GetMetadata\Table::class,
-        Strategy::PARSER_METADATA_OBJECT => \PHRETS\Parsers\GetMetadata\BaseObject::class,
-        Strategy::PARSER_METADATA_LOOKUP => \PHRETS\Parsers\GetMetadata\Lookup::class,
-        Strategy::PARSER_METADATA_LOOKUPTYPE => \PHRETS\Parsers\GetMetadata\LookupType::class,
-        Strategy::PARSER_UPDATE => \PHRETS\Parsers\Update\OneEight::class,
-        Strategy::PARSER_OBJECT_POST => \PHRETS\Parsers\PostObject\OneEight::class,
-        Strategy::PARSER_XML => \PHRETS\Parsers\XML::class,
+        ParserType::LOGIN->value => \PHRETS\Parsers\Login\OneFive::class,
+        ParserType::OBJECT_SINGLE->value => \PHRETS\Parsers\GetObject\Single::class,
+        ParserType::OBJECT_MULTIPLE->value => \PHRETS\Parsers\GetObject\Multiple::class,
+        ParserType::SEARCH->value => \PHRETS\Parsers\Search\OneX::class,
+        ParserType::SEARCH_RECURSIVE->value => \PHRETS\Parsers\Search\RecursiveOneX::class,
+        ParserType::METADATA_SYSTEM->value => \PHRETS\Parsers\GetMetadata\System::class,
+        ParserType::METADATA_RESOURCE->value => \PHRETS\Parsers\GetMetadata\Resource::class,
+        ParserType::METADATA_CLASS->value => \PHRETS\Parsers\GetMetadata\ResourceClass::class,
+        ParserType::METADATA_TABLE->value => \PHRETS\Parsers\GetMetadata\Table::class,
+        ParserType::METADATA_OBJECT->value => \PHRETS\Parsers\GetMetadata\BaseObject::class,
+        ParserType::METADATA_LOOKUP->value => \PHRETS\Parsers\GetMetadata\Lookup::class,
+        ParserType::METADATA_LOOKUPTYPE->value => \PHRETS\Parsers\GetMetadata\LookupType::class,
+        ParserType::UPDATE->value => \PHRETS\Parsers\Update\OneEight::class,
+        ParserType::OBJECT_POST->value => \PHRETS\Parsers\PostObject\OneEight::class,
+        ParserType::XML->value => \PHRETS\Parsers\XML::class,
     ];
 
     private array $classes;
@@ -39,26 +40,26 @@ class SimpleStrategy implements Strategy
     }
 
     /**
-     * @param string $component
+     * @param \PHRETS\Parsers\ParserType $parser
      *
      * @throws \PHRETS\Exceptions\ParserNotFound
      */
-    public function provide(string $component): mixed
+    public function provide(ParserType $parser): mixed
     {
-        if (!array_key_exists($component, $this->instances)) {
-            throw new ParserNotFound("Component {$component} not found");
+        if (!array_key_exists($parser->value, $this->instances)) {
+            throw new ParserNotFound("Component {$parser->value} not found");
         }
 
-        return $this->instances[$component];
+        return $this->instances[$parser->value];
     }
 
     /**
      * @return void
      */
-    public function initialize(Configuration $configuration)
+    public function initialize(Configuration $configuration): void
     {
         if ($configuration->getRetsVersion()->isAtLeast1_8()) {
-            $this->classes[self::PARSER_LOGIN] = OneEight::class;
+            $this->classes[ParserType::LOGIN->value] = OneEight::class;
         }
 
         foreach ($this->classes as $k => $v) {
@@ -69,16 +70,16 @@ class SimpleStrategy implements Strategy
     /**
      * Used for tests
      *
-     * @param string $component Component
+     * @param \PHRETS\Parsers\ParserType $parser Parser
      * @param mixed $instance Instance
      * @return void
      */
-    public function setInstance(string $component, mixed $instance): void
+    public function setInstance(ParserType $parser, mixed $instance): void
     {
-        if (!array_key_exists($component, $this->instances)) {
-            throw new ParserNotFound("Component {$component} not found");
+        if (!array_key_exists($parser->value, $this->instances)) {
+            throw new ParserNotFound("Component {$parser->value} not found");
         }
 
-        $this->instances[$component] = $instance;
+        $this->instances[$parser->value] = $instance;
     }
 }

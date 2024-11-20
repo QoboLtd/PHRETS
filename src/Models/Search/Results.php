@@ -48,9 +48,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param null $keyed_by
+     * @param mixed $keyed_by
      */
-    public function addRecord(Record $record, $keyed_by = null)
+    public function addRecord(Record $record, mixed $keyed_by = null): void
     {
         // register this Results object as the record's parent automatically
         $record->setParent($this);
@@ -71,7 +71,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      *
      * @param $field
      */
-    public function keyResultsBy($field)
+    public function keyResultsBy($field): void
     {
         $results = clone $this->results;
         $this->results = new Collection();
@@ -91,7 +91,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return null
+     * @return mixed
      */
     public function getError()
     {
@@ -99,11 +99,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param null $error
+     * @param mixed $error
      *
-     * @return $this
+     * @return self
      */
-    public function setError($error): static
+    public function setError(mixed $error): self
     {
         $this->error = $error;
 
@@ -116,14 +116,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setReturnedResultsCount(int $returned_results_count): static
+    public function setReturnedResultsCount(int $returned_results_count): self
     {
-        if (is_int($returned_results_count) == false) {
-            throw new \InvalidArgumentException('$returned_results_count should be an integer');
-        }
-
         $this->returned_results_count = $returned_results_count;
 
         return $this;
@@ -135,14 +131,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setTotalResultsCount(int $total_results_count): static
+    public function setTotalResultsCount(int $total_results_count): self
     {
-        if (is_int($total_results_count) == false) {
-            throw new \InvalidArgumentException('$total_results_count should be an integer');
-        }
-
         $this->total_results_count = $total_results_count;
 
         return $this;
@@ -187,9 +179,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setSession(Session $session): static
+    public function setSession(Session $session): self
     {
         $this->session = $session;
 
@@ -197,7 +189,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return null
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
@@ -211,11 +202,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param null $metadata
+     * @param mixed $metadata
      *
-     * @return $this
+     * @return self
      */
-    public function setMetadata($metadata): static
+    public function setMetadata(mixed $metadata): self
     {
         $this->metadata = $metadata;
 

@@ -11,9 +11,7 @@ class Bulletin implements \Stringable
 
     public function __construct(array $details = [])
     {
-        if ($details && is_array($details)) {
-            $this->details = array_change_key_case($details, CASE_UPPER);
-        }
+        $this->details = array_change_key_case($details, CASE_UPPER);
     }
 
     public function getBody(): ?string
@@ -22,9 +20,10 @@ class Bulletin implements \Stringable
     }
 
     /**
-     * @return $this
+     * @param ?string $body Body
+     * @return self
      */
-    public function setBody($body): static
+    public function setBody(?string $body): self
     {
         $this->body = $body;
 
@@ -70,6 +69,6 @@ class Bulletin implements \Stringable
 
     public function __toString(): string
     {
-        return (string) $this->body;
+        return $this->body ?? '';
     }
 }

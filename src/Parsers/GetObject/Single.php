@@ -10,8 +10,9 @@ class Single
 {
     public function parse(Response $response): BaseObject
     {
+        $body = (string)$response->getBody();
         $obj = new BaseObject();
-        $obj->setContent(($response->getBody()) ? $response->getBody()->__toString() : null);
+        $obj->setContent($body !== '' ? $body : null);
         $obj->setContentDescription($response->getHeader('Content-Description'));
         $obj->setContentSubDescription($response->getHeader('Content-Sub-Description'));
         $obj->setContentId($response->getHeader('Content-ID'));
