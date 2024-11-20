@@ -18,7 +18,6 @@ class LookupType extends Base
         $collection = new Collection();
 
         if ($xml->METADATA) {
-
             // some servers don't name this correctly for the version of RETS used, so play nice with either way
             if (!empty($xml->METADATA->{'METADATA-LOOKUP_TYPE'}->LookupType)) {
                 $base = $xml->METADATA->{'METADATA-LOOKUP_TYPE'}->LookupType;

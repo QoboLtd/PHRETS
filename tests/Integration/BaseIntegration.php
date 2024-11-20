@@ -45,7 +45,7 @@ class BaseIntegration extends TestCase
 
         PHRETS\Http\Client::set($new_client);
 
-        $this->attach_to($new_client);
+        $this->attachTo($new_client);
 
         $this->session->Login();
     }
@@ -62,7 +62,7 @@ class BaseIntegration extends TestCase
         return $this;
     }
 
-    public function attach_to(Client $client)
+    public function attachTo(Client $client)
     {
         /** @var HandlerStack $stack */
         $stack = $client->getConfig('handler');
