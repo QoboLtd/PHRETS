@@ -156,13 +156,13 @@ class Configuration
     }
 
     /**
-     * @param array $configuration
+     * @param array<string,string> $configuration
      *
-     * @return static
+     * @return self
      *
      * @throws Exceptions\InvalidConfiguration
      */
-    public static function load($configuration = [])
+    public static function load(array $configuration = []): self
     {
         $variables = [
             'username' => 'Username',

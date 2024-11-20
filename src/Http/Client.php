@@ -7,18 +7,18 @@ use GuzzleHttp\ClientInterface;
 
 class Client
 {
-    protected static ?GuzzleClient $client = null;
+    protected static ?ClientInterface $client = null;
 
-    public static function make(array $options = []): GuzzleClient
+    public static function make(array $options = []): ClientInterface
     {
-        if (!self::$client) {
+        if (self::$client === null) {
             self::$client = new GuzzleClient($options);
         }
 
         return self::$client;
     }
 
-    public static function set(ClientInterface $client)
+    public static function set(ClientInterface $client): void
     {
         self::$client = $client;
     }

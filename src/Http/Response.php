@@ -4,12 +4,12 @@ namespace PHRETS\Http;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use SimpleXMLElement;
 
 /**
  * Class Response.
  *
+ * @method int getStatusCode()
  * @method \Psr\Http\Message\StreamInterface getBody()
  * @method array getHeaders()
  */

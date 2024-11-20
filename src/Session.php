@@ -3,16 +3,17 @@
 namespace PHRETS;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
 use PHRETS\Exceptions\CapabilityUnavailable;
 use PHRETS\Exceptions\MetadataNotFound;
 use PHRETS\Exceptions\MissingConfiguration;
 use PHRETS\Exceptions\RETSException;
 use PHRETS\Http\Client as PHRETSClient;
+use PHRETS\Http\Response;
 use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
 use PHRETS\Models\BaseObject;
@@ -25,15 +26,13 @@ class Session
 {
     /** @var Capabilities */
     protected $capabilities;
-    /** @var Client */
-    protected $client;
+    protected ClientInterface $client;
     /** @var \Psr\Log\LoggerInterface */
     protected $logger;
     protected $rets_session_id;
     protected $cookie_jar;
     protected $last_request_url;
-    /** @var ResponseInterface */
-    protected $last_response;
+    protected ?Response $last_response = null;
 
     public function __construct(protected Configuration $configuration)
     {
@@ -326,12 +325,12 @@ class Session
      * @param array $options
      * @param bool $is_retry
      *
-     * @return ResponseInterface
+     * @return \PHRETS\Http\Response
      *
      * @throws CapabilityUnavailable
      * @throws RETSException
      */
-    protected function request($capability, $options = [], $is_retry = false)
+    protected function request($capability, $options = [], $is_retry = false): Response
     {
         $response = null;
         $url = $this->capabilities->get($capability);
@@ -558,9 +557,9 @@ class Session
     }
 
     /**
-     * @return Client
+     * @return \GuzzleHttp\ClientInterface
      */
-    public function getClient()
+    public function getClient(): ClientInterface
     {
         return $this->client;
     }
