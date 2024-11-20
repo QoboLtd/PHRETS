@@ -91,7 +91,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return null
+     * @return mixed
      */
     public function getError()
     {
@@ -99,11 +99,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param null $error
+     * @param mixed $error
      *
-     * @return $this
+     * @return self
      */
-    public function setError($error): static
+    public function setError(mixed $error): self
     {
         $this->error = $error;
 
@@ -202,11 +202,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param null $metadata
+     * @param mixed $metadata
      *
-     * @return $this
+     * @return self
      */
-    public function setMetadata($metadata): static
+    public function setMetadata(mixed $metadata): self
     {
         $this->metadata = $metadata;
 

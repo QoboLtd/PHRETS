@@ -10,7 +10,7 @@ class Record implements \ArrayAccess, \Stringable
     protected ?string $restricted_value = '****';
     protected array $values = [];
 
-    public function get(string $field): mixed
+    public function get(string|int $field): mixed
     {
         return $this->values[$field] ?? null;
     }
@@ -18,17 +18,17 @@ class Record implements \ArrayAccess, \Stringable
     /**
      * @param $value
      */
-    public function set(string $field, $value)
+    public function set(string|int $field, $value)
     {
         $this->values[$field] = $value;
     }
 
-    public function remove(string $field)
+    public function remove(string|int $field)
     {
         unset($this->values[$field]);
     }
 
-    public function isRestricted(string $field): bool
+    public function isRestricted(string|int $field): bool
     {
         $val = $this->get($field);
 

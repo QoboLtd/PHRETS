@@ -62,7 +62,7 @@ class OneX
             // assume tab delimited since it wasn't given
             $rets->debug('Assuming TAB delimiter since none specified in response');
 
-            return chr('09');
+            return chr(9);
         }
     }
 

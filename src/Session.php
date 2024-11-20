@@ -107,14 +107,14 @@ class Session
      * @param $resource
      * @param $type
      * @param $content_ids
-     * @param string $object_ids
+     * @param mixed $object_ids
      * @param int $location
      *
      * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetObject($resource, $type, $content_ids, $object_ids = '*', $location = 0): Collection|array
+    public function GetObject($resource, $type, $content_ids, mixed $object_ids = '*', $location = 0): Collection|array
     {
         $request_id = GetObject::ids($content_ids, $object_ids);
 
@@ -235,11 +235,11 @@ class Session
      * @param $type
      * @param $id
      * @param \PHRETS\Parsers\ParserType $parser Parser
-     * @param null $keyed_by
+     * @param mixed $keyed_by
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    protected function MakeMetadataRequest($type, $id, ParserType $parser, $keyed_by = null)
+    protected function MakeMetadataRequest($type, $id, ParserType $parser, mixed $keyed_by = null)
     {
         $response = $this->request(
             'GetMetadata',
@@ -606,9 +606,9 @@ class Session
 
     /**
      * @param $message
-     * @param array $context
+     * @param array|string $context
      */
-    public function debug($message, $context = [])
+    public function debug($message, array|string $context = [])
     {
         if ($this->logger) {
             if (!is_array($context)) {
