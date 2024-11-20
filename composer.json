@@ -52,5 +52,12 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
+  },
+  "scripts": {
+    "stan": [
+      "phpcs --warning-severity=0",
+      "phpstan"
+    ],
+    "test": "phpunit"
   }
 }
