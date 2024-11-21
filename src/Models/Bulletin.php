@@ -7,6 +7,8 @@ use Illuminate\Support\Arr;
 class Bulletin implements \Stringable
 {
     protected ?string $body = null;
+
+    /** @var array<string,mixed> */
     protected array $details = [];
 
     public function __construct(array $details = [])
@@ -30,7 +32,7 @@ class Bulletin implements \Stringable
         return $this;
     }
 
-    public function setDetail(string $name, $value): static
+    public function setDetail(string $name, $value): self
     {
         $this->details[strtoupper($name)] = $value;
 

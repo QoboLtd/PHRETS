@@ -5,7 +5,7 @@ use PHRETS\Session;
 
 class OneEight
 {
-    public function parse(Session $rets, Response $response, $parameters)
+    public function parse(Session $rets, Response $response, array $parameters): array
     {
         $xml = $response->xml();
 

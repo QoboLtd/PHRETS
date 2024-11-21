@@ -9,7 +9,7 @@ use PHRETS\Session;
 
 class Table extends Base
 {
-    public function parse(Session $rets, Response $response, $keyed_by): Collection
+    public function parse(Session $rets, Response $response, string $keyed_by): Collection
     {
         /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);

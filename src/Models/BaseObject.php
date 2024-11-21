@@ -12,7 +12,7 @@ class BaseObject
     protected ?string $content_description = null;
     protected ?string $content_sub_description = null;
     protected ?string $content = null;
-    protected mixed $preferred = null;
+    protected int|string|null $preferred = null;
     protected ?RETSError $error = null;
 
     public function getContent(): ?string
@@ -21,9 +21,9 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setContent(?string $content): static
+    public function setContent(?string $content): self
     {
         $this->content = $content;
 
@@ -51,9 +51,9 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setContentId(?string $content_id): static
+    public function setContentId(?string $content_id): self
     {
         $this->content_id = $content_id;
 
@@ -66,9 +66,9 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setContentSubDescription(?string $content_sub_description): static
+    public function setContentSubDescription(?string $content_sub_description): self
     {
         $this->content_sub_description = $content_sub_description;
 
@@ -81,24 +81,24 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setContentType(?string $content_type): static
+    public function setContentType(?string $content_type): self
     {
         $this->content_type = $content_type;
 
         return $this;
     }
 
-    public function getLocation()
+    public function getLocation():? string
     {
         return $this->location;
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setLocation(?string $location): static
+    public function setLocation(?string $location): self
     {
         $this->location = $location;
 
@@ -111,9 +111,9 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setMimeVersion(?string $mime_version): static
+    public function setMimeVersion(?string $mime_version): self
     {
         $this->mime_version = $mime_version;
 
@@ -126,9 +126,9 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setObjectId(string|int|null $object_id): static
+    public function setObjectId(string|int|null $object_id): self
     {
         $this->object_id = $object_id;
 
@@ -136,9 +136,10 @@ class BaseObject
     }
 
     /**
-     * @param $value
+     * @param ?string $name Name
+     * @param string$value Value
      */
-    public function setFromHeader(?string $name, mixed $value)
+    public function setFromHeader(?string $name, string $value)
     {
         $headers = [
             'Content-Description' => 'ContentDescription',
@@ -161,10 +162,10 @@ class BaseObject
 
     public function getSize(): int
     {
-        return strlen((string) $this->getContent());
+        return strlen((string)$this->getContent());
     }
 
-    public function getPreferred()
+    public function getPreferred(): int|string|null
     {
         return $this->preferred;
     }
@@ -178,9 +179,9 @@ class BaseObject
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setPreferred(mixed $preferred): static
+    public function setPreferred(int|string|null $preferred): self
     {
         $this->preferred = $preferred;
 

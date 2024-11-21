@@ -7,14 +7,15 @@ use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
+use SimpleXMLElement;
 
 class OneX
 {
-    public function parse(Session $rets, Response $response, $parameters): Results
+    public function parse(Session $rets, Response $response, array $parameters): Results
     {
-        /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
         $xml = $parser->parse($response);
+        assert($xml instanceof SimpleXMLElement);
 
         $rs = new Results();
         $rs->setSession($rets)
@@ -53,7 +54,7 @@ class OneX
      * @param $xml
      * @param $parameters
      */
-    protected function getDelimiter(Session $rets, $xml, $parameters): string
+    protected function getDelimiter(Session $rets, SimpleXMLElement $xml, array $parameters): string
     {
         if (property_exists($xml, 'DELIMITER') && $xml->DELIMITER !== null) {
             // delimiter found so we have at least a COLUMNS row to parse
@@ -70,7 +71,7 @@ class OneX
      * @param $xml
      * @param $parameters
      */
-    protected function getRestrictedIndicator(Session $rets, &$xml, $parameters): ?string
+    protected function getRestrictedIndicator(Session $rets, SimpleXMLElement $xml, array $parameters): ?string
     {
         if (array_key_exists('RestrictedIndicator', $parameters)) {
             return $parameters['RestrictedIndicator'];
@@ -79,7 +80,7 @@ class OneX
         }
     }
 
-    protected function getColumnNames(Session $rets, &$xml, $parameters): array
+    protected function getColumnNames(Session $rets, SimpleXMLElement $xml, array $parameters): array
     {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
@@ -101,7 +102,7 @@ class OneX
         return explode($delim, $column_names);
     }
 
-    protected function parseRecords(Session $rets, &$xml, $parameters, Results $rs)
+    protected function parseRecords(Session $rets, SimpleXMLElement $xml, array $parameters, Results $rs)
     {
         if (property_exists($xml, 'DATA') && $xml->DATA !== null) {
             foreach ($xml->DATA as $line) {
@@ -110,7 +111,7 @@ class OneX
         }
     }
 
-    protected function parseRecordFromLine(Session $rets, &$xml, $parameters, &$line, Results $rs): Record
+    protected function parseRecordFromLine(Session $rets, SimpleXMLElement $xml, array $parameters, string &$line, Results $rs): Record
     {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
@@ -138,7 +139,7 @@ class OneX
         return $r;
     }
 
-    protected function getTotalCount(Session $rets, &$xml, $parameters): ?int
+    protected function getTotalCount(Session $rets, SimpleXMLElement $xml, array $parameters): ?int
     {
         if (property_exists($xml, 'COUNT') && $xml->COUNT !== null) {
             return (int) "{$xml->COUNT->attributes()->Records}";
@@ -147,7 +148,7 @@ class OneX
         }
     }
 
-    protected function foundMaxRows(Session $rets, &$xml, $parameters): bool
+    protected function foundMaxRows(Session $rets, SimpleXMLElement $xml, array $parameters): bool
     {
         return property_exists($xml, 'MAXROWS') && $xml->MAXROWS !== null;
     }

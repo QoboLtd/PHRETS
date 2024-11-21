@@ -4,13 +4,13 @@ namespace PHRETS\Parsers\Login;
 
 class OneEight extends OneX
 {
-    public function readLine($line): array
+    public function readLine(string $line): array
     {
         $name = null;
         $value = null;
 
-        if (str_contains((string) $line, '=')) {
-            @[$name, $value] = explode('=', (string) $line, 2);
+        if (str_contains($line, '=')) {
+            @[$name, $value] = explode('=', $line, 2);
         }
 
         $value = trim($value);

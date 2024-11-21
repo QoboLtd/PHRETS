@@ -18,16 +18,16 @@ use PHRETS\Interpreters\Search;
 use PHRETS\Models\Bulletin;
 use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\ParserType;
+use Psr\Log\LoggerInterface;
+use Stringable;
 
 class Session
 {
-    /** @var \PHRETS\Capabilities */
-    protected $capabilities;
+    protected Capabilities $capabilities;
     protected ClientInterface $client;
-    /** @var \Psr\Log\LoggerInterface */
-    protected $logger;
-    protected $rets_session_id;
-    protected $cookie_jar;
+    protected ?LoggerInterface $logger = null;
+    protected ?string $rets_session_id = null;
+    protected CookieJarInterface $cookie_jar;
     protected $last_request_url;
     protected ?Response $last_response = null;
 
@@ -403,8 +403,8 @@ class Session
     }
 
     /**
-     * @param $capability
-     * @param array $options
+     * @param string $capability
+     * @param array<string,mixed> $options
      * @param bool $is_retry
      *
      * @return \PHRETS\Http\Response
@@ -412,7 +412,7 @@ class Session
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
      */
-    protected function request($capability, $options = [], $is_retry = false): Response
+    protected function request(string $capability, array $options = [], bool $is_retry = false): Response
     {
         $response = null;
         $url = $this->capabilities->get($capability);
@@ -580,35 +580,22 @@ class Session
         return $response;
     }
 
-    /**
-     * @return string
-     */
-    public function getLoginUrl()
+    public function getLoginUrl(): ?string
     {
         return $this->capabilities->get('Login');
     }
 
-    /**
-     * @return \PHRETS\Capabilities
-     */
-    public function getCapabilities()
+    public function getCapabilities(): Capabilities
     {
         return $this->capabilities;
     }
 
-    /**
-     * @return \PHRETS\Configuration
-     */
-    public function getConfiguration()
+    public function getConfiguration(): Configuration
     {
         return $this->configuration;
     }
 
-    /**
-     * @param $message
-     * @param array|string $context
-     */
-    public function debug($message, array|string $context = [])
+    public function debug(string|Stringable $message, array|string $context = []): void
     {
         if ($this->logger) {
             if (!is_array($context)) {
@@ -618,10 +605,7 @@ class Session
         }
     }
 
-    /**
-     * @return \GuzzleHttp\Cookie\CookieJarInterface
-     */
-    public function getCookieJar()
+    public function getCookieJar(): CookieJarInterface
     {
         return $this->cookie_jar;
     }
@@ -660,7 +644,7 @@ class Session
         return $this->client;
     }
 
-    public function getRetsSessionId()
+    public function getRetsSessionId(): ?string
     {
         return $this->rets_session_id;
     }
@@ -674,9 +658,14 @@ class Session
     }
 
     /**
-     * @return array
+     * @return array{
+     *   auth:string[],
+     *   headers: array{User-Agent: string, RETS-Version: string, Accept-Encoding: string, Accept: string},
+     *   curl: array{10031: string|false},
+     *   allow_redirects: false
+     * }
      */
-    public function getDefaultOptions()
+    public function getDefaultOptions(): array
     {
         $defaults = [
             'auth' => [

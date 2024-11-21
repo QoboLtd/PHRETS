@@ -21,8 +21,8 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     protected int $total_results_count = 0;
     protected int $returned_results_count = 0;
     protected mixed $error = null;
-    /** @var \Illuminate\Support\Collection|\PHRETS\Models\Search\Record[] */
-    protected Collection|array $results;
+    /** @var \Illuminate\Support\Collection<\PHRETS\Models\Search\Record> */
+    protected Collection $results;
     protected array $headers = [];
     protected string $restricted_indicator = '****';
     protected bool $maxrows_reached = false;
@@ -38,9 +38,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setHeaders(array $headers): static
+    public function setHeaders(array $headers): self
     {
         $this->headers = $headers;
 

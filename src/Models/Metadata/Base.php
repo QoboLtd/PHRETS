@@ -28,7 +28,7 @@ abstract class Base implements \ArrayAccess
     }
 
     /**
-     * @return $this|mixed|null
+     * @return mixed
      */
     public function __call(mixed $name, array $args = [])
     {

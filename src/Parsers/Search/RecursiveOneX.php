@@ -14,7 +14,7 @@ class RecursiveOneX
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\AutomaticPaginationError
      */
-    public function parse(Session $rets, Response $response, $parameters): Results
+    public function parse(Session $rets, Response $response, array $parameters): Results
     {
         // we're given the first response automatically, so parse this and start the recursion
 

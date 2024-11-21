@@ -45,5 +45,8 @@ abstract class OneX
         return $this->details;
     }
 
-    abstract public function readLine($line);
+    /**
+     * @return array{0:string,1:string}
+     */
+    abstract public function readLine(string $line): array;
 }
