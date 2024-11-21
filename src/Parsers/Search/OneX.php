@@ -111,13 +111,18 @@ class OneX
         }
     }
 
-    protected function parseRecordFromLine(Session $rets, SimpleXMLElement $xml, array $parameters, string &$line, Results $rs): Record
-    {
+    protected function parseRecordFromLine(
+        Session $rets,
+        SimpleXMLElement $xml,
+        array $parameters,
+        SimpleXMLElement $line,
+        Results $rs
+    ): Record {
         $delim = $this->getDelimiter($rets, $xml, $parameters);
         $delimLength = strlen($delim);
 
         $r = new Record();
-        $field_data = (string) $line;
+        $field_data = (string)$line;
 
         // Take out the first delimiter
         if (substr($field_data, 0, $delimLength) === $delim) {

@@ -5,6 +5,9 @@ use PHRETS\Session;
 
 class OneEight
 {
+    /**
+     * @return array<string,mixed>
+     */
     public function parse(Session $rets, Response $response): array
     {
         $xml = $response->xml();
@@ -14,9 +17,7 @@ class OneEight
         $errors = [];
 
         if ($xml->ERRORBLOCK) {
-            $errors = collect((array) $xml->ERRORBLOCK->ERRORDATA)->map(
-                fn($line) => explode("\t", trim($line)),
-            )->values();
+            $errors = array_map(fn($line) => explode("\t", trim($line)), (array) $xml->ERRORBLOCK->ERRORDATA);
         }
 
         return [

@@ -3,17 +3,17 @@
 namespace PHRETS\Parsers\GetObject;
 
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Collection;
 use PHRETS\Http\Response as PHRETSResponse;
 
 class Multiple
 {
-    public function parse(PHRETSResponse $response): Collection
+    /**
+     * @return list<\PHRETS\Models\BaseObject>
+     */
+    public function parse(PHRETSResponse $response): array
     {
-        $collection = new Collection();
-
         if (!$response->getBody()) {
-            return $collection;
+            return [];
         }
 
         // help bad responses be more multipart compliant
@@ -44,19 +44,22 @@ class Multiple
 
         $parser = new Single();
 
+        $gatheredParts = [];
         // go through each part of the multipart message
         foreach ($multi_parts as $part) {
             // get Guzzle to parse this multipart section as if it's a whole HTTP message
             $parts = \GuzzleHttp\Psr7\Message::parseResponse("HTTP/1.1 200 OK\r\n" . $part . "\r\n");
 
             // now throw this single faked message through the Single GetObject response parser
-            $single = new PHRETSResponse(new Response($parts->getStatusCode(), $parts->getHeaders(), (string) $parts->getBody()));
+            $single = new PHRETSResponse(
+                new Response($parts->getStatusCode(), $parts->getHeaders(), (string) $parts->getBody())
+            );
             $obj = $parser->parse($single);
 
             // add information about this multipart to the returned collection
-            $collection->push($obj);
+            $gatheredParts[] = $obj;
         }
 
-        return $collection;
+        return $gatheredParts;
     }
 }

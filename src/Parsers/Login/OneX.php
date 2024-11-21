@@ -11,11 +11,11 @@ abstract class OneX
         'ServerInformation', 'Update', 'PostObject', 'GetPayloadList',
     ];
 
-    public function parse($body): void
+    public function parse(string $body): void
     {
-        $lines = explode("\r\n", (string) $body);
+        $lines = explode("\r\n", $body);
         if (empty($lines[3])) {
-            $lines = explode("\n", (string) $body);
+            $lines = explode("\n", $body);
         }
 
         foreach ($lines as $line) {

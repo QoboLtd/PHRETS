@@ -2,7 +2,7 @@
 
 namespace PHRETS\Models;
 
-use Illuminate\Support\Arr;
+use PHRETS\Arr;
 
 class Bulletin implements \Stringable
 {

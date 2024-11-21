@@ -2,7 +2,7 @@
 
 namespace PHRETS\Models\Metadata;
 
-use Illuminate\Support\Arr;
+use PHRETS\Arr;
 use PHRETS\Session;
 
 abstract class Base implements \ArrayAccess

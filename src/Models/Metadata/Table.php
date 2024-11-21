@@ -2,8 +2,6 @@
 
 namespace PHRETS\Models\Metadata;
 
-use Illuminate\Support\Collection;
-
 /**
  * Class Table.
  *
@@ -80,11 +78,11 @@ class Table extends Base
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\LookupType[]
+     * @return list<\PHRETS\Models\Metadata\LookupType>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getLookupValues(): Collection|array
+    public function getLookupValues(): array
     {
         return $this->session->GetLookupValues($this->getResource(), $this->getLookupName());
     }

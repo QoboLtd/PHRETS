@@ -2,20 +2,22 @@
 
 namespace PHRETS\Parsers\GetMetadata;
 
-use Illuminate\Support\Collection;
 use PHRETS\Http\Response;
 use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
 
 class LookupType extends Base
 {
-    public function parse(Session $rets, Response $response): Collection
+    /**
+     * @return list<\PHRETS\Models\Metadata\LookupType>
+     */
+    public function parse(Session $rets, Response $response): array
     {
         /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
         $xml = $parser->parse($response);
 
-        $collection = new Collection();
+        $collection = [];
 
         if ($xml->METADATA) {
             // some servers don't name this correctly for the version of RETS used, so play nice with either way
@@ -29,7 +31,7 @@ class LookupType extends Base
                 $metadata = new \PHRETS\Models\Metadata\LookupType();
                 $metadata->setSession($rets);
                 $this->loadFromXml($metadata, $value, $xml->METADATA->{'METADATA-LOOKUP_TYPE'});
-                $collection->push($metadata);
+                $collection[] = $metadata;
             }
         }
 

@@ -6,15 +6,14 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Collection;
 use PHRETS\Exceptions\CapabilityUnavailable;
-use PHRETS\Exceptions\MetadataNotFound;
 use PHRETS\Exceptions\MissingConfiguration;
 use PHRETS\Exceptions\RETSException;
 use PHRETS\Http\Client as PHRETSClient;
 use PHRETS\Http\Response;
 use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
+use PHRETS\Models\BaseObject;
 use PHRETS\Models\Bulletin;
 use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\ParserType;
@@ -69,9 +68,10 @@ class Session
 
         $response = $this->request('Login');
 
+        /** @var \PHRETS\Parsers\Login\OneX $parser */
         $parser = $this->grab(ParserType::LOGIN);
         $xml = new \SimpleXMLElement((string) $response->getBody());
-        $parser->parse($xml->{'RETS-RESPONSE'}->__toString());
+        $parser->parse((string)$xml->{'RETS-RESPONSE'});
 
         foreach ($parser->getCapabilities() as $k => $v) {
             $this->capabilities->add($k, $v);
@@ -80,7 +80,7 @@ class Session
         $bulletin = new Bulletin($parser->getDetails());
         if ($this->capabilities->get('Action')) {
             $response = $this->request('Action');
-            $bulletin->setBody($response->getBody()->__toString());
+            $bulletin->setBody((string)$response->getBody());
 
             return $bulletin;
         } else {
@@ -94,13 +94,13 @@ class Session
      * @param $content_id
      * @param int $location
      *
-     * @return \PHRETS\Models\BaseObject
+     * @return ?\PHRETS\Models\BaseObject
      */
-    public function GetPreferredObject($resource, $type, $content_id, $location = 0)
+    public function GetPreferredObject($resource, $type, $content_id, $location = 0): ?BaseObject
     {
         $collection = $this->GetObject($resource, $type, $content_id, '0', $location);
 
-        return $collection->first();
+        return $collection[0] ?? null;
     }
 
     /**
@@ -110,11 +110,11 @@ class Session
      * @param mixed $object_ids
      * @param int $location
      *
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
+     * @return list<\PHRETS\Models\BaseObject>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetObject($resource, $type, $content_ids, mixed $object_ids = '*', $location = 0): Collection|array
+    public function GetObject($resource, $type, $content_ids, mixed $object_ids = '*', $location = 0): array
     {
         $request_id = GetObject::ids($content_ids, $object_ids);
 
@@ -131,13 +131,14 @@ class Session
         );
 
         if (stripos($response->getHeader('Content-Type'), 'multipart') !== false) {
+            /** @var \PHRETS\Parsers\GetObject\Multiple $parser */
             $parser = $this->grab(ParserType::OBJECT_MULTIPLE);
             $collection = $parser->parse($response);
         } else {
-            $collection = new Collection();
+            /** @var \PHRETS\Parsers\GetObject\Single $parser */
             $parser = $this->grab(ParserType::OBJECT_SINGLE);
             $object = $parser->parse($response);
-            $collection->push($object);
+            $collection = [ $object ];
         }
 
         return $collection;
@@ -150,98 +151,120 @@ class Session
      */
     public function GetSystemMetadata()
     {
-        return $this->MakeMetadataRequest('METADATA-SYSTEM', 0, ParserType::METADATA_SYSTEM);
+        $response = $this->MakeMetadataRequest('METADATA-SYSTEM', 0);
+
+        /** @var \PHRETS\Parsers\GetMetadata\System $parser */
+        $parser = $this->grab(ParserType::METADATA_SYSTEM);
+        return $parser->parse($this, $response);
+    }
+
+    /**
+     * @return array<string,\PHRETS\Models\Metadata\Resource>
+     *
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     */
+    public function GetResourcesMetadata(): array
+    {
+        $response = $this->MakeMetadataRequest('METADATA-RESOURCE', 0);
+
+        /** @var \PHRETS\Parsers\GetMetadata\Resource $parser */
+        $parser = $this->grab(ParserType::METADATA_RESOURCE);
+
+        return $parser->parse($this, $response);
     }
 
     /**
      * @param string $resource_id
-     *
-     * @throws \PHRETS\Exceptions\CapabilityUnavailable
-     * @throws \PHRETS\Exceptions\MetadataNotFound
-     */
-    public function GetResourcesMetadata($resource_id = null): Collection|\PHRETS\Models\Metadata\Resource
-    {
-        $result = $this->MakeMetadataRequest('METADATA-RESOURCE', 0, ParserType::METADATA_RESOURCE);
-
-        if ($resource_id) {
-            foreach ($result as $r) {
-                /** @var \PHRETS\Models\Metadata\Resource $r */
-                if ($r->getResourceID() == $resource_id) {
-                    return $r;
-                }
-            }
-            throw new MetadataNotFound("Requested '{$resource_id}' resource metadata does not exist");
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $resource_id
+     * @return array<string,\PHRETS\Models\Metadata\ResourceClass>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetClassesMetadata($resource_id)
+    public function GetClassesMetadata(string $resource_id)
     {
-        return $this->MakeMetadataRequest('METADATA-CLASS', $resource_id, ParserType::METADATA_CLASS);
+        $response = $this->MakeMetadataRequest('METADATA-CLASS', $resource_id);
+
+        /** @var \PHRETS\Parsers\GetMetadata\ResourceClass */
+        $parser = $this->grab(ParserType::METADATA_CLASS);
+
+        return $parser->parse($this, $response);
     }
 
     /**
-     * @param $resource_id
-     * @param $class_id
+     * @param string $resource_id
+     * @param string $class_id
      * @param string $keyed_by
-     *
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Table[]
+     * @return array<string,\PHRETS\Models\Metadata\Table>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetTableMetadata($resource_id, $class_id, $keyed_by = 'SystemName'): Collection|array
+    public function GetTableMetadata(string $resource_id, string $class_id, string $keyed_by = 'SystemName'): array
     {
-        return $this->MakeMetadataRequest('METADATA-TABLE', $resource_id . ':' . $class_id, ParserType::METADATA_TABLE, $keyed_by);
+        $response = $this->MakeMetadataRequest('METADATA-TABLE', $resource_id . ':' . $class_id);
+        
+        /** @var \PHRETS\Parsers\GetMetadata\Table $parser */
+        $parser = $this->grab(ParserType::METADATA_TABLE);
+        
+        return $parser->parse($this, $response, $keyed_by);
+    }
+
+    /**
+     * @param string|int $resource_id
+     * @return array<string,\PHRETS\Models\Metadata\BaseObject>
+     *
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     */
+    public function GetObjectMetadata(string|int $resource_id)
+    {
+        $response = $this->MakeMetadataRequest('METADATA-OBJECT', $resource_id);
+        
+        /** @var \PHRETS\Parsers\GetMetadata\BaseObject $parser */
+        $parser = $this->grab(ParserType::METADATA_OBJECT);
+
+        return $parser->parse($this, $response);
     }
 
     /**
      * @param $resource_id
-     *
+     * @return array<string,\PHRETS\Models\Metadata\Lookup>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetObjectMetadata($resource_id)
+    public function GetLookups($resource_id): array
     {
-        return $this->MakeMetadataRequest('METADATA-OBJECT', $resource_id, ParserType::METADATA_OBJECT);
+        $response = $this->MakeMetadataRequest('METADATA-LOOKUP', $resource_id);
+        
+        /** @var \PHRETS\Parsers\GetMetadata\Lookup $parser */
+        $parser = $this->grab(ParserType::METADATA_LOOKUP);
+
+        return $parser->parse($this, $response);
     }
 
     /**
-     * @param $resource_id
-     * @return mixed
-     * @throws \PHRETS\Exceptions\CapabilityUnavailable
-     */
-    public function GetLookups($resource_id)
-    {
-        return $this->MakeMetadataRequest('METADATA-LOOKUP', $resource_id, ParserType::METADATA_LOOKUP);
-    }
-
-    /**
-     * @param $resource_id
-     * @param $lookup_name
+     * @param string $resource_id
+     * @param string $lookup_name
+     * @return list<\PHRETS\Models\Metadata\LookupType>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetLookupValues($resource_id, $lookup_name)
+    public function GetLookupValues(string $resource_id, string $lookup_name)
     {
-        return $this->MakeMetadataRequest('METADATA-LOOKUP_TYPE', $resource_id . ':' . $lookup_name, ParserType::METADATA_LOOKUPTYPE);
+        $response = $this->MakeMetadataRequest('METADATA-LOOKUP_TYPE', $resource_id . ':' . $lookup_name);
+
+        /** @var \PHRETS\Parsers\GetMetadata\LookupType $parser */
+        $parser = $this->grab(ParserType::METADATA_LOOKUPTYPE);
+
+        return $parser->parse($this, $response);
     }
 
     /**
-     * @param $type
-     * @param $id
-     * @param \PHRETS\Parsers\ParserType $parser Parser
-     * @param mixed $keyed_by
+     * @param string $type
+     * @param string|int $id
+     * @return \PHRETS\Http\Response
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    protected function MakeMetadataRequest($type, $id, ParserType $parser, mixed $keyed_by = null)
+    protected function MakeMetadataRequest(string $type, string|int $id): Response
     {
-        $response = $this->request(
+        return $this->request(
             'GetMetadata',
             [
                 'query' => [
@@ -251,10 +274,6 @@ class Session
                 ],
             ]
         );
-
-        $parser = $this->grab($parser);
-
-        return $parser->parse($this, $response, $keyed_by);
     }
 
     /**
@@ -297,8 +316,10 @@ class Session
         );
 
         if ($recursive) {
+            /** @var \PHRETS\Parsers\Search\RecursiveOneX $parser */
             $parser = $this->grab(ParserType::SEARCH_RECURSIVE);
         } else {
+            /** @var \PHRETS\Parsers\Search\OneX $parser */
             $parser = $this->grab(ParserType::SEARCH);
         }
 
@@ -314,7 +335,7 @@ class Session
      * @param int $validation_mode
      * @param string $delimiter
      * @param array $additional_parameters
-     * @return mixed
+     * @return array<string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
      */
@@ -327,7 +348,7 @@ class Session
         int $validation_mode = 0,
         string $delimiter = '09',
         array $additional_parameters = []
-    ) {
+    ): array {
         $parameters = [
             'Resource' => $resource_id,
             'ClassName' => $class_id,
@@ -345,6 +366,7 @@ class Session
             'form_params' => array_merge($additional_parameters, $parameters),
         ]);
 
+        /** @var \PHRETS\Parsers\Update\OneEight $parser */
         $parser = $this->grab(ParserType::UPDATE);
 
         return $parser->parse($this, $response, $parameters);
@@ -357,11 +379,11 @@ class Session
      * @param $action
      * @param mixed $body
      * @param array $attributes
-     * @return mixed
+     * @return array<string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
      */
-    public function PostObject($resource, $type, $content_type, $action, mixed $body, array $attributes = [])
+    public function PostObject($resource, $type, $content_type, $action, mixed $body, array $attributes = []): array
     {
         $headers = array_merge([
             'Resource' => $resource,
@@ -375,6 +397,7 @@ class Session
             'body' => $body,
         ]);
 
+        /** @var \PHRETS\Parsers\PostObject\OneEight */
         $parser = $this->grab(ParserType::OBJECT_POST);
 
         return $parser->parse($this, $response);
@@ -418,7 +441,9 @@ class Session
         $url = $this->capabilities->get($capability);
 
         if (!$url) {
-            throw new CapabilityUnavailable("'{$capability}' tried but no valid endpoint was found.  Did you forget to Login()?");
+            throw new CapabilityUnavailable(
+                "'{$capability}' tried but no valid endpoint was found.  Did you forget to Login()?"
+            );
         }
 
         $options = array_merge($this->getDefaultOptions(), $options);
@@ -452,7 +477,11 @@ class Session
                 // do not send query options in url, only in form_params
                 $local_options = $options;
                 unset($local_options['query']);
-                $response = $this->client->request('POST', $url, array_merge($local_options, ['form_params' => $query]));
+                $response = $this->client->request(
+                    'POST',
+                    $url,
+                    array_merge($local_options, ['form_params' => $query])
+                );
             } else {
                 if (array_key_exists('query', $options)) {
                     $this->last_request_url = $url . '?' . \http_build_query($options['query']);
@@ -504,7 +533,10 @@ class Session
 
         $this->debug('Response: HTTP ' . $response->getStatusCode());
 
-        if (stripos((string) $response->getHeader('Content-Type'), 'text/xml') !== false && $capability != 'GetObject') {
+        if (stripos((string) $response->getHeader('Content-Type'), 'text/xml') !== false
+            && $capability != 'GetObject'
+        ) {
+            /** @var \PHRETS\Parsers\XML $parser */
             $parser = $this->grab(ParserType::XML);
             $xml = $parser->parse($response);
 
@@ -549,16 +581,16 @@ class Session
 
         if ($this->getConfiguration()->readOption('getobject_auto_retry') && $capability == 'GetObject') {
             if (stripos((string) $response->getHeader('Content-Type'), 'multipart') !== false) {
+                /** @var \PHRETS\Parsers\GetObject\Multiple $parser */
                 $parser = $this->grab(ParserType::OBJECT_MULTIPLE);
                 $collection = $parser->parse($response);
             } else {
-                $collection = new Collection();
+                /** @var \PHRETS\Parsers\GetObject\Single $parser */
                 $parser = $this->grab(ParserType::OBJECT_SINGLE);
                 $object = $parser->parse($response);
-                $collection->push($object);
+                $collection = [ $object ];
             }
 
-            /** @var \PHRETS\Models\BaseObject[] $collection */
             foreach ($collection as $object) {
                 if ($object->isError() && $object->getError()->getCode() == '20037') {
                     if ($is_retry) {

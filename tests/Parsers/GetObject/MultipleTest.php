@@ -38,10 +38,9 @@ class MultipleTest extends TestCase
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));
 
-        $this->assertSame(5, $collection->count());
+        $this->assertSame(5, count($collection));
 
-        /** @var \PHRETS\Models\BaseObject $obj */
-        $obj = $collection->first();
+        $obj = $collection[0];
         $this->assertSame('Exterior Main View', $obj->getContentDescription());
         $this->assertSame('http://url1.jpg', $obj->getLocation());
     }
@@ -51,8 +50,7 @@ class MultipleTest extends TestCase
     {
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, [], null)));
-
-        $this->assertInstanceOf('Illuminate\\Support\\Collection', $collection);
+        $this->assertCount(0, $collection);
     }
 
     /** @test **/
@@ -86,10 +84,9 @@ class MultipleTest extends TestCase
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));
 
-        $this->assertSame(5, $collection->count());
+        $this->assertSame(5, count($collection));
 
-        /** @var \PHRETS\Models\BaseObject $obj */
-        $obj = $collection->first();
+        $obj = $collection[0];
         $this->assertSame('Exterior Main View', $obj->getContentDescription());
         $this->assertSame('http://url1.jpg', $obj->getLocation());
     }

@@ -1,8 +1,5 @@
 <?php
-
 namespace PHRETS\Models\Metadata;
-
-use Illuminate\Support\Collection;
 
 /**
  * Class Resource.
@@ -69,21 +66,21 @@ class Resource extends Base
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\ResourceClass[]
+     * @return array<string,\PHRETS\Models\Metadata\ResourceClass>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getClasses(): Collection|array
+    public function getClasses(): array
     {
         return $this->getSession()->GetClassesMetadata($this->getResourceID());
     }
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\BaseObject[]
+     * @return array<string,\PHRETS\Models\Metadata\BaseObject>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getObject(): Collection|array
+    public function getObject(): array
     {
         return $this->getSession()->GetObjectMetadata($this->getResourceID());
     }

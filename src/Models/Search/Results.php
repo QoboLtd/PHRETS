@@ -3,11 +3,12 @@
 namespace PHRETS\Models\Search;
 
 use ArrayAccess;
+use ArrayIterator;
 use Closure;
 use Countable;
-use Illuminate\Support\Collection;
 use IteratorAggregate;
 use League\Csv\Writer;
+use PHRETS\Arr;
 use PHRETS\Session;
 use SplTempFileObject;
 use Traversable;
@@ -21,15 +22,15 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     protected int $total_results_count = 0;
     protected int $returned_results_count = 0;
     protected mixed $error = null;
-    /** @var \Illuminate\Support\Collection<\PHRETS\Models\Search\Record> */
-    protected Collection $results;
+    /** @var array<int|string,\PHRETS\Models\Search\Record> */
+    protected array $results;
     protected array $headers = [];
     protected string $restricted_indicator = '****';
     protected bool $maxrows_reached = false;
 
     public function __construct()
     {
-        $this->results = new Collection();
+        $this->results = [];
     }
 
     public function getHeaders(): array
@@ -48,9 +49,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param mixed $keyed_by
+     * @param callable|string|int|null $keyed_by
      */
-    public function addRecord(Record $record, mixed $keyed_by = null): void
+    public function addRecord(Record $record, callable|string|int|null $keyed_by = null): void
     {
         // register this Results object as the record's parent automatically
         $record->setParent($this);
@@ -58,11 +59,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         $this->returned_results_count++;
 
         if (is_callable($keyed_by)) {
-            $this->results->put($keyed_by($record), $record);
+            $this->results[$keyed_by($record)] = $record;
         } elseif ($keyed_by) {
-            $this->results->put($record->get($keyed_by), $record);
+            $this->results[$record->get($keyed_by)] = $record;
         } else {
-            $this->results->push($record);
+            $this->results[] = $record;
         }
     }
 
@@ -73,8 +74,8 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
      */
     public function keyResultsBy($field): void
     {
-        $results = clone $this->results;
-        $this->results = new Collection();
+        $results = $this->results;
+        $this->results = [];
         foreach ($results as $r) {
             $this->addRecord($r, $field);
         }
@@ -83,11 +84,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Grab a record by it's tracked key.
      *
-     * @param $key_id
+     * @param string|int $keyId
      */
-    public function find($key_id): ?Record
+    public function find(string|int $keyId): ?Record
     {
-        return $this->results->get($key_id);
+        return $this->results[$keyId] ?? null;
     }
 
     /**
@@ -232,17 +233,17 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     public function getIterator(): Traversable
     {
-        return $this->results->getIterator();
+        return new ArrayIterator($this->results);
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return $this->results->offsetExists($offset);
+        return array_key_exists($offset, $this->results);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->results->offsetGet($offset);
+        return $this->results[$offset] ?? null;
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -256,25 +257,31 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     public function offsetUnset(mixed $offset): void
     {
-        $this->results->offsetUnset($offset);
+        unset($this->results[$offset]);
     }
 
     public function count(): int
     {
-        return $this->results->count();
+        return count($this->results);
     }
 
     /**
-     * @param null $default
+     * @param ?\PHRETS\Models\Search\Record $default
      */
-    public function first(Closure $callback = null, $default = null): ?Record
+    public function first(Closure $callback = null, ?Record $default = null): ?Record
     {
-        return $this->results->first($callback, $default);
+        foreach ($this->results as $record) {
+            if ($callback === null || $callback($record)) {
+                return $record;
+            }
+        }
+
+        return $default;
     }
 
     public function last(): ?Record
     {
-        return $this->results->last();
+        return Arr::last($this->results);
     }
 
     public function isMaxRowsReached(): bool
