@@ -7,7 +7,7 @@ use PHRETS\Session;
 
 class Lookup extends Base
 {
-    public function parse(Session $rets, Response $response)
+    public function parse(Session $rets, Response $response): Collection
     {
         /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
