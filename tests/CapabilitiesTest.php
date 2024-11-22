@@ -1,12 +1,15 @@
 <?php
+namespace PHRETS\Test;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Capabilities;
 
 class CapabilitiesTest extends TestCase
 {
-    /** @test **/
-    public function itTracks()
+    #[Test]
+    public function itTracks(): void
     {
         $cpb = new Capabilities();
         $cpb->add('login', 'http://www.reso.org/login');
@@ -15,18 +18,16 @@ class CapabilitiesTest extends TestCase
         $this->assertNull($cpb->get('test'));
     }
 
-    /**
-     * @test
-     * **/
-    public function itBarfsWhenNotGivenEnoughInformationToBuildAbsoluteUrls()
+    #[Test]
+    public function itBarfsWhenNotGivenEnoughInformationToBuildAbsoluteUrls(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $cpb = new Capabilities();
         $cpb->add('Login', '/rets/Login');
     }
 
-    /** @test **/
-    public function itCanBuildAbsoluteUrlsFromRelativeOnes()
+    #[Test]
+    public function itCanBuildAbsoluteUrlsFromRelativeOnes(): void
     {
         $cpb = new Capabilities();
         $cpb->add('Login', 'http://www.google.com/login');
@@ -35,8 +36,8 @@ class CapabilitiesTest extends TestCase
         $this->assertSame('http://www.google.com:80/search', $cpb->get('Search'));
     }
 
-    /** @test **/
-    public function itPreservesExplicityPorts()
+    #[Test]
+    public function itPreservesExplicityPorts(): void
     {
         $cpb = new Capabilities();
         $cpb->add('Login', 'http://www.google.com:8080/login');

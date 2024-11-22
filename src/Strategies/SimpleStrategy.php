@@ -30,7 +30,10 @@ class SimpleStrategy implements Strategy
         ParserType::XML->value => \PHRETS\Parsers\XML::class,
     ];
 
+    /** @var array<string,class-string> */
     private array $classes;
+
+    /** @var array<string,mixed> */
     private array $instances;
 
     public function __construct()
@@ -54,7 +57,6 @@ class SimpleStrategy implements Strategy
     }
 
     /**
-     * @return void
      */
     public function initialize(Configuration $configuration): void
     {
@@ -72,7 +74,6 @@ class SimpleStrategy implements Strategy
      *
      * @param \PHRETS\Parsers\ParserType $parser Parser
      * @param mixed $instance Instance
-     * @return void
      */
     public function setInstance(ParserType $parser, mixed $instance): void
     {

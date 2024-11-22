@@ -1,17 +1,20 @@
 <?php
+namespace PHRETS\Test\Integration;
+
+use PHPUnit\Framework\Attributes\Test;
+use PHRETS\Arr;
 
 class SearchIntegrationTest extends BaseIntegration
 {
-    /** @test */
-    public function itMakesRequests()
+    #[Test]
+    public function itMakesRequests(): void
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
-        $this->assertTrue($results instanceof \PHRETS\Models\Search\Results);
         $this->assertCount(3, $results);
     }
 
-    /** @test **/
-    public function itParsesRequests()
+    #[Test]
+    public function itParsesRequests(): void
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
@@ -24,8 +27,8 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertTrue(preg_match('/000000$/', $record->get('LIST_1')) === 1);
     }
 
-    /** @test **/
-    public function itCountsRecords()
+    #[Test]
+    public function itCountsRecords(): void
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
@@ -33,16 +36,16 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertSame(9057, $results->getTotalResultsCount());
     }
 
-    /** @test **/
-    public function itSeesMaxrowsReached()
+    #[Test]
+    public function itSeesMaxrowsReached(): void
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
         $this->assertTrue($results->isMaxRowsReached());
     }
 
-    /** @test **/
-    public function itLimitsFields()
+    #[Test]
+    public function itLimitsFields(): void
     {
         /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => 'LIST_1,LIST_105']);
@@ -51,8 +54,8 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertNotContains('LIST_22', $results->getHeaders());
     }
 
-    /** @test **/
-    public function itLimitsFieldsWithAnArray()
+    #[Test]
+    public function itLimitsFieldsWithAnArray(): void
     {
         /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
@@ -61,17 +64,15 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertNotContains('LIST_22', $results->getHeaders());
     }
 
-    /** @test **/
-    public function itProvidesAccessToAssociatedMetadata()
+    #[Test]
+    public function itProvidesAccessToAssociatedMetadata(): void
     {
-        /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
-        $this->assertInstanceOf('\Illuminate\Support\Collection', $results->getMetadata());
-        $this->assertInstanceOf('\PHRETS\Models\Metadata\Table', $results->getMetadata()->first());
+        $this->assertInstanceOf(\PHRETS\Models\Metadata\Table::class, Arr::first($results->getMetadata()));
     }
 
-    /** @test **/
-    public function itRecursivelyRetrievesAllResults()
+    #[Test]
+    public function itRecursivelyRetrievesAllResults(): void
     {
         $this->session->Login();
 
@@ -86,8 +87,8 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertCount(40, $results);
     }
 
-    /** @test **/
-    public function itRecoversFromMissingDelimiter()
+    #[Test]
+    public function itRecoversFromMissingDelimiter(): void
     {
         $this->session->Login();
 
@@ -102,8 +103,8 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertCount(1, $results->getHeaders());
     }
 
-    /** @test **/
-    public function itDoesntDieWhenNoCountIsGiven()
+    #[Test]
+    public function itDoesntDieWhenNoCountIsGiven(): void
     {
         $this->session->Login();
 
@@ -119,10 +120,8 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertCount(40, $results);
     }
 
-    /**
-     * @test
-     * **/
-    public function itDetectsBrokenPagination()
+    #[Test]
+    public function itDetectsBrokenPagination(): void
     {
         $this->expectException(\PHRETS\Exceptions\AutomaticPaginationError::class);
         $this->session->Login();

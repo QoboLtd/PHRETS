@@ -12,57 +12,56 @@ class Configuration
     public const AUTH_BASIC = 'basic';
     public const AUTH_DIGEST = 'digest';
 
-    protected $username;
-    protected $password;
-    protected $login_url;
-    protected $user_agent = 'PHRETS/2.6.4';
-    protected $user_agent_password;
+    protected ?string $username = null;
+    protected ?string $password = null;
+    protected ?string $login_url = null;
+    protected string $user_agent = 'PHRETS/2.6.4';
+    protected ?string $user_agent_password = null;
     protected RETSVersion $rets_version;
-    protected $http_authentication = 'digest';
-    protected ?Strategy $strategy = null;
-    protected $options = [];
+    protected readonly Strategy $strategy;
+    protected string $http_authentication = 'digest';
 
-    public function __construct()
+    /** @var array<string,mixed> */
+    protected array $options = [];
+
+    public function __construct(?Strategy $strategy = null)
     {
+        if ($strategy === null) {
+            $strategy = new SimpleStrategy();
+        }
+
         $this->rets_version = (new RETSVersion())->setVersion('1.5');
+        $this->strategy = $strategy;
+        $strategy->initialize($this);
     }
 
-    public function getLoginUrl()
+    public function getLoginUrl(): ?string
     {
         return $this->login_url;
     }
 
     /**
-     * @return $this
      */
-    public function setLoginUrl($login_url)
+    public function setLoginUrl(?string $login_url): self
     {
         $this->login_url = $login_url;
 
         return $this;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    /**
-     * @param string $password
-     *
-     * @return $this
-     */
-    public function setPassword($password)
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * @return \PHRETS\Versions\RETSVersion
-     */
-    public function getRetsVersion()
+    public function getRetsVersion(): RETSVersion
     {
         return $this->rets_version;
     }
@@ -72,83 +71,57 @@ class Configuration
      *
      * @return $this
      */
-    public function setRetsVersion($rets_version)
+    public function setRetsVersion(string $rets_version)
     {
         $this->rets_version = (new RETSVersion())->setVersion($rets_version);
 
         return $this;
     }
 
-    public function getUserAgent()
+    public function getUserAgent(): string
     {
         return $this->user_agent;
     }
 
-    /**
-     * @param string $user_agent
-     *
-     * @return $this
-     */
-    public function setUserAgent($user_agent)
+    public function setUserAgent(string $user_agent): self
     {
         $this->user_agent = $user_agent;
 
         return $this;
     }
 
-    public function getUserAgentPassword()
+    public function getUserAgentPassword(): ?string
     {
         return $this->user_agent_password;
     }
 
-    /**
-     * @param string $user_agent_password
-     *
-     * @return $this
-     */
-    public function setUserAgentPassword($user_agent_password)
+    public function setUserAgentPassword(?string $user_agent_password): self
     {
         $this->user_agent_password = $user_agent_password;
 
         return $this;
     }
 
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * @param string $username
-     *
-     * @return $this
-     */
-    public function setUsername($username)
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
         return $this;
     }
 
-    /**
-     * @param $name
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setOption($name, $value)
+    public function setOption(string $name, mixed $value): self
     {
         $this->options[$name] = $value;
 
         return $this;
     }
 
-    /**
-     * @param $name
-     *
-     * @return null
-     */
-    public function readOption($name)
+    public function readOption(string $name): mixed
     {
         return $this->options[$name] ?? null;
     }
@@ -156,7 +129,6 @@ class Configuration
     /**
      * @param array<string,string> $configuration
      *
-     * @return self
      *
      * @throws \PHRETS\Exceptions\InvalidConfiguration
      */
@@ -189,40 +161,22 @@ class Configuration
     }
 
     /**
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->getLoginUrl() && $this->getUsername();
     }
 
     /**
-     * @return \PHRETS\Strategies\Strategy
      */
-    public function getStrategy()
+    public function getStrategy(): \PHRETS\Strategies\Strategy
     {
-        if ($this->strategy === null) {
-            $this->setStrategy(new SimpleStrategy());
-        }
-
         return $this->strategy;
     }
 
     /**
-     * @return $this
      */
-    public function setStrategy(Strategy $strategy)
-    {
-        $strategy->initialize($this);
-        $this->strategy = $strategy;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function userAgentDigestHash(Session $session)
+    public function userAgentDigestHash(Session $session): string
     {
         $ua_a1 = md5($this->getUserAgent() . ':' . $this->getUserAgentPassword());
 
@@ -237,7 +191,7 @@ class Configuration
      *
      * @return $this
      */
-    public function setHttpAuthenticationMethod($auth_method)
+    public function setHttpAuthenticationMethod(string $auth_method)
     {
         if (!in_array($auth_method, [self::AUTH_BASIC, self::AUTH_DIGEST])) {
             throw new \InvalidArgumentException("Given authentication method is invalid.  Must be 'basic' or 'digest'");
@@ -248,9 +202,8 @@ class Configuration
     }
 
     /**
-     * @return string
      */
-    public function getHttpAuthenticationMethod()
+    public function getHttpAuthenticationMethod(): string
     {
         return $this->http_authentication;
     }
