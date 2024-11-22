@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Parsers\Login\OneEight;
 
@@ -40,32 +41,32 @@ GetPayloadList=/GetPayloadList.asmx/GetPayloadList
         ');
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesAllTransactions()
     {
         $this->assertSame(7, count($this->parser->getCapabilities()));
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesCoreTransactions()
     {
         $this->assertSame('/Search.asmx/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/Logout.asmx/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesAllDetails()
     {
         $this->assertSame(18, count($this->parser->getDetails()));
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesUserDetails()
     {
         $this->assertSame('RESOWG', $this->parser->getDetails()['USER']);
     }
 
-    /** @test **/
+    #[Test]
     public function itCastsDetails()
     {
         $this->assertIsBool($this->parser->getDetails()['BROKERRECIPFLAG']);

@@ -1,11 +1,12 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\BaseObject;
 
 class ObjectTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itHolds()
     {
         $o = new BaseObject();
@@ -14,7 +15,7 @@ class ObjectTest extends TestCase
         $this->assertSame('Test Content', $o->getContent());
     }
 
-    /** @test **/
+    #[Test]
     public function itReturnsASize()
     {
         $o = new BaseObject();
@@ -23,7 +24,7 @@ class ObjectTest extends TestCase
         $this->assertSame(5, $o->getSize());
     }
 
-    /** @test **/
+    #[Test]
     public function itMakesFromHeaders()
     {
         $headers = [
@@ -50,7 +51,7 @@ class ObjectTest extends TestCase
         $this->assertSame('Mime Version', $o->getMimeVersion());
     }
 
-    /** @test **/
+    #[Test]
     public function itMarksPreferredObjects()
     {
         $o = new BaseObject();
@@ -60,7 +61,7 @@ class ObjectTest extends TestCase
         $this->assertSame(1, $o->getPreferred());
     }
 
-    /** @test **/
+    #[Test]
     public function itMarksErrors()
     {
         $e = new \PHRETS\Models\RETSError();

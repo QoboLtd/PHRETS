@@ -1,13 +1,14 @@
 <?php
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Http\Response as PHRETSResponse;
 use PHRETS\Parsers\GetObject\Multiple;
 
 class MultipleTest extends TestCase
 {
-    /** @test * */
+    #[Test]
     public function itBreaksThingsApart()
     {
         $headers = [
@@ -45,7 +46,7 @@ class MultipleTest extends TestCase
         $this->assertSame('http://url1.jpg', $obj->getLocation());
     }
 
-    /** @test **/
+    #[Test]
     public function itHandlesEmptyBodies()
     {
         $parser = new Multiple();
@@ -53,7 +54,7 @@ class MultipleTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
-    /** @test **/
+    #[Test]
     public function itHandlesUnquotedBoundaries()
     {
         $headers = [

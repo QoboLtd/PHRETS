@@ -1,29 +1,30 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Versions\RETSVersion;
 
 class RETSVersionTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itLoads()
     {
         $this->assertSame('1.7.2', (new RETSVersion())->setVersion('1.7.2')->getVersion());
     }
 
-    /** @test **/
+    #[Test]
     public function itCleans()
     {
         $this->assertSame('1.7.2', (new RETSVersion())->setVersion('RETS/1.7.2')->getVersion());
     }
 
-    /** @test **/
+    #[Test]
     public function itMakesTheHeader()
     {
         $this->assertSame('RETS/1.7.2', (new RETSVersion())->setVersion('1.7.2')->asHeader());
     }
 
-    /** @test **/
+    #[Test]
     public function itIs15()
     {
         $v = new RETSVersion();
@@ -33,7 +34,7 @@ class RETSVersionTest extends TestCase
         $this->assertTrue($v->isAtLeast1_5());
     }
 
-    /** @test **/
+    #[Test]
     public function itIs17()
     {
         $v = new RETSVersion();
@@ -46,7 +47,7 @@ class RETSVersionTest extends TestCase
         $this->assertFalse($v->isAtLeast1_7_2());
     }
 
-    /** @test **/
+    #[Test]
     public function itIs172()
     {
         $v = new RETSVersion();
@@ -60,7 +61,7 @@ class RETSVersionTest extends TestCase
         $this->assertFalse($v->isAtLeast1_8());
     }
 
-    /** @test **/
+    #[Test]
     public function itIs18()
     {
         $v = new RETSVersion();
@@ -75,7 +76,7 @@ class RETSVersionTest extends TestCase
         $this->assertTrue($v->isAtLeast1_8());
     }
 
-    /** @test **/
+    #[Test]
     public function itCompares()
     {
         $v = new RETSVersion();
@@ -86,9 +87,7 @@ class RETSVersionTest extends TestCase
         $this->assertTrue($v->isAtLeast('1.7.2'));
     }
 
-    /**
-     * @test
-     * **/
+    #[Test]
     public function itFailsBadVersions()
     {
         $this->expectException(\PHRETS\Exceptions\InvalidRETSVersion::class);
@@ -96,7 +95,7 @@ class RETSVersionTest extends TestCase
         $v->setVersion('2.0');
     }
 
-    /** @test **/
+    #[Test]
     public function itConvertsToString()
     {
         $v = new RETSVersion();

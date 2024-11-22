@@ -1,10 +1,11 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class ResponseTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itCreatesValidXml()
     {
         $body = "<?xml version='1.0' encoding='UTF-8'?><guestbook><guest><fname>First Name</fname><lname>Last Name</lname></guest></guestbook>";
@@ -15,7 +16,7 @@ class ResponseTest extends TestCase
         $this->assertEquals(1, $response->xml()->count());
     }
 
-    /** @test **/
+    #[Test]
     public function itCreatesValidXmlWithNewLines()
     {
         $body = "\n\n\r<?xml version='1.0' encoding='UTF-8'?><guestbook><guest><fname>First Name</fname><lname>Last Name</lname></guest></guestbook>\r\n\n";

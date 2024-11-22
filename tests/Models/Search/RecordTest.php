@@ -1,12 +1,13 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 
 class RecordTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itHoldsValues()
     {
         $r = new Record();
@@ -15,7 +16,7 @@ class RecordTest extends TestCase
         $this->assertSame('value', $r->get('name'));
     }
 
-    /** @test **/
+    #[Test]
     public function itHoldsMultipleValues()
     {
         $r = new Record();
@@ -28,7 +29,7 @@ class RecordTest extends TestCase
         $this->assertSame('three', $r->get('3'));
     }
 
-    /** @test **/
+    #[Test]
     public function itDetectsRestrictedValues()
     {
         $rs = new Results();
@@ -43,7 +44,7 @@ class RecordTest extends TestCase
         $this->assertTrue($r->isRestricted('another'));
     }
 
-    /** @test **/
+    #[Test]
     public function itChangesToArray()
     {
         $r = new Record();
@@ -53,7 +54,7 @@ class RecordTest extends TestCase
         $this->assertSame(['ListingID' => '123456789', 'MLS' => 'demo'], $r->toArray());
     }
 
-    /** @test **/
+    #[Test]
     public function itChangesToJson()
     {
         $r = new Record();
@@ -64,7 +65,7 @@ class RecordTest extends TestCase
         $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', (string) $r);
     }
 
-    /** @test **/
+    #[Test]
     public function itAccessesParentGivenAttributes()
     {
         $rs = new Results();
@@ -82,7 +83,7 @@ class RecordTest extends TestCase
         }
     }
 
-    /** @test **/
+    #[Test]
     public function itAllowsArrayAccess()
     {
         $r = new Record();

@@ -1,15 +1,17 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
+
 class GetObjectIntegrationTest extends BaseIntegration
 {
-    /** @test */
+    #[Test]
     public function itFetchesObjects()
     {
         $objects = $this->session->GetObject('Property', 'Photo', '14-52', '*', 0);
         $this->assertSame(22, count($objects));
     }
 
-    /** @test */
+    #[Test]
     public function itFetchesPrimaryObject()
     {
         $objects = $this->session->GetObject('Property', 'Photo', '00-1669', 0, 1);
@@ -22,14 +24,14 @@ class GetObjectIntegrationTest extends BaseIntegration
         $this->assertEquals($primary, $object);
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesPrimaryAsPreferred()
     {
         $object = $this->session->GetPreferredObject('Property', 'Photo', '00-1669', 1);
         $this->assertTrue($object->isPreferred());
     }
 
-    /** @test */
+    #[Test]
     public function itSeesLocationsDespiteXmlBeingReturned()
     {
         $object = $this->session->GetObject('Property', 'Photo', 'URLS-WITH-XML', '*', 1);

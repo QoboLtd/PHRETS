@@ -1,17 +1,18 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHRETS\Arr;
 
 class SearchIntegrationTest extends BaseIntegration
 {
-    /** @test */
+    #[Test]
     public function itMakesRequests()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
         $this->assertCount(3, $results);
     }
 
-    /** @test **/
+    #[Test]
     public function itParsesRequests()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
@@ -25,7 +26,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertTrue(preg_match('/000000$/', $record->get('LIST_1')) === 1);
     }
 
-    /** @test **/
+    #[Test]
     public function itCountsRecords()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
@@ -34,7 +35,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertSame(9057, $results->getTotalResultsCount());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesMaxrowsReached()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
@@ -42,7 +43,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertTrue($results->isMaxRowsReached());
     }
 
-    /** @test **/
+    #[Test]
     public function itLimitsFields()
     {
         /** @var \PHRETS\Models\Search\Results $results */
@@ -52,7 +53,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertNotContains('LIST_22', $results->getHeaders());
     }
 
-    /** @test **/
+    #[Test]
     public function itLimitsFieldsWithAnArray()
     {
         /** @var \PHRETS\Models\Search\Results $results */
@@ -62,14 +63,14 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertNotContains('LIST_22', $results->getHeaders());
     }
 
-    /** @test **/
+    #[Test]
     public function itProvidesAccessToAssociatedMetadata()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
         $this->assertInstanceOf(\PHRETS\Models\Metadata\Table::class, Arr::first($results->getMetadata()));
     }
 
-    /** @test **/
+    #[Test]
     public function itRecursivelyRetrievesAllResults()
     {
         $this->session->Login();
@@ -85,7 +86,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertCount(40, $results);
     }
 
-    /** @test **/
+    #[Test]
     public function itRecoversFromMissingDelimiter()
     {
         $this->session->Login();
@@ -101,7 +102,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertCount(1, $results->getHeaders());
     }
 
-    /** @test **/
+    #[Test]
     public function itDoesntDieWhenNoCountIsGiven()
     {
         $this->session->Login();
@@ -118,9 +119,7 @@ class SearchIntegrationTest extends BaseIntegration
         $this->assertCount(40, $results);
     }
 
-    /**
-     * @test
-     * **/
+    #[Test]
     public function itDetectsBrokenPagination()
     {
         $this->expectException(\PHRETS\Exceptions\AutomaticPaginationError::class);

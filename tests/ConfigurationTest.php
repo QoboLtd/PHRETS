@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Strategies\SimpleStrategy;
@@ -7,7 +8,7 @@ use PHRETS\Strategies\Strategy;
 
 class ConfigurationTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itDoesTheBasics()
     {
         $config = new Configuration();
@@ -20,7 +21,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('pass', $config->getPassword());
     }
 
-    /** @test **/
+    #[Test]
     public function itLoadsConfigFromArray()
     {
         $config = Configuration::load([
@@ -34,23 +35,21 @@ class ConfigurationTest extends TestCase
         $this->assertSame('pass', $config->getPassword());
     }
 
-    /**
-     * @test
-     **/
+    #[Test]
     public function itComplainsAboutBadConfig()
     {
         $this->expectException(\PHRETS\Exceptions\InvalidConfiguration::class);
         Configuration::load();
     }
 
-    /** @test **/
+    #[Test]
     public function itLoadsDefaultRetsVersion()
     {
         $config = new Configuration();
         $this->assertTrue($config->getRetsVersion()->is1_5());
     }
 
-    /** @test **/
+    #[Test]
     public function itHandlesVersionsCorrectly()
     {
         $config = new Configuration();
@@ -58,7 +57,7 @@ class ConfigurationTest extends TestCase
         $this->assertTrue($config->getRetsVersion()->is1_7_2());
     }
 
-    /** @test **/
+    #[Test]
     public function itHandlesUserAgents()
     {
         $config = new Configuration();
@@ -66,7 +65,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('PHRETS/2.0', $config->getUserAgent());
     }
 
-    /** @test **/
+    #[Test]
     public function itHandlesUaPasswords()
     {
         $config = new Configuration();
@@ -76,7 +75,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('test12345', $config->getUserAgentPassword());
     }
 
-    /** @test **/
+    #[Test]
     public function itTracksOptions()
     {
         $config = new Configuration();
@@ -84,7 +83,7 @@ class ConfigurationTest extends TestCase
         $this->assertTrue($config->readOption('param'));
     }
 
-    /** @test **/
+    #[Test]
     public function itLoadsAStrategy()
     {
         $config = new Configuration();
@@ -92,7 +91,7 @@ class ConfigurationTest extends TestCase
         $this->assertInstanceOf(SimpleStrategy::class, $config->getStrategy());
     }
 
-    /** @test **/
+    #[Test]
     public function itAllowsOverridingTheStrategy()
     {
         $strategy = new SimpleStrategy();
@@ -100,7 +99,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame($strategy, $config->getStrategy());
     }
 
-    /** @test **/
+    #[Test]
     public function itGeneratesUserAgentAuthHashesCorrectly()
     {
         $c = new Configuration();
@@ -113,16 +112,14 @@ class ConfigurationTest extends TestCase
         $this->assertSame('123c96e02e514da469db6bc61ab998dc', $c->userAgentDigestHash($s));
     }
 
-    /** @test **/
+    #[Test]
     public function itKeepsDigestAsTheDefault()
     {
         $c = new Configuration();
         $this->assertSame(Configuration::AUTH_DIGEST, $c->getHttpAuthenticationMethod());
     }
 
-    /**
-     * @test
-     **/
+    #[Test]
     public function itDoesntAllowBogusAuthMethods()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -130,7 +127,7 @@ class ConfigurationTest extends TestCase
         $c->setHttpAuthenticationMethod('bogus');
     }
 
-    /** @test **/
+    #[Test]
     public function itAcceptsBasicAuth()
     {
         $c = new Configuration();

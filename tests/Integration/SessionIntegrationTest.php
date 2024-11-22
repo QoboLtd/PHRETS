@@ -2,12 +2,13 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
+use PHPUnit\Framework\Attributes\Test;
 use PHRETS\Configuration;
 use PHRETS\Session;
 
 class SessionIntegrationTest extends BaseIntegration
 {
-    /** @test * */
+    #[Test]
     public function itLogsIn()
     {
         assert($this->session !== null);
@@ -15,16 +16,14 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertNull($connect->getBody());
     }
 
-    /** @test **/
+    #[Test]
     public function itMadeTheRequest()
     {
         $this->session->Login();
         $this->assertSame('http://retsgw.flexmls.com:80/rets2_1/Login', $this->session->getLastRequestURL());
     }
 
-    /**
-     * @test
-     * **/
+    #[Test]
     public function itThrowsAnExceptionWhenMakingABadRequest()
     {
         $this->expectException(\PHRETS\Exceptions\RETSException::class);
@@ -33,7 +32,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->session->Search('Property', 'Z', '*'); // no such class by that name
     }
 
-    /** @test **/
+    #[Test]
     public function itTracksTheLastResponseBody()
     {
         $this->session->Login();
@@ -42,7 +41,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertMatchesRegularExpression('/NotificationFeed/', $this->session->getLastResponse());
     }
 
-    /** @test **/
+    #[Test]
     public function itDisconnects()
     {
         $this->session->Login();
@@ -50,7 +49,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertTrue($this->session->Disconnect());
     }
 
-    /** @test **/
+    #[Test]
     public function itRequestsTheServersActionTransaction()
     {
         $config = new \PHRETS\Configuration();
@@ -67,7 +66,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
     }
 
-    /** @test **/
+    #[Test]
     public function itUsesHttpPostMethodWhenDesired()
     {
         $config = new \PHRETS\Configuration();
@@ -89,7 +88,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertCount(1, $results);
     }
 
-    /** @test **/
+    #[Test]
     public function itTracksAGivenSessionId()
     {
         $this->session->Login();
@@ -100,7 +99,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertSame('21AC8993DC98DDCE648423628ECF4AB5', $this->session->getRetsSessionId());
     }
 
-    /** @test **/
+    #[Test]
     public function itDetectsWhenToUseUserAgentAuthentication()
     {
         $config = new Configuration();
@@ -132,9 +131,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertArrayHasKey('Accept', $last_request['request']->getHeaders());
     }
 
-    /**
-     * @test
-     **/
+    #[Test]
     public function itDoesntAllowRequestsToUnsupportedCapabilities()
     {
         $this->expectException(\PHRETS\Exceptions\CapabilityUnavailable::class);

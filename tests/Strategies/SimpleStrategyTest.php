@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Parsers\ParserType;
@@ -7,7 +8,7 @@ use PHRETS\Strategies\SimpleStrategy;
 
 class SimpleStrategyTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itProvidesDefaults()
     {
         $config = new Configuration();
@@ -17,7 +18,7 @@ class SimpleStrategyTest extends TestCase
         $this->assertInstanceOf('\PHRETS\Parsers\Login\OneFive', $strategy->provide(ParserType::LOGIN));
     }
 
-    /** @test **/
+    #[Test]
     public function itProvidesA18LoginParser()
     {
         $config = new Configuration();
@@ -28,7 +29,7 @@ class SimpleStrategyTest extends TestCase
         $this->assertInstanceOf('\PHRETS\Parsers\Login\OneEight', $strategy->provide(ParserType::LOGIN));
     }
 
-    /** @test **/
+    #[Test]
     public function itProvidesSingletons()
     {
         $config = new Configuration();

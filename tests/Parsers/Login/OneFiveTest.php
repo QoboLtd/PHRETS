@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Parsers\Login\OneFive;
 
@@ -26,32 +27,32 @@ Logout=/rets1_5/Logout
         ');
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesAllTransactions()
     {
         $this->assertSame(6, count($this->parser->getCapabilities()));
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesCoreTransactions()
     {
         $this->assertSame('/rets1_5/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/rets1_5/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesCustomTransactions()
     {
         $this->assertSame('/rets1_5/Links', $this->parser->getCapabilities()['X-SampleLinks']);
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesAllDetails()
     {
         $this->assertSame(5, count($this->parser->getDetails()));
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesUserDetails()
     {
         $this->assertSame('unk,MASTER,4,1234567890', $this->parser->getDetails()['User']);

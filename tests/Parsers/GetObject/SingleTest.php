@@ -1,13 +1,14 @@
 <?php
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Http\Response as PHRETSResponse;
 use PHRETS\Parsers\GetObject\Single;
 
 class SingleTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itUnderstandsTheBasics()
     {
         $parser = new Single();
@@ -18,7 +19,7 @@ class SingleTest extends TestCase
         $this->assertSame('text/plain', $obj->getContentType());
     }
 
-    /** @test **/
+    #[Test]
     public function itDetectsAndHandlesErrors()
     {
         $error = '<RETS ReplyCode="20203" ReplyText="RETS Server: Some error">
@@ -33,7 +34,7 @@ class SingleTest extends TestCase
         $this->assertSame('RETS Server: Some error', $obj->getError()->getMessage());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesTheNewRetsErrorHeader()
     {
         $error = '<RETS ReplyCode="20203" ReplyText="RETS Server: Some error">

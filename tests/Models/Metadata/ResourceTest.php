@@ -1,11 +1,12 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Metadata\Resource;
 
 class ResourceTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itHolds()
     {
         $metadata = new Resource();
@@ -14,9 +15,7 @@ class ResourceTest extends TestCase
         $this->assertSame('Test Description', $metadata->getDescription());
     }
 
-    /**
-     * @test
-     **/
+    #[Test]
     public function itDoesntLikeBadMethods()
     {
         $this->expectException(BadMethodCallException::class);
@@ -25,7 +24,7 @@ class ResourceTest extends TestCase
         $metadata->totallyBogus();
     }
 
-    /** @test **/
+    #[Test]
     public function itReturnsNullForUnrecognizedAttributes()
     {
         $metadata = new Resource();
@@ -33,7 +32,7 @@ class ResourceTest extends TestCase
         $this->assertNull($metadata->getSomethingFake());
     }
 
-    /** @test **/
+    #[Test]
     public function itWorksLikeAnArray()
     {
         $metadata = new Resource();
@@ -43,7 +42,7 @@ class ResourceTest extends TestCase
         $this->assertSame('Test Description', $metadata['Description']);
     }
 
-    /** @test **/
+    #[Test]
     public function itSetsLikeAnArray()
     {
         $metadata = new Resource();

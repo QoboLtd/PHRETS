@@ -1,16 +1,17 @@
 <?php
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Http\Response as PHRETSResponse;
+use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\Search\OneX;
 use PHRETS\Session;
 
 class OneXTest extends TestCase
 {
-    /** @var \PHRETS\Models\Search\Results */
-    protected $results;
+    protected Results $results;
 
     public function setUp(): void
     {
@@ -41,25 +42,25 @@ class OneXTest extends TestCase
         $this->results = $parser->parse($s, new PHRETSResponse(new Response(200, [], $data)), $parameters);
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesCounts()
     {
         $this->assertSame(9057, $this->results->getTotalResultsCount());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesColumns()
     {
         $this->assertSame(['LIST_1', 'LIST_105'], $this->results->getHeaders());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesTheFirstRecord()
     {
         $this->assertSame('20111007152642181995000000', $this->results->first()['LIST_1'] ?? null);
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesMaxrows()
     {
         $this->assertTrue($this->results->isMaxRowsReached());

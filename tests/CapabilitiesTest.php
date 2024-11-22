@@ -1,11 +1,12 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Capabilities;
 
 class CapabilitiesTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itTracks()
     {
         $cpb = new Capabilities();
@@ -15,9 +16,7 @@ class CapabilitiesTest extends TestCase
         $this->assertNull($cpb->get('test'));
     }
 
-    /**
-     * @test
-     * **/
+    #[Test]
     public function itBarfsWhenNotGivenEnoughInformationToBuildAbsoluteUrls()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -25,7 +24,7 @@ class CapabilitiesTest extends TestCase
         $cpb->add('Login', '/rets/Login');
     }
 
-    /** @test **/
+    #[Test]
     public function itCanBuildAbsoluteUrlsFromRelativeOnes()
     {
         $cpb = new Capabilities();
@@ -35,7 +34,7 @@ class CapabilitiesTest extends TestCase
         $this->assertSame('http://www.google.com:80/search', $cpb->get('Search'));
     }
 
-    /** @test **/
+    #[Test]
     public function itPreservesExplicityPorts()
     {
         $cpb = new Capabilities();

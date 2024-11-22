@@ -2,6 +2,7 @@
 
 use GuzzleHttp\Cookie\CookieJar;
 use Monolog\Logger;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Session;
@@ -9,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 class SessionTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itBuilds()
     {
         $c = new Configuration();
@@ -19,9 +20,7 @@ class SessionTest extends TestCase
         $this->assertSame($c, $s->getConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDetectsInvalidConfigurations()
     {
         $this->expectException(\PHRETS\Exceptions\MissingConfiguration::class);
@@ -32,7 +31,7 @@ class SessionTest extends TestCase
         $s->Login();
     }
 
-    /** @test **/
+    #[Test]
     public function itGivesBackTheLoginUrl()
     {
         $c = new Configuration();
@@ -43,7 +42,7 @@ class SessionTest extends TestCase
         $this->assertSame('http://www.reso.org/login', $s->getLoginUrl());
     }
 
-    /** @test **/
+    #[Test]
     public function itTracksCapabilities()
     {
         $login_url = 'http://www.reso.org/login';
@@ -55,7 +54,7 @@ class SessionTest extends TestCase
         $this->assertSame($login_url, $capabilities->get('Login'));
     }
 
-    /** @test **/
+    #[Test]
     public function itDisablesRedirectsWhenDesired()
     {
         $c = new Configuration();
@@ -69,7 +68,7 @@ class SessionTest extends TestCase
         $this->assertFalse($defaultOptions['allow_redirects']);
     }
 
-    /** @test **/
+    #[Test]
     public function itUsesTheSetLogger()
     {
         $logger = $this->getMockBuilder(Logger::class)
@@ -99,7 +98,7 @@ class SessionTest extends TestCase
         $s->debug('Message', 'Context');
     }
 
-    /** @test **/
+    #[Test]
     public function itFixesTheLoggerContextAutomatically()
     {
         $logger = $this->createMock(\Monolog\Logger::class);
@@ -114,7 +113,7 @@ class SessionTest extends TestCase
         $s->setLogger($logger);
     }
 
-    /** @test **/
+    #[Test]
     public function itLoadsACookieJar()
     {
         $c = new Configuration();
@@ -124,7 +123,7 @@ class SessionTest extends TestCase
         $this->assertInstanceOf(CookieJar::class, $s->getCookieJar());
     }
 
-    /** @test **/
+    #[Test]
     public function itAllowsOverridingTheCookieJar()
     {
         $c = new Configuration();

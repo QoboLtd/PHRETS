@@ -1,17 +1,18 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Bulletin;
 
 class BulletinTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function itHolds()
     {
         $this->assertSame('Hello World', (new Bulletin())->setBody('Hello World')->getBody());
     }
 
-    /** @test **/
+    #[Test]
     public function itTurnsItselfIntoAString()
     {
         $this->assertSame('Hello World', (string) (new Bulletin())->setBody('Hello World'));

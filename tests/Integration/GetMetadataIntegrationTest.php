@@ -1,19 +1,22 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Test;
+use PHRETS\Arr;
+
 class GetMetadataIntegrationTest extends BaseIntegration
 {
     /**
      * System.
      */
 
-    /** @test **/
+    #[Test]
     public function itGetsSystemData()
     {
         $system = $this->session->GetSystemMetadata();
         $this->assertTrue($system instanceof \PHRETS\Models\Metadata\System);
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsSystemDataFor15()
     {
         $config = new \PHRETS\Configuration();
@@ -30,7 +33,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertSame('demomls', $system->getSystemID());
     }
 
-    /** @test **/
+    #[Test]
     public function itMakesAGoodUrl()
     {
         $this->session->GetSystemMetadata();
@@ -40,7 +43,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
         );
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesSomeAttributes()
     {
         $system = $this->session->GetSystemMetadata();
@@ -48,7 +51,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertSame('-05:00', $system->getTimeZoneOffset());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsRelatedResources()
     {
         $system = $this->session->GetSystemMetadata()->getResources();
@@ -60,7 +63,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
      * Resources.
      */
 
-    /** @test **/
+    #[Test]
     public function itGetsResourceData()
     {
         $resources = $this->session->GetResourcesMetadata();
@@ -72,16 +75,16 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertSame('7', $resource->getClassCount());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsAllResourceData()
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertCount(9, $resources);
-        $this->assertSame('ActiveAgent', $this->first($resources)?->getResourceID());
-        $this->assertSame('VirtualTour', $this->last($resources)?->getResourceID());
+        $this->assertSame('ActiveAgent', Arr::first($resources)?->getResourceID());
+        $this->assertSame('VirtualTour', Arr::last($resources)?->getResourceID());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsKeyedResourceData()
     {
         $resources = $this->session->GetResourcesMetadata();
@@ -89,16 +92,14 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertInstanceOf(\PHRETS\Models\Metadata\Resource::class, $resources['Property']);
     }
 
-    /**
-     * @test
-     * **/
+    #[Test]
     public function itErrorsWithBadResourceName()
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayNotHasKey('Bogus', $resources);
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsRelatedClasses()
     {
         $resources = $this->session->GetResourcesMetadata();
@@ -109,21 +110,21 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertEquals($resource_classes, $classes);
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsRelatedObjectMetadata()
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayHasKey('Property', $resources);
 
         $object_types = $resources['Property']->getObject();
-        $this->assertSame('Photo', $this->first($object_types)?->getObjectType());
+        $this->assertSame('Photo', Arr::first($object_types)?->getObjectType());
     }
 
     /**
      * Classes.
      */
 
-    /** @test **/
+    #[Test]
     public function itGetsClassData()
     {
         $classes = $this->session->GetClassesMetadata('Property');
@@ -132,17 +133,17 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertSame('A', reset($classes)->getClassName());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsRelatedTableData()
     {
         $classes = $this->session->GetClassesMetadata('Property');
         $this->assertIsArray($classes);
-        $firstClass = $this->first($classes);
+        $firstClass = Arr::first($classes);
 
-        $this->assertSame('LIST_0', $this->first($firstClass->getTable())->getSystemName());
+        $this->assertSame('LIST_0', Arr::first($firstClass->getTable())->getSystemName());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsKeyedClassMetadata()
     {
         $classes = $this->session->GetClassesMetadata('Property');
@@ -153,46 +154,46 @@ class GetMetadataIntegrationTest extends BaseIntegration
      * Table.
      */
 
-    /** @test **/
+     #[Test]
     public function itGetsTableData()
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
         $this->assertTrue(count($fields) > 100, 'Verify that a lot of fields came back');
-        $this->assertSame('LIST_0', $this->first($fields)?->getSystemName());
+        $this->assertSame('LIST_0', Arr::first($fields)?->getSystemName());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesTableAttributes()
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
-        $this->assertSame('Property', $this->first($fields)?->getResource());
-        $this->assertSame('A', $this->last($fields)?->getClass());
+        $this->assertSame('Property', Arr::first($fields)?->getResource());
+        $this->assertSame('A', Arr::last($fields)?->getClass());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesFieldsByKey()
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
         $this->assertSame('Listing ID', $fields['LIST_105']->getLongName());
     }
 
-    /** @test **/
+    #[Test]
     public function itSeesFieldsByStandardKey()
     {
         $fields = $this->session->GetTableMetadata('Property', 'A', 'StandardName');
         $this->assertSame('Listing ID', $fields['ListingID']->getLongName());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsObjectMetadata()
     {
         $object_types = $this->session->GetObjectMetadata('Property');
         $this->assertTrue(count($object_types) > 4, 'Verify that a few came back');
-        $this->assertSame('Photo', $this->first($object_types)?->getObjectType());
-        $this->assertSame('LIST_133', $this->first($object_types)->getObjectCount());
+        $this->assertSame('Photo', Arr::first($object_types)?->getObjectType());
+        $this->assertSame('LIST_133', Arr::first($object_types)->getObjectCount());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsKeyedObjectMetadata()
     {
         $object_types = $this->session->GetObjectMetadata('Property');
@@ -203,17 +204,17 @@ class GetMetadataIntegrationTest extends BaseIntegration
      * Lookups.
      */
 
-    /** @test **/
+    #[Test]
     public function itGetsLookupValues()
     {
         $values = $this->session->GetLookupValues('Property', '20000426151013376279000000');
-        $first = $this->first($values);
+        $first = Arr::first($values);
 
         $this->assertSame('Lake/Other', $first->getLongValue());
         $this->assertSame('5PSUX49PM1Q', $first->getValue());
     }
 
-    /** @test **/
+    #[Test]
     public function itGetsRelatedLookupValues()
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
@@ -221,40 +222,10 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $quick_way = $fields['LIST_9']->getLookupValues();
         $manual_way = $this->session->GetLookupValues('Property', '20000426151013376279000000');
 
-        $this->assertEquals($this->first($quick_way), $this->first($manual_way));
+        $this->assertEquals(Arr::first($quick_way), Arr::first($manual_way));
     }
 
-    /**
-     * @template T
-     * @param array<int|string,T> $values
-     * @return T|null
-     */
-    private function first(array $values): mixed
-    {
-        $key = array_key_first($values);
-        if ($key === null) {
-            return null;
-        }
-
-        return $values[$key];
-    }
-
-     /**
-     * @template T
-     * @param array<int|string,T> $values
-     * @return T|null
-     */
-    private function last(array $values): mixed
-    {
-        $key = array_key_last($values);
-        if ($key === null) {
-            return null;
-        }
-
-        return $values[$key];
-    }
-
-    /** @test **/
+    #[Test]
     public function itRecoversFromBadLookuptypeTag()
     {
         $config = new \PHRETS\Configuration();
@@ -270,7 +241,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertCount(6, $values);
     }
 
-    /** @test **/
+    #[Test]
     public function itHandlesIncompleteObjectMetadataCorrectly()
     {
         $config = new \PHRETS\Configuration();
