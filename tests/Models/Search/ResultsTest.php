@@ -202,13 +202,6 @@ class ResultsTest extends TestCase
     }
 
     /** @test **/
-    public function itConvertsObjectToCSV()
-    {
-        $expected = "id,name,value\n1,left,up\n2,right,down\n";
-        $this->assertSame($expected, $this->rs->toCSV());
-    }
-
-    /** @test **/
     public function itConvertsObjectToJSON()
     {
         $expected = '[{"id":1,"name":"left","value":"up"},{"id":2,"name":"right","value":"down"}]';

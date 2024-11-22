@@ -327,34 +327,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
         return $l;
     }
 
-    /**
-     * Return results as a large prepared CSV string.
-     *
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function toCSV(): string
-    {
-        // create a temporary file so we can write the CSV out
-        $writer = Writer::createFromFileObject(new SplTempFileObject());
-
-        // add the header line
-        $writer->insertOne($this->getHeaders());
-
-        // go through each record
-        foreach ($this->results as $r) {
-            $record = [];
-
-            // go through each field and ensure that each record is prepared in an order consistent with the headers
-            foreach ($this->getHeaders() as $h) {
-                $record[] = $r->get($h);
-            }
-            $writer->insertOne($record);
-        }
-
-        // return as a string
-        return (string) $writer;
-    }
-
     public function jsonSerialize(): mixed
     {
         return $this->results;
