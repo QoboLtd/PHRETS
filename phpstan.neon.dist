@@ -1,16 +1,20 @@
 parameters:
-	level: 6
-	paths:
-		- src
-		- tests
-	treatPhpDocTypesAsCertain: false
-	ignoreErrors:
-		-
-			identifier: missingType.generics
-		-
-			identifier: missingType.return
-			path: tests
-		
+    level: 7
+    paths:
+        - src
+        - tests
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            identifier: argument.type
+            path: tests
+        -
+            identifier: missingType.generics
+        -
+            identifier: missingType.return
+            path: tests
+
 
 includes:
-	- phpstan-baseline.neon
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon

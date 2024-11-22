@@ -41,10 +41,8 @@ class GetObject
             } else {
                 $value = [$value];
             }
-        } else {
-            $value = array_map(fn ($v) => (string)$v, $value);
         }
 
-        return $value;
+        return array_map(fn ($v) => (string)$v, $value);
     }
 }

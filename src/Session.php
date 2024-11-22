@@ -451,7 +451,7 @@ class Session
         $response = null;
         $url = $this->capabilities->get($capability);
 
-        if (!$url) {
+        if (!is_string($url)) {
             throw new CapabilityUnavailable(
                 "'{$capability}' tried but no valid endpoint was found.  Did you forget to Login()?"
             );
@@ -625,7 +625,9 @@ class Session
 
     public function getLoginUrl(): ?string
     {
-        return $this->capabilities->get('Login');
+        $url = $this->capabilities->get('Login');
+        
+        return is_string($url) ? $url : null;
     }
 
     public function getCapabilities(): Capabilities
@@ -709,10 +711,10 @@ class Session
 
     /**
      * @return array{
-     *   auth:string[],
+     *   auth:list<?string>,
      *   headers: array{User-Agent: string, RETS-Version: string, Accept-Encoding: string, Accept: string},
      *   curl: array{10031: string|false},
-     *   allow_redirects: false
+     *   allow_redirects?: false
      * }
      */
     public function getDefaultOptions(): array

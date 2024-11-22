@@ -116,7 +116,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $this->assertArrayHasKey('Property', $resources);
 
         $object_types = $resources['Property']->getObject();
-        $this->assertSame('Photo', reset($object_types)->getObjectType());
+        $this->assertSame('Photo', $this->first($object_types)?->getObjectType());
     }
 
     /**

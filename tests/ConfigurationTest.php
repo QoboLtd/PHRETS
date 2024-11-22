@@ -47,8 +47,6 @@ class ConfigurationTest extends TestCase
     public function itLoadsDefaultRetsVersion()
     {
         $config = new Configuration();
-
-        $this->assertInstanceOf('PHRETS\\Versions\\RETSVersion', $config->getRetsVersion());
         $this->assertTrue($config->getRetsVersion()->is1_5());
     }
 
@@ -57,7 +55,7 @@ class ConfigurationTest extends TestCase
     {
         $config = new Configuration();
         $config->setRetsVersion('1.7.2');
-        $this->assertInstanceOf('PHRETS\\Versions\\RETSVersion', $config->getRetsVersion());
+        $this->assertTrue($config->getRetsVersion()->is1_7_2());
     }
 
     /** @test **/

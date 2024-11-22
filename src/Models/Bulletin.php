@@ -8,11 +8,11 @@ class Bulletin implements \Stringable
 {
     protected ?string $body = null;
 
-    /** @var array<string,string> */
+    /** @var array<string,bool|int|string> */
     protected array $details = [];
 
     /**
-     * @param array<string,string> $details
+     * @param array<string,bool|int|string> $details
      */
     public function __construct(array $details = [])
     {

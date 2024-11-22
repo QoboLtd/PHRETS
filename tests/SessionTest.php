@@ -1,8 +1,10 @@
 <?php
 
+use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Session;
+use Psr\Log\LoggerInterface;
 
 class SessionTest extends TestCase
 {
@@ -49,7 +51,6 @@ class SessionTest extends TestCase
 
         $s = new Session($c);
         $capabilities = $s->getCapabilities();
-        $this->assertInstanceOf('PHRETS\Capabilities', $capabilities);
         $this->assertSame($login_url, $capabilities->get('Login'));
     }
 
@@ -62,7 +63,9 @@ class SessionTest extends TestCase
 
         $s = new Session($c);
 
-        $this->assertFalse($s->getDefaultOptions()['allow_redirects']);
+        $defaultOptions = $s->getDefaultOptions();
+        $this->assertArrayHasKey('allow_redirects', $defaultOptions);
+        $this->assertFalse($defaultOptions['allow_redirects']);
     }
 
     /** @test **/
@@ -89,6 +92,7 @@ class SessionTest extends TestCase
     public function itFixesTheLoggerContextAutomatically()
     {
         $logger = $this->createMock(\Monolog\Logger::class);
+        assert($logger instanceof LoggerInterface);
         // just expect that a debug message is spit out
         $logger->expects($this->atLeastOnce())->method('debug')->with($this->matchesRegularExpression('/logger/'));
 
@@ -106,7 +110,7 @@ class SessionTest extends TestCase
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
-        $this->assertInstanceOf('\GuzzleHttp\Cookie\CookieJarInterface', $s->getCookieJar());
+        $this->assertInstanceOf(CookieJar::class, $s->getCookieJar());
     }
 
     /** @test **/

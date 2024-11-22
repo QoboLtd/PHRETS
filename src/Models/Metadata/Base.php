@@ -20,7 +20,7 @@ abstract class Base implements \ArrayAccess
     protected array $attributes = [];
 
 
-    /** @var array<string,mixed> */
+    /** @var array<int|string,mixed> */
     protected array $values = [];
 
     public function getSession(): Session

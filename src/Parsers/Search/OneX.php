@@ -56,6 +56,7 @@ class OneX
     /**
      * @param $xml
      * @param $parameters
+     * @return non-empty-string
      */
     protected function getDelimiter(Session $rets, SimpleXMLElement $xml): string
     {

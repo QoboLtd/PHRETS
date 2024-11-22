@@ -4,10 +4,10 @@ namespace PHRETS\Parsers\Login;
 
 abstract class OneX
 {
-    /** @var array<string,string> */
+    /** @var array<string,bool|int|string> */
     protected array $capabilities = [];
 
-    /** @var array<string,string> */
+    /** @var array<string,bool|int|string> */
     protected array $details = [];
 
     /** @var list<string> */
@@ -41,7 +41,7 @@ abstract class OneX
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string,bool|int|string>
      */
     public function getCapabilities(): array
     {
@@ -49,7 +49,7 @@ abstract class OneX
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string,bool|int|string>
      */
     public function getDetails(): array
     {
@@ -57,7 +57,7 @@ abstract class OneX
     }
 
     /**
-     * @return array{0:string,1:string}
+     * @return array{0:string,1:bool|int|string}
      */
     abstract public function readLine(string $line): array;
 }

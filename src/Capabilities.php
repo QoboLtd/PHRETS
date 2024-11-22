@@ -5,48 +5,47 @@ namespace PHRETS;
 class Capabilities
 {
     /**
-     * @var array<string,string>
+     * @var array<string,bool|int|string>
      */
     protected array $capabilities = [];
 
     /**
      * @param string $name
-     * @param string $uri
-     *
-     * @return self
+     * @param bool|string|int $capability
      */
-    public function add(string $name, string $uri): self
+    public function add(string $name, bool|string|int $capability): void
     {
-        $parts = [];
-        $new_uri = null;
-        $parse_results = parse_url($uri);
-        if (!array_key_exists('host', $parse_results) || !$parse_results['host']) {
-            // relative URL given, so build this into an absolute URL
-            $login_url = $this->get('Login');
-            if (!$login_url) {
-                throw new \InvalidArgumentException("Cannot automatically determine absolute path for '{$uri}' given");
-            }
+        if (!is_string($capability)) {
+            $this->capabilities[$name] = $capability;
 
-            $parts = parse_url($login_url);
-
-            $new_uri = $parts['scheme'] . '://' . $parts['host'] . ':';
-            $new_uri .= (empty($parts['port'])) ? (($parts['scheme'] == 'https') ? 443 : 80) : $parts['port'];
-            $new_uri .= $uri;
-
-            $uri = $new_uri;
+            return;
         }
 
-        $this->capabilities[$name] = $uri;
+        $parts = parse_url($capability);
+        if (!is_array($parts) || array_key_exists('host', $parts)) {
+            $this->capabilities[$name] = $capability;
 
-        return $this;
+            return;
+        }
+
+        // relative URL given, so build this into an absolute URL
+        $login_url = $this->get('Login');
+        if (!is_string($login_url)) {
+            throw new \InvalidArgumentException("Cannot automatically determine absolute path for '{$capability}' given");
+        }
+
+        $parts = parse_url($login_url);
+        assert(isset($parts['scheme']));
+        assert(isset($parts['host']));
+
+        $uri = $parts['scheme'] . '://' . $parts['host'] . ':';
+        $uri .= (empty($parts['port'])) ? (($parts['scheme'] === 'https') ? 443 : 80) : $parts['port'];
+        $uri .= $capability;
+
+        $this->capabilities[$name] = $uri;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ?string
-     */
-    public function get(string $name): ?string
+    public function get(string $name): bool|string|int|null
     {
         return $this->capabilities[$name] ?? null;
     }

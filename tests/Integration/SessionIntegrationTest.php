@@ -60,7 +60,6 @@ class SessionIntegrationTest extends BaseIntegration
         $session = new \PHRETS\Session($config);
         $bulletin = $session->Login();
 
-        $this->assertInstanceOf('\PHRETS\Models\Bulletin', $bulletin);
         $this->assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
     }
 

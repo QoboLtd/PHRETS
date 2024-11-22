@@ -33,7 +33,7 @@ class SimpleStrategy implements Strategy
     /** @var array<string,class-string> */
     private array $classes;
 
-    /** @var list<mixed> */
+    /** @var array<string,mixed> */
     private array $instances;
 
     public function __construct()
