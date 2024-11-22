@@ -22,7 +22,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
                 ->setRetsVersion('1.5');
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $system = $session->GetSystemMetadata();
@@ -263,7 +263,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
                 ->setRetsVersion('1.5');
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $values = $session->GetLookupValues('Property', '20000426151013376279000000');
@@ -279,7 +279,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
             ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
             ->setRetsVersion('1.5');
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $values = $session->GetObjectMetadata('PropertyPowerProduction');

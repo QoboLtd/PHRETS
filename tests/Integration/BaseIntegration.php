@@ -2,7 +2,9 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
+use PHRETS\Configuration;
 use PHRETS\Session;
 use Psr\Http\Message\RequestInterface;
 
@@ -28,23 +30,20 @@ class BaseIntegration extends TestCase
     public function setUp(): void
     {
         $this->path = __DIR__ . '/Fixtures/Http';
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration();
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
                 ->setRetsVersion('1.7.2');
 
-        $this->session = new PHRETS\Session($config);
-        $client = $this->session->getClient();
-
-        $defaults = $client->getConfig();
-        $new_client = new GuzzleHttp\Client($defaults);
-
-        PHRETS\Http\Client::set($new_client);
-
-        $this->attachTo($new_client);
-
+        $this->session = $this->createSession($config);
         $this->session->Login();
+    }
+
+    protected function createSession(Configuration $config): Session
+    {
+        $new_client = new Client(['handler' => $this->createHandler()]);
+        return new Session($config, $new_client);
     }
 
     /** @return list<string> */
@@ -60,12 +59,14 @@ class BaseIntegration extends TestCase
         return $this;
     }
 
-    public function attachTo(Client $client): void
+    public function createHandler(): HandlerStack
     {
-        /** @var \GuzzleHttp\HandlerStack $stack */
-        $stack = $client->getConfig('handler');
+        $stack = HandlerStack::create();
+
         $stack->push($this->onBefore());
         $stack->push($this->onComplete());
+
+        return $stack;
     }
 
     public function onBefore()

@@ -1,6 +1,9 @@
 <?php
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
+use PHRETS\Configuration;
+use PHRETS\Session;
 
 class SessionIntegrationTest extends BaseIntegration
 {
@@ -58,7 +61,7 @@ class SessionIntegrationTest extends BaseIntegration
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
                 ->setRetsVersion('1.7.2');
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $bulletin = $session->Login();
 
         $this->assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
@@ -76,7 +79,7 @@ class SessionIntegrationTest extends BaseIntegration
                 ->setRetsVersion('1.7.2')
                 ->setOption('use_post_method', true);
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $system = $session->GetSystemMetadata();
@@ -100,7 +103,7 @@ class SessionIntegrationTest extends BaseIntegration
     /** @test **/
     public function itDetectsWhenToUseUserAgentAuthentication()
     {
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration();
 
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
@@ -109,16 +112,17 @@ class SessionIntegrationTest extends BaseIntegration
                 ->setUserAgentPassword('bogus_password')
                 ->setRetsVersion('1.7.2');
 
-        $session = new \PHRETS\Session($config);
+
+        $handler = $this->createHandler();
+        $session = new Session($config, new Client(['handler' => $handler]));
 
         /**
          * Attach a history container to Guzzle so we can verify the needed header is sent.
          */
         $container = [];
-        /** @var \GuzzleHttp\HandlerStack $stack */
-        $stack = $session->getClient()->getConfig('handler');
+
         $history = Middleware::history($container);
-        $stack->push($history);
+        $handler->push($history);
 
         $session->Login();
 
@@ -142,7 +146,7 @@ class SessionIntegrationTest extends BaseIntegration
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
                 ->setRetsVersion('1.7.2');
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         // make a request for metadata to a server that doesn't support metadata

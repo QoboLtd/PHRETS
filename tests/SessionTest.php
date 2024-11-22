@@ -1,6 +1,7 @@
 <?php
 
 use GuzzleHttp\Cookie\CookieJar;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Session;
@@ -71,19 +72,29 @@ class SessionTest extends TestCase
     /** @test **/
     public function itUsesTheSetLogger()
     {
-        $logger = $this->createMock(\Monolog\Logger::class);
-
-        // expect that the string 'Context' will be changed into an array
-        $logger->expects($this->atLeastOnce())->method('debug')->withConsecutive(
-            [$this->anything()],
-            [$this->equalTo('Message'), $this->equalTo(['Context'])]
-        );
+        $logger = $this->getMockBuilder(Logger::class)
+            ->setConstructorArgs(['TEST'])
+            ->onlyMethods(['debug'])->getMock();
 
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
         $s->setLogger($logger);
+
+
+        $count = 0;
+        $messages = [
+            'Message',
+            'Context',
+        ];
+
+        $logger->expects($this->any())->method('debug')->willReturnCallback(
+            function ($message) use (&$count, $messages) {
+                self::assertSame($messages[$count], $message);
+                $count++;
+            }
+        );
 
         $s->debug('Message', 'Context');
     }

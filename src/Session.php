@@ -2,6 +2,7 @@
 
 namespace PHRETS;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\CookieJarInterface;
@@ -9,7 +10,6 @@ use GuzzleHttp\Exception\ClientException;
 use PHRETS\Exceptions\CapabilityUnavailable;
 use PHRETS\Exceptions\MissingConfiguration;
 use PHRETS\Exceptions\RETSException;
-use PHRETS\Http\Client as PHRETSClient;
 use PHRETS\Http\Response;
 use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
@@ -23,7 +23,7 @@ use Stringable;
 class Session
 {
     protected Capabilities $capabilities;
-    protected ClientInterface $client;
+    protected readonly ClientInterface $client;
     protected ?LoggerInterface $logger = null;
     protected ?string $rets_session_id = null;
     protected CookieJarInterface $cookie_jar;
@@ -33,18 +33,16 @@ class Session
     /**
      * @throws \PHRETS\Exceptions\MissingConfiguration
      */
-    public function __construct(protected readonly Configuration $configuration)
-    {
+    public function __construct(
+        protected readonly Configuration $configuration,
+        ?ClientInterface $client = null
+    ) {
         $loginUrl = $configuration->getLoginUrl();
         if ($loginUrl === null) {
             throw new MissingConfiguration('Login URL is not configured');
         }
 
-        $defaults = [];
-
-        // start up our Guzzle HTTP client
-        $this->client = PHRETSClient::make($defaults);
-
+        $this->client = $client ?? new Client([]);
         $this->cookie_jar = new CookieJar();
 
         // start up the Capabilities tracker and add Login as the first one
