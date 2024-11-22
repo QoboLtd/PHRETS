@@ -136,10 +136,10 @@ class BaseObject
     }
 
     /**
-     * @param ?string $name Name
-     * @param string$value Value
+     * @param string $name Name
+     * @param string $value Value
      */
-    public function setFromHeader(?string $name, string $value): void
+    public function setFromHeader(string $name, string $value): void
     {
         $headers = [
             'Content-Description' => 'ContentDescription',

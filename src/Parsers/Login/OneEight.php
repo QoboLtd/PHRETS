@@ -13,7 +13,7 @@ class OneEight extends OneX
             @[$name, $value] = explode('=', $line, 2);
         }
 
-        $value = trim($value);
+        $value = trim($value ?? '');
 
         if ($name == 'Info' && $value) {
             // break it up on the 2 required parts
@@ -38,6 +38,6 @@ class OneEight extends OneX
             $value = $info_token_value;
         }
 
-        return [trim($name), $value];
+        return [trim($name ?? ''), $value];
     }
 }

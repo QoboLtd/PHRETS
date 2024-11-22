@@ -33,8 +33,10 @@ class Multiple
 
         // clean up the body to remove a reamble and epilogue
         $body = preg_replace('/^(.*?)\r\n--' . $boundary . '\r\n/', "\r\n--{$boundary}\r\n", $body);
+        assert($body !== null);
         // make the last one look like the rest for easier parsing
         $body = preg_replace('/\r\n--' . $boundary . '--/', "\r\n--{$boundary}\r\n", $body);
+        assert($body !== null);
 
         // cut up the message
         $multi_parts = explode("\r\n--{$boundary}\r\n", $body);

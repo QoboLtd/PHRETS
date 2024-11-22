@@ -18,15 +18,21 @@ class Configuration
     protected string $user_agent = 'PHRETS/2.6.4';
     protected ?string $user_agent_password = null;
     protected RETSVersion $rets_version;
+    protected readonly Strategy $strategy;
     protected string $http_authentication = 'digest';
-    protected ?Strategy $strategy = null;
 
     /** @var array<string,mixed> */
     protected array $options = [];
 
-    public function __construct()
+    public function __construct(?Strategy $strategy = null)
     {
+        if ($strategy === null) {
+            $strategy = new SimpleStrategy();
+        }
+
         $this->rets_version = (new RETSVersion())->setVersion('1.5');
+        $this->strategy = $strategy;
+        $strategy->initialize($this);
     }
 
     public function getLoginUrl(): ?string
@@ -169,22 +175,7 @@ class Configuration
      */
     public function getStrategy()
     {
-        if ($this->strategy === null) {
-            $this->setStrategy(new SimpleStrategy());
-        }
-
         return $this->strategy;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setStrategy(Strategy $strategy)
-    {
-        $strategy->initialize($this);
-        $this->strategy = $strategy;
-
-        return $this;
     }
 
     /**

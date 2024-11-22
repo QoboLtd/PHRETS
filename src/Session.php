@@ -30,8 +30,16 @@ class Session
     protected ?string $last_request_url;
     protected ?Response $last_response = null;
 
+    /**
+     * @throws \PHRETS\Exceptions\MissingConfiguration
+     */
     public function __construct(protected readonly Configuration $configuration)
     {
+        $loginUrl = $configuration->getLoginUrl();
+        if ($loginUrl === null) {
+            throw new MissingConfiguration('Login URL is not configured');
+        }
+
         $defaults = [];
 
         // start up our Guzzle HTTP client
@@ -41,7 +49,7 @@ class Session
 
         // start up the Capabilities tracker and add Login as the first one
         $this->capabilities = new Capabilities();
-        $this->capabilities->add('Login', $configuration->getLoginUrl());
+        $this->capabilities->add('Login', $loginUrl);
     }
 
     /**
@@ -130,7 +138,9 @@ class Session
             ]
         );
 
-        if (stripos($response->getHeader('Content-Type'), 'multipart') !== false) {
+        $contentType = $response->getHeader('Content-Type');
+
+        if ($contentType !== null && stripos($contentType, 'multipart') !== false) {
             /** @var \PHRETS\Parsers\GetObject\Multiple $parser */
             $parser = $this->grab(ParserType::OBJECT_MULTIPLE);
             $collection = $parser->parse($response);
@@ -200,10 +210,10 @@ class Session
     public function GetTableMetadata(string $resource_id, string $class_id, string $keyed_by = 'SystemName'): array
     {
         $response = $this->MakeMetadataRequest('METADATA-TABLE', $resource_id . ':' . $class_id);
-        
+
         /** @var \PHRETS\Parsers\GetMetadata\Table $parser */
         $parser = $this->grab(ParserType::METADATA_TABLE);
-        
+
         return $parser->parse($this, $response, $keyed_by);
     }
 
@@ -216,7 +226,7 @@ class Session
     public function GetObjectMetadata(string|int $resource_id)
     {
         $response = $this->MakeMetadataRequest('METADATA-OBJECT', $resource_id);
-        
+
         /** @var \PHRETS\Parsers\GetMetadata\BaseObject $parser */
         $parser = $this->grab(ParserType::METADATA_OBJECT);
 
@@ -231,7 +241,7 @@ class Session
     public function GetLookups(string|int $resource_id): array
     {
         $response = $this->MakeMetadataRequest('METADATA-LOOKUP', $resource_id);
-        
+
         /** @var \PHRETS\Parsers\GetMetadata\Lookup $parser */
         $parser = $this->grab(ParserType::METADATA_LOOKUP);
 
@@ -560,7 +570,7 @@ class Session
                     if ($this->getConfiguration()->readOption('disable_auto_retry')) {
                         // this attempt was already a retry, so let's stop here
                         $this->debug("Re-logging in disabled.  Won't retry");
-                        throw new RETSException($xml['ReplyText'], (int) $xml['ReplyCode']);
+                        throw new RETSException((string)$xml['ReplyText'], (int)$xml['ReplyCode']);
                     }
 
                     if ($is_retry) {
@@ -585,7 +595,7 @@ class Session
                 // 20201 - No records found - not exception worthy in my mind
                 // 20403 - No objects found - not exception worthy in my mind
                 if (!in_array($rc, [0, 20201, 20403])) {
-                    throw new RETSException($xml['ReplyText'], (int) $xml['ReplyCode']);
+                    throw new RETSException((string)$xml['ReplyText'], (int)$xml['ReplyCode']);
                 }
             }
         }
@@ -603,7 +613,7 @@ class Session
             }
 
             foreach ($collection as $object) {
-                if ($object->isError() && $object->getError()->getCode() == '20037') {
+                if ($object->isError() && $object->getError()?->getCode() === '20037') {
                     if ($is_retry) {
                         // this attempt was already a retry, so let's stop here
                         $this->debug("Request retry failed.  Won't retry again");
@@ -626,7 +636,7 @@ class Session
     public function getLoginUrl(): ?string
     {
         $url = $this->capabilities->get('Login');
-        
+
         return is_string($url) ? $url : null;
     }
 
@@ -658,35 +668,23 @@ class Session
         return $this->cookie_jar;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCookieJar(CookieJarInterface $cookie_jar)
+    public function setCookieJar(CookieJarInterface $cookie_jar): self
     {
         $this->cookie_jar = $cookie_jar;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastRequestURL()
+    public function getLastRequestURL(): ?string
     {
         return $this->last_request_url;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastResponse()
+    public function getLastResponse(): string
     {
-        return (string) $this->last_response->getBody();
+        return (string) $this->last_response?->getBody();
     }
 
-    /**
-     * @return \GuzzleHttp\ClientInterface
-     */
     public function getClient(): ClientInterface
     {
         return $this->client;

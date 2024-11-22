@@ -72,7 +72,9 @@ class Resource extends Base
      */
     public function getClasses(): array
     {
-        return $this->getSession()->GetClassesMetadata($this->getResourceID());
+        $resourceId = $this->getResourceID();
+        assert($resourceId !== null);
+        return $this->getSession()->GetClassesMetadata($resourceId);
     }
 
     /**
@@ -82,6 +84,8 @@ class Resource extends Base
      */
     public function getObject(): array
     {
-        return $this->getSession()->GetObjectMetadata($this->getResourceID());
+        $resourceId = $this->getResourceID();
+        assert($resourceId !== null);
+        return $this->getSession()->GetObjectMetadata($resourceId);
     }
 }

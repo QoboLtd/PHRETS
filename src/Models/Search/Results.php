@@ -15,8 +15,8 @@ use Traversable;
 
 class Results implements Countable, ArrayAccess, IteratorAggregate
 {
-    protected ?string $resource = '';
-    protected ?string $class = '';
+    protected string $resource = '';
+    protected string $class = '';
     protected ?Session $session = null;
 
     /** @var array<int|string,mixed> */
@@ -148,30 +148,27 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return $this;
     }
 
-    public function getClass(): ?string
+    public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * @return $this
-     */
-    public function setClass(string $class): static
+    public function setClass(string $class): self
     {
         $this->class = $class;
 
         return $this;
     }
 
-    public function getResource(): ?string
+    public function getResource(): string
     {
         return $this->resource;
     }
 
     /**
-     * @return $this
+     * @return self
      */
-    public function setResource(string $resource): static
+    public function setResource(string $resource): self
     {
         $this->resource = $resource;
 
@@ -197,12 +194,12 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return array<int|string,mixed>
+     * @return ?array<int|string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getMetadata(): array
+    public function getMetadata(): ?array
     {
-        if (!$this->metadata) {
+        if ($this->metadata === null && $this->session !== null) {
             $this->metadata = $this->session->GetTableMetadata($this->getResource(), $this->getClass());
         }
 

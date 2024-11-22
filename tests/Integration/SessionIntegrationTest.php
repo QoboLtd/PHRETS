@@ -7,6 +7,7 @@ class SessionIntegrationTest extends BaseIntegration
     /** @test * */
     public function itLogsIn()
     {
+        assert($this->session !== null);
         $connect = $this->session->Login();
         $this->assertNull($connect->getBody());
     }

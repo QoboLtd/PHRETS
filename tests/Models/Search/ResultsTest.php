@@ -39,8 +39,8 @@ class ResultsTest extends TestCase
     {
         $this->rs->keyResultsBy('id');
 
-        $this->assertSame('left', $this->rs->find(1)->get('name'));
-        $this->assertSame('right', $this->rs->find(2)->get('name'));
+        $this->assertSame('left', $this->rs->find(1)?->get('name'));
+        $this->assertSame('right', $this->rs->find(2)?->get('name'));
         $this->assertNull($this->rs->find(3));
     }
 

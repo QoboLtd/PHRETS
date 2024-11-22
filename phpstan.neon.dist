@@ -1,5 +1,5 @@
 parameters:
-    level: 7
+    level: 8
     paths:
         - src
         - tests
@@ -7,6 +7,9 @@ parameters:
     ignoreErrors:
         -
             identifier: argument.type
+            path: tests
+        -
+            identifier: method.nonObject
             path: tests
         -
             identifier: missingType.generics

@@ -13,6 +13,6 @@ class OneFive extends OneX
             @[$name, $value] = explode('=', (string) $line, 2);
         }
 
-        return [trim($name), trim($value)];
+        return [trim($name ?? ''), trim($value ?? '')];
     }
 }

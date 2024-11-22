@@ -7,6 +7,7 @@ class StrategyIntegrationTest extends BaseIntegration
 {
     private function setParser(ParserType $parser, mixed $parser_object): void
     {
+        assert($this->session !== null);
         $strategy = $this->session->getConfiguration()->getStrategy();
         assert($strategy instanceof SimpleStrategy);
 
@@ -16,6 +17,7 @@ class StrategyIntegrationTest extends BaseIntegration
     /** @test */
     public function itSupportsCustomParsers()
     {
+        assert($this->session !== null);
         $this->session->Login();
 
         /*
@@ -34,6 +36,7 @@ class StrategyIntegrationTest extends BaseIntegration
     /** @test */
     public function itSupportsCustomXmlParser()
     {
+        assert($this->session !== null);
         $this->session->Login();
 
         /*

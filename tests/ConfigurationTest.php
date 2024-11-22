@@ -95,11 +95,8 @@ class ConfigurationTest extends TestCase
     /** @test **/
     public function itAllowsOverridingTheStrategy()
     {
-        $config = new Configuration();
         $strategy = new SimpleStrategy();
-        $strategy->initialize($config);
-        $config->setStrategy($strategy);
-
+        $config = new Configuration($strategy);
         $this->assertSame($strategy, $config->getStrategy());
     }
 

@@ -4,9 +4,9 @@ namespace PHRETS\Models\Search;
 
 class Record implements \ArrayAccess, \Stringable
 {
-    protected ?string $resource = '';
-    protected ?string $class = '';
-    
+    protected string $resource = '';
+    protected string $class = '';
+
     /** @var list<string> */
     protected array $fields = [];
     protected ?string $restricted_value = '****';

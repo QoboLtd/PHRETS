@@ -56,7 +56,7 @@ class OneXTest extends TestCase
     /** @test **/
     public function itSeesTheFirstRecord()
     {
-        $this->assertSame('20111007152642181995000000', $this->results->first()['LIST_1']);
+        $this->assertSame('20111007152642181995000000', $this->results->first()['LIST_1'] ?? null);
     }
 
     /** @test **/
