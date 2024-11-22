@@ -96,21 +96,25 @@ class Record implements \ArrayAccess, \Stringable
 
     public function offsetExists(mixed $offset): bool
     {
+        assert(is_int($offset) || is_string($offset));
         return array_key_exists($offset, $this->values);
     }
 
-    public function offsetGet(mixed $offset): ?string
+    public function offsetGet(mixed $offset): mixed
     {
+        assert(is_int($offset) || is_string($offset));
         return $this->get($offset);
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert(is_int($offset) || is_string($offset));
         $this->set($offset, $value);
     }
 
     public function offsetUnset(mixed $offset): void
     {
+        assert(is_int($offset) || is_string($offset));
         if (array_key_exists($offset, $this->values)) {
             unset($this->values[$offset]);
         }

@@ -4,6 +4,7 @@ namespace PHRETS\Parsers\Search;
 
 use PHRETS\Exceptions\AutomaticPaginationError;
 use PHRETS\Http\Response;
+use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
@@ -11,7 +12,7 @@ use PHRETS\Session;
 class RecursiveOneX
 {
     /**
-     * @param array<string,mixed> $parameters Parameters
+     * @param array{Class:string,SearchType:string,Query?:?string,RestrictedIndicator?:?string} $parameters Parameters
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\AutomaticPaginationError
      */
@@ -30,9 +31,8 @@ class RecursiveOneX
             $rets->debug('Current count collected already: ' . $rs->count());
 
             $resource = $pms['SearchType'];
-            $class = $pms['Class'];
+            $class = $pms['Class'] ?? null;
             $query = $pms['Query'] ?? null;
-
             $pms['Offset'] = $this->getNewOffset($rs);
 
             unset($pms['SearchType']);
@@ -49,6 +49,7 @@ class RecursiveOneX
             }
 
             foreach ($inner_rs as $ir) {
+                assert($ir instanceof Record);
                 $rs->addRecord($ir);
             }
         }

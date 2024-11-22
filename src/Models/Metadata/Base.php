@@ -44,7 +44,9 @@ abstract class Base implements \ArrayAccess
      */
     public function __call(mixed $name, array $args = [])
     {
-        $name = strtolower((string) $name);
+        assert(is_string($name));
+
+        $name = strtolower($name);
         $action = substr($name, 0, 3);
 
         if ($action === 'set') {
@@ -102,6 +104,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetExists(mixed $offset): bool
     {
+        assert(is_string($offset) || is_int($offset));
+
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
             if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return true;
@@ -125,6 +129,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetGet(mixed $offset): mixed
     {
+        assert(is_string($offset) || is_int($offset));
+
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
             if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return Arr::get($this->values, $attr);
@@ -149,6 +155,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert(is_string($offset) || is_int($offset));
+
         $this->values[$offset] = $value;
     }
 
@@ -164,6 +172,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetUnset(mixed $offset): void
     {
+        assert(is_string($offset) || is_int($offset));
+
         if ($this->offsetExists($offset)) {
             unset($this->values[$offset]);
         }

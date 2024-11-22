@@ -290,7 +290,7 @@ class Session
      * @param string $resource_id
      * @param string $class_id
      * @param ?string $dmql_query
-     * @param array<string,mixed> $optional_parameters
+     * @param array{Class?:string,SearchType?:string,Query?:?string,RestrictedIndicator?:?string} $optional_parameters
      *
      * @return \PHRETS\Models\Search\Results
      *
@@ -471,8 +471,11 @@ class Session
 
         // user-agent authentication
         if ($this->configuration->getUserAgentPassword()) {
+            $headers = $options['headers'] ?? [];
+            assert(is_array($headers));
             $ua_digest = $this->configuration->userAgentDigestHash($this);
-            $options['headers'] = array_merge($options['headers'], ['RETS-UA-Authorization' => 'Digest ' . $ua_digest]);
+
+            $options['headers'] = array_merge($headers, ['RETS-UA-Authorization' => 'Digest ' . $ua_digest]);
         }
 
         $this->debug("Sending HTTP Request for {$url} ({$capability})", $options);
@@ -504,7 +507,8 @@ class Session
                     array_merge($local_options, ['form_params' => $query])
                 );
             } else {
-                if (array_key_exists('query', $options)) {
+                if (isset($options['query'])) {
+                    assert(is_array($options['query']));
                     $this->last_request_url = $url . '?' . \http_build_query($options['query']);
                 }
 

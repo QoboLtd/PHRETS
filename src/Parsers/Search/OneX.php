@@ -12,13 +12,13 @@ use SimpleXMLElement;
 class OneX
 {
     /**
-     * @param array<string,mixed> $parameters
+     * @param array{Class:string,SearchType:string,RestrictedIndicator?:?string} $parameters
      */
     public function parse(Session $rets, Response $response, array $parameters): Results
     {
+        /** @var \PHRETS\Parsers\XML $parser */
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::XML);
         $xml = $parser->parse($response);
-        assert($xml instanceof SimpleXMLElement);
 
         $rs = new Results();
         $rs->setSession($rets)
@@ -72,7 +72,7 @@ class OneX
     }
 
     /**
-     * @param array<string,mixed> $parameters
+     * @param array{RestrictedIndicator?:?string} $parameters
      */
     protected function getRestrictedIndicator(array $parameters): ?string
     {

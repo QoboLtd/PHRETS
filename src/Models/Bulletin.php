@@ -35,7 +35,7 @@ class Bulletin implements \Stringable
         return $this;
     }
 
-    public function setDetail(string $name, mixed $value): self
+    public function setDetail(string $name, string $value): self
     {
         $this->details[strtoupper($name)] = $value;
 
@@ -44,7 +44,13 @@ class Bulletin implements \Stringable
 
     public function getDetail(string $name): ?string
     {
-        return Arr::get($this->details, strtoupper($name));
+        /** @var bool|int|string|null $value */
+        $value = Arr::get($this->details, strtoupper($name));
+        if ($value === null) {
+            return null;
+        }
+
+        return (string)$value;
     }
 
     public function getMemberName(): ?string

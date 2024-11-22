@@ -1,7 +1,25 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Parameter \#1 \$record of method League\\Csv\\Writer\:\:insertOne\(\) expects array\<float\|int\|string\|Stringable\|null\>, list\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Models/Search/Results.php
+
+		-
 			message: '#^Parameter \#1 \$codepoint of function chr expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Parsers/Search/OneX.php
+
+		-
+			message: '#^Binary operation "\." between mixed and ''_'' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: tests/Models/Search/ResultsTest.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: tests/Models/Search/ResultsTest.php

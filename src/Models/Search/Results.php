@@ -242,16 +242,20 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     public function offsetExists(mixed $offset): bool
     {
+        assert(is_string($offset) || is_int($offset));
         return array_key_exists($offset, $this->results);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
+        assert(is_string($offset) || is_int($offset));
         return $this->results[$offset] ?? null;
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert($value instanceof Record);
+        assert($offset === null || is_string($offset) || is_int($offset));
         if ($offset) {
             $this->addRecord($value, fn () => $offset);
         } else {
