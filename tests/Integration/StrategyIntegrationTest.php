@@ -1,8 +1,11 @@
 <?php
+namespace PHRETS\Test\Integration;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHRETS\Parsers\ParserType;
 use PHRETS\Strategies\SimpleStrategy;
+use PHRETS\Test\Integration\Parsers\CustomSystemParser;
+use PHRETS\Test\Integration\Parsers\CustomXMLParser;
 
 class StrategyIntegrationTest extends BaseIntegration
 {

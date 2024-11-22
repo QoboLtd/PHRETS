@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test\Parsers\Login;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

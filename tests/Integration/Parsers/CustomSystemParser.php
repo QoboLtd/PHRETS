@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test\Integration\Parsers;
 
 use PHRETS\Http\Response;
 use PHRETS\Models\Metadata\System as SystemModel;

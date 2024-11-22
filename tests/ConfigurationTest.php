@@ -1,8 +1,11 @@
 <?php
+namespace PHRETS\Test;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
+use PHRETS\Session;
 use PHRETS\Strategies\SimpleStrategy;
 use PHRETS\Strategies\Strategy;
 
@@ -108,7 +111,7 @@ class ConfigurationTest extends TestCase
             ->setUserAgentPassword('12345')
             ->setRetsVersion('1.7.2');
 
-        $s = new \PHRETS\Session($c);
+        $s = new Session($c);
         $this->assertSame('123c96e02e514da469db6bc61ab998dc', $c->userAgentDigestHash($s));
     }
 

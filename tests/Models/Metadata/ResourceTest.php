@@ -1,5 +1,7 @@
 <?php
+namespace PHRETS\Test\Models\Metadata;
 
+use BadMethodCallException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Metadata\Resource;

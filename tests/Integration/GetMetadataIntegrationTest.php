@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test\Integration;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHRETS\Arr;

@@ -48,6 +48,11 @@
       "PHRETS\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "PHRETS\\Test\\": "tests/"
+    }
+  },
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true

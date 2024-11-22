@@ -1,5 +1,7 @@
 <?php
+namespace PHRETS\Test;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Capabilities;

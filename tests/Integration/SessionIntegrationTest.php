@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test\Integration;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;

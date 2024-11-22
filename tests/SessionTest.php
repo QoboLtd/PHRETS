@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test;
 
 use GuzzleHttp\Cookie\CookieJar;
 use Monolog\Logger;

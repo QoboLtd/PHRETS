@@ -4,10 +4,6 @@
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
     <rule ref="PSR2"/>
 
-    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
-        <exclude-pattern>./tests/</exclude-pattern>
-    </rule>
-
     <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
         <exclude-pattern>./src/Session.php</exclude-pattern>
         <exclude-pattern>./src/Versions/RETSVersion.php</exclude-pattern>

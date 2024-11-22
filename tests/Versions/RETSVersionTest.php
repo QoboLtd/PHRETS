@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test\Versions;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

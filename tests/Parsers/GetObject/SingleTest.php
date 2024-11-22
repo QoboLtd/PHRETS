@@ -1,4 +1,5 @@
 <?php
+namespace PHRETS\Test\Parsers\GetObject;
 
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\Test;
