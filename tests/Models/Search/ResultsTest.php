@@ -212,7 +212,7 @@ class ResultsTest extends TestCase
     public function itConvertsObjectToJSON()
     {
         $expected = '[{"id":1,"name":"left","value":"up"},{"id":2,"name":"right","value":"down"}]';
-        $this->assertSame($expected, $this->rs->toJSON());
+        $this->assertSame($expected, json_encode($this->rs, JSON_THROW_ON_ERROR));
     }
 
     /** @test **/

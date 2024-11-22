@@ -2,7 +2,9 @@
 
 namespace PHRETS\Models\Search;
 
-class Record implements \ArrayAccess, \Stringable
+use JsonSerializable;
+
+class Record implements \ArrayAccess, \Stringable, JsonSerializable
 {
     protected string $resource = '';
     protected string $class = '';
@@ -78,12 +80,9 @@ class Record implements \ArrayAccess, \Stringable
         return $this->values;
     }
 
-    /**
-     * @throws \JsonException
-     */
-    public function toJson(): string
+    public function jsonSerialize(): mixed
     {
-        return json_encode($this->values, JSON_THROW_ON_ERROR);
+        return $this->values;
     }
 
     /**
@@ -91,7 +90,7 @@ class Record implements \ArrayAccess, \Stringable
      */
     public function __toString(): string
     {
-        return $this->toJson();
+        return json_encode($this->jsonSerialize(), JSON_THROW_ON_ERROR);
     }
 
     public function offsetExists(mixed $offset): bool

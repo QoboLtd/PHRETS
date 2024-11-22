@@ -7,13 +7,14 @@ use ArrayIterator;
 use Closure;
 use Countable;
 use IteratorAggregate;
+use JsonSerializable;
 use League\Csv\Writer;
 use PHRETS\Arr;
 use PHRETS\Session;
 use SplTempFileObject;
 use Traversable;
 
-class Results implements Countable, ArrayAccess, IteratorAggregate
+class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializable
 {
     protected string $resource = '';
     protected string $class = '';
@@ -354,14 +355,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return (string) $writer;
     }
 
-    /**
-     * Return results as a JSON string.
-     *
-     * @throws \JsonException
-     */
-    public function toJSON(): string
+    public function jsonSerialize(): mixed
     {
-        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+        return $this->results;
     }
 
     /**
