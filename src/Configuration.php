@@ -41,7 +41,6 @@ class Configuration
     }
 
     /**
-     * @return self
      */
     public function setLoginUrl(?string $login_url): self
     {
@@ -130,7 +129,6 @@ class Configuration
     /**
      * @param array<string,string> $configuration
      *
-     * @return self
      *
      * @throws \PHRETS\Exceptions\InvalidConfiguration
      */
@@ -163,25 +161,22 @@ class Configuration
     }
 
     /**
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->getLoginUrl() && $this->getUsername();
     }
 
     /**
-     * @return \PHRETS\Strategies\Strategy
      */
-    public function getStrategy()
+    public function getStrategy(): \PHRETS\Strategies\Strategy
     {
         return $this->strategy;
     }
 
     /**
-     * @return string
      */
-    public function userAgentDigestHash(Session $session)
+    public function userAgentDigestHash(Session $session): string
     {
         $ua_a1 = md5($this->getUserAgent() . ':' . $this->getUserAgentPassword());
 
@@ -207,7 +202,6 @@ class Configuration
     }
 
     /**
-     * @return string
      */
     public function getHttpAuthenticationMethod(): string
     {

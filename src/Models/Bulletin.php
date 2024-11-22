@@ -26,7 +26,6 @@ class Bulletin implements \Stringable
 
     /**
      * @param ?string $body Body
-     * @return self
      */
     public function setBody(?string $body): self
     {

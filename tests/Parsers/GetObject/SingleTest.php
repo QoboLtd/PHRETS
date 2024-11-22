@@ -10,7 +10,7 @@ use PHRETS\Parsers\GetObject\Single;
 class SingleTest extends TestCase
 {
     #[Test]
-    public function itUnderstandsTheBasics()
+    public function itUnderstandsTheBasics(): void
     {
         $parser = new Single();
         $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/plain'], 'Test'));
@@ -21,7 +21,7 @@ class SingleTest extends TestCase
     }
 
     #[Test]
-    public function itDetectsAndHandlesErrors()
+    public function itDetectsAndHandlesErrors(): void
     {
         $error = '<RETS ReplyCode="20203" ReplyText="RETS Server: Some error">
         Valid Classes are: A B C E F G H I
@@ -36,7 +36,7 @@ class SingleTest extends TestCase
     }
 
     #[Test]
-    public function itSeesTheNewRetsErrorHeader()
+    public function itSeesTheNewRetsErrorHeader(): void
     {
         $error = '<RETS ReplyCode="20203" ReplyText="RETS Server: Some error">
         Valid Classes are: A B C E F G H I

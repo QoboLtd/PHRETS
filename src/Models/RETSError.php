@@ -13,7 +13,6 @@ class RETSError
     }
 
     /**
-     * @return self
      */
     public function setCode(string $code): self
     {
@@ -28,7 +27,6 @@ class RETSError
     }
 
     /**
-     * @return self
      */
     public function setMessage(string $message): self
     {

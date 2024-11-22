@@ -30,13 +30,13 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itHoldsRecords()
+    public function itHoldsRecords(): void
     {
         $this->assertCount(2, $this->rs);
     }
 
     #[Test]
-    public function itKeysRecords()
+    public function itKeysRecords(): void
     {
         $this->rs->keyResultsBy('id');
 
@@ -46,7 +46,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itKeysRecordsWithClosure()
+    public function itKeysRecordsWithClosure(): void
     {
         $this->rs->keyResultsBy(
             function (Record $record) {
@@ -59,7 +59,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itTraverses()
+    public function itTraverses(): void
     {
         $found = false;
         foreach ($this->rs as $rs) {
@@ -71,7 +71,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itAssociatesMetadata()
+    public function itAssociatesMetadata(): void
     {
         $metadata = ['test', 'fields'];
         $rs = new Results();
@@ -81,7 +81,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itTracksHeaders()
+    public function itTracksHeaders(): void
     {
         $fields = ['A', 'B', 'C', 'D', 'E'];
         $rs = new Results();
@@ -91,7 +91,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itTracksCounts()
+    public function itTracksCounts(): void
     {
         $rs = new Results();
         $rs->setTotalResultsCount(1000);
@@ -102,7 +102,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itTracksResourcesAndClasses()
+    public function itTracksResourcesAndClasses(): void
     {
         $rs = new Results();
         $rs->setResource('Property');
@@ -113,7 +113,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itAllowsArrayAccessingKeyedResults()
+    public function itAllowsArrayAccessingKeyedResults(): void
     {
         $r = new Record();
         $r->set('id', 'extra');
@@ -137,7 +137,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itHoldsErrors()
+    public function itHoldsErrors(): void
     {
         $rs = new Results();
         $rs->setError('test');
@@ -145,7 +145,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itHoldsASession()
+    public function itHoldsASession(): void
     {
         $rs = new Results();
         $config = new \PHRETS\Configuration();
@@ -156,7 +156,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itGivesAList()
+    public function itGivesAList(): void
     {
         $rs = new Results();
 
@@ -179,7 +179,7 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itGivesAListExcludingRestrictedValues()
+    public function itGivesAListExcludingRestrictedValues(): void
     {
         $rs = new Results();
         $rs->setRestrictedIndicator('****');
@@ -203,14 +203,14 @@ class ResultsTest extends TestCase
     }
 
     #[Test]
-    public function itConvertsObjectToJSON()
+    public function itConvertsObjectToJSON(): void
     {
         $expected = '[{"id":1,"name":"left","value":"up"},{"id":2,"name":"right","value":"down"}]';
         $this->assertSame($expected, json_encode($this->rs, JSON_THROW_ON_ERROR));
     }
 
     #[Test]
-    public function itConvertsObjectToArray()
+    public function itConvertsObjectToArray(): void
     {
         $expected = [
             ['id' => 1, 'name' => 'left', 'value' => 'up'],

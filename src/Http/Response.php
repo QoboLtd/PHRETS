@@ -42,7 +42,7 @@ class Response
     /**
      * @return array<string,array<int,string>>
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->response->getHeaders();
     }

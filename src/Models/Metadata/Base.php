@@ -40,9 +40,8 @@ abstract class Base implements \ArrayAccess
 
     /**
      * @param array<int,mixed> $args Arguments
-     * @return mixed
      */
-    public function __call(mixed $name, array $args = [])
+    public function __call(mixed $name, array $args = []): mixed
     {
         assert(is_string($name));
 

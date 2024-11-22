@@ -43,32 +43,32 @@ GetPayloadList=/GetPayloadList.asmx/GetPayloadList
     }
 
     #[Test]
-    public function itSeesAllTransactions()
+    public function itSeesAllTransactions(): void
     {
         $this->assertSame(7, count($this->parser->getCapabilities()));
     }
 
     #[Test]
-    public function itSeesCoreTransactions()
+    public function itSeesCoreTransactions(): void
     {
         $this->assertSame('/Search.asmx/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/Logout.asmx/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
     #[Test]
-    public function itSeesAllDetails()
+    public function itSeesAllDetails(): void
     {
         $this->assertSame(18, count($this->parser->getDetails()));
     }
 
     #[Test]
-    public function itSeesUserDetails()
+    public function itSeesUserDetails(): void
     {
         $this->assertSame('RESOWG', $this->parser->getDetails()['USER']);
     }
 
     #[Test]
-    public function itCastsDetails()
+    public function itCastsDetails(): void
     {
         $this->assertIsBool($this->parser->getDetails()['BROKERRECIPFLAG']);
         $this->assertIsInt($this->parser->getDetails()['SUL']);

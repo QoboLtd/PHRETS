@@ -8,18 +8,18 @@ use PHRETS\Models\Bulletin;
 class BulletinTest extends TestCase
 {
     #[Test]
-    public function itHolds()
+    public function itHolds(): void
     {
         $this->assertSame('Hello World', (new Bulletin())->setBody('Hello World')->getBody());
     }
 
     #[Test]
-    public function itTurnsItselfIntoAString()
+    public function itTurnsItselfIntoAString(): void
     {
         $this->assertSame('Hello World', (string) (new Bulletin())->setBody('Hello World'));
     }
 
-    public function testDetailsAreMadeAvailable()
+    public function testDetailsAreMadeAvailable(): void
     {
         $bulletin = new Bulletin(['Test' => 'Value']);
         $this->assertSame('Value', $bulletin->getDetail('Test'));

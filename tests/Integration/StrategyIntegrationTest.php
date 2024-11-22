@@ -19,7 +19,7 @@ class StrategyIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itSupportsCustomParsers()
+    public function itSupportsCustomParsers(): void
     {
         assert($this->session !== null);
         $this->session->Login();
@@ -38,7 +38,7 @@ class StrategyIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itSupportsCustomXmlParser()
+    public function itSupportsCustomXmlParser(): void
     {
         assert($this->session !== null);
         $this->session->Login();

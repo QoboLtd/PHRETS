@@ -22,7 +22,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     protected ?array $metadata = null;
     protected int $total_results_count = 0;
     protected int $returned_results_count = 0;
-    protected mixed $error = null;
+    protected ?string $error = null;
     /** @var array<int|string,\PHRETS\Models\Search\Record> */
     protected array $results;
 
@@ -46,7 +46,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
 
     /**
      * @param list<string> $headers Headers
-     * @return self
      */
     public function setHeaders(array $headers): self
     {
@@ -97,20 +96,12 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
         return $this->results[$keyId] ?? null;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getError()
+    public function getError(): ?string
     {
         return $this->error;
     }
 
-    /**
-     * @param mixed $error
-     *
-     * @return self
-     */
-    public function setError(mixed $error): self
+    public function setError(?string $error): self
     {
         $this->error = $error;
 
@@ -123,7 +114,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     }
 
     /**
-     * @return self
      */
     public function setReturnedResultsCount(int $returned_results_count): self
     {
@@ -138,7 +128,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     }
 
     /**
-     * @return self
      */
     public function setTotalResultsCount(int $total_results_count): self
     {
@@ -165,7 +154,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     }
 
     /**
-     * @return self
      */
     public function setResource(string $resource): self
     {
@@ -175,7 +163,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     }
 
     /**
-     * @return \PHRETS\Session
      */
     public function getSession(): ?Session
     {
@@ -183,7 +170,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     }
 
     /**
-     * @return self
      */
     public function setSession(Session $session): self
     {
@@ -208,7 +194,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     /**
      * @param array<int|string,mixed> $metadata
      *
-     * @return self
      */
     public function setMetadata(array $metadata): self
     {
@@ -225,7 +210,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
     /**
      * @param string $indicator
      *
-     * @return self
      */
     public function setRestrictedIndicator(string $indicator): self
     {

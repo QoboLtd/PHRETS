@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 class SessionTest extends TestCase
 {
     #[Test]
-    public function itBuilds()
+    public function itBuilds(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -22,7 +22,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itDetectsInvalidConfigurations()
+    public function itDetectsInvalidConfigurations(): void
     {
         $this->expectException(\PHRETS\Exceptions\MissingConfiguration::class);
         $c = new Configuration();
@@ -33,7 +33,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itGivesBackTheLoginUrl()
+    public function itGivesBackTheLoginUrl(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -44,7 +44,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itTracksCapabilities()
+    public function itTracksCapabilities(): void
     {
         $login_url = 'http://www.reso.org/login';
         $c = new Configuration();
@@ -56,7 +56,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itDisablesRedirectsWhenDesired()
+    public function itDisablesRedirectsWhenDesired(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -70,7 +70,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itUsesTheSetLogger()
+    public function itUsesTheSetLogger(): void
     {
         $logger = $this->getMockBuilder(Logger::class)
             ->setConstructorArgs(['TEST'])
@@ -90,7 +90,7 @@ class SessionTest extends TestCase
         ];
 
         $logger->expects($this->any())->method('debug')->willReturnCallback(
-            function ($message) use (&$count, $messages) {
+            function ($message) use (&$count, $messages): void {
                 self::assertSame($messages[$count], $message);
                 $count++;
             }
@@ -100,7 +100,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itFixesTheLoggerContextAutomatically()
+    public function itFixesTheLoggerContextAutomatically(): void
     {
         $logger = $this->createMock(\Monolog\Logger::class);
         assert($logger instanceof LoggerInterface);
@@ -115,7 +115,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itLoadsACookieJar()
+    public function itLoadsACookieJar(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -125,7 +125,7 @@ class SessionTest extends TestCase
     }
 
     #[Test]
-    public function itAllowsOverridingTheCookieJar()
+    public function itAllowsOverridingTheCookieJar(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');

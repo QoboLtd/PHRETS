@@ -29,32 +29,32 @@ Logout=/rets1_5/Logout
     }
 
     #[Test]
-    public function itSeesAllTransactions()
+    public function itSeesAllTransactions(): void
     {
         $this->assertSame(6, count($this->parser->getCapabilities()));
     }
 
     #[Test]
-    public function itSeesCoreTransactions()
+    public function itSeesCoreTransactions(): void
     {
         $this->assertSame('/rets1_5/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/rets1_5/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
     #[Test]
-    public function itSeesCustomTransactions()
+    public function itSeesCustomTransactions(): void
     {
         $this->assertSame('/rets1_5/Links', $this->parser->getCapabilities()['X-SampleLinks']);
     }
 
     #[Test]
-    public function itSeesAllDetails()
+    public function itSeesAllDetails(): void
     {
         $this->assertSame(5, count($this->parser->getDetails()));
     }
 
     #[Test]
-    public function itSeesUserDetails()
+    public function itSeesUserDetails(): void
     {
         $this->assertSame('unk,MASTER,4,1234567890', $this->parser->getDetails()['User']);
     }

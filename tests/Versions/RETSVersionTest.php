@@ -8,25 +8,25 @@ use PHRETS\Versions\RETSVersion;
 class RETSVersionTest extends TestCase
 {
     #[Test]
-    public function itLoads()
+    public function itLoads(): void
     {
         $this->assertSame('1.7.2', (new RETSVersion())->setVersion('1.7.2')->getVersion());
     }
 
     #[Test]
-    public function itCleans()
+    public function itCleans(): void
     {
         $this->assertSame('1.7.2', (new RETSVersion())->setVersion('RETS/1.7.2')->getVersion());
     }
 
     #[Test]
-    public function itMakesTheHeader()
+    public function itMakesTheHeader(): void
     {
         $this->assertSame('RETS/1.7.2', (new RETSVersion())->setVersion('1.7.2')->asHeader());
     }
 
     #[Test]
-    public function itIs15()
+    public function itIs15(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.5');
@@ -36,7 +36,7 @@ class RETSVersionTest extends TestCase
     }
 
     #[Test]
-    public function itIs17()
+    public function itIs17(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.7');
@@ -49,7 +49,7 @@ class RETSVersionTest extends TestCase
     }
 
     #[Test]
-    public function itIs172()
+    public function itIs172(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.7.2');
@@ -63,7 +63,7 @@ class RETSVersionTest extends TestCase
     }
 
     #[Test]
-    public function itIs18()
+    public function itIs18(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.8');
@@ -78,7 +78,7 @@ class RETSVersionTest extends TestCase
     }
 
     #[Test]
-    public function itCompares()
+    public function itCompares(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.8');
@@ -89,7 +89,7 @@ class RETSVersionTest extends TestCase
     }
 
     #[Test]
-    public function itFailsBadVersions()
+    public function itFailsBadVersions(): void
     {
         $this->expectException(\PHRETS\Exceptions\InvalidRETSVersion::class);
         $v = new RETSVersion();
@@ -97,7 +97,7 @@ class RETSVersionTest extends TestCase
     }
 
     #[Test]
-    public function itConvertsToString()
+    public function itConvertsToString(): void
     {
         $v = new RETSVersion();
         $v->setVersion('1.7.2');

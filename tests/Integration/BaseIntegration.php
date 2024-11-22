@@ -70,7 +70,7 @@ class BaseIntegration extends TestCase
         return $stack;
     }
 
-    public function onBefore()
+    public function onBefore(): callable
     {
         return function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
@@ -87,7 +87,7 @@ class BaseIntegration extends TestCase
         };
     }
 
-    public function onComplete()
+    public function onComplete(): callable
     {
         return function (callable $handler) {
             return function ($request, array $options) use ($handler) {

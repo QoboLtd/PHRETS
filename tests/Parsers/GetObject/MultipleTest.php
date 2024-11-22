@@ -10,7 +10,7 @@ use PHRETS\Parsers\GetObject\Multiple;
 class MultipleTest extends TestCase
 {
     #[Test]
-    public function itBreaksThingsApart()
+    public function itBreaksThingsApart(): void
     {
         $headers = [
                 'Server' => [
@@ -48,7 +48,7 @@ class MultipleTest extends TestCase
     }
 
     #[Test]
-    public function itHandlesEmptyBodies()
+    public function itHandlesEmptyBodies(): void
     {
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, [], null)));
@@ -56,7 +56,7 @@ class MultipleTest extends TestCase
     }
 
     #[Test]
-    public function itHandlesUnquotedBoundaries()
+    public function itHandlesUnquotedBoundaries(): void
     {
         $headers = [
                 'Server' => [

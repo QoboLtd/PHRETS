@@ -13,10 +13,6 @@ parameters:
             path: tests
         -
             identifier: missingType.generics
-        -
-            identifier: missingType.return
-            path: tests
-
 
 includes:
     - phpstan-baseline.neon

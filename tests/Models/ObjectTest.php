@@ -8,7 +8,7 @@ use PHRETS\Models\BaseObject;
 class ObjectTest extends TestCase
 {
     #[Test]
-    public function itHolds()
+    public function itHolds(): void
     {
         $o = new BaseObject();
         $o->setContent('Test Content');
@@ -17,7 +17,7 @@ class ObjectTest extends TestCase
     }
 
     #[Test]
-    public function itReturnsASize()
+    public function itReturnsASize(): void
     {
         $o = new BaseObject();
         $o->setContent('Hello');
@@ -26,7 +26,7 @@ class ObjectTest extends TestCase
     }
 
     #[Test]
-    public function itMakesFromHeaders()
+    public function itMakesFromHeaders(): void
     {
         $headers = [
             'Content-Type' => 'image/jpeg',
@@ -53,7 +53,7 @@ class ObjectTest extends TestCase
     }
 
     #[Test]
-    public function itMarksPreferredObjects()
+    public function itMarksPreferredObjects(): void
     {
         $o = new BaseObject();
         $this->assertFalse($o->isPreferred());
@@ -63,7 +63,7 @@ class ObjectTest extends TestCase
     }
 
     #[Test]
-    public function itMarksErrors()
+    public function itMarksErrors(): void
     {
         $e = new \PHRETS\Models\RETSError();
         $e->setCode('1234');

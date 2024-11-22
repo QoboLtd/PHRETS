@@ -8,19 +8,19 @@ use PHRETS\Interpreters\Search;
 class SearchTest extends TestCase
 {
     #[Test]
-    public function itDoesntTouchProperlyFormattedDmql()
+    public function itDoesntTouchProperlyFormattedDmql(): void
     {
         $this->assertSame('(FIELD=VALUE)', Search::dmql('(FIELD=VALUE)'));
     }
 
     #[Test]
-    public function itWrapsSimplifiedDmqlInParens()
+    public function itWrapsSimplifiedDmqlInParens(): void
     {
         $this->assertSame('(FIELD=VALUE)', Search::dmql('FIELD=VALUE'));
     }
 
     #[Test]
-    public function itDoesntModifyWhenSpecialCharactersAreUsed()
+    public function itDoesntModifyWhenSpecialCharactersAreUsed(): void
     {
         $this->assertSame('*', Search::dmql('*'));
         $this->assertSame('', Search::dmql(''));

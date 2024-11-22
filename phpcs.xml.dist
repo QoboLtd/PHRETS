@@ -13,6 +13,7 @@
     <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation" />
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" />
 
     <file>./src/</file>
     <file>./tests/</file>

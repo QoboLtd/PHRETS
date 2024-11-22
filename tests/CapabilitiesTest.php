@@ -9,7 +9,7 @@ use PHRETS\Capabilities;
 class CapabilitiesTest extends TestCase
 {
     #[Test]
-    public function itTracks()
+    public function itTracks(): void
     {
         $cpb = new Capabilities();
         $cpb->add('login', 'http://www.reso.org/login');
@@ -19,7 +19,7 @@ class CapabilitiesTest extends TestCase
     }
 
     #[Test]
-    public function itBarfsWhenNotGivenEnoughInformationToBuildAbsoluteUrls()
+    public function itBarfsWhenNotGivenEnoughInformationToBuildAbsoluteUrls(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $cpb = new Capabilities();
@@ -27,7 +27,7 @@ class CapabilitiesTest extends TestCase
     }
 
     #[Test]
-    public function itCanBuildAbsoluteUrlsFromRelativeOnes()
+    public function itCanBuildAbsoluteUrlsFromRelativeOnes(): void
     {
         $cpb = new Capabilities();
         $cpb->add('Login', 'http://www.google.com/login');
@@ -37,7 +37,7 @@ class CapabilitiesTest extends TestCase
     }
 
     #[Test]
-    public function itPreservesExplicityPorts()
+    public function itPreservesExplicityPorts(): void
     {
         $cpb = new Capabilities();
         $cpb->add('Login', 'http://www.google.com:8080/login');

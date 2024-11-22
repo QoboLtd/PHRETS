@@ -10,7 +10,7 @@ use PHRETS\Strategies\SimpleStrategy;
 class SimpleStrategyTest extends TestCase
 {
     #[Test]
-    public function itProvidesDefaults()
+    public function itProvidesDefaults(): void
     {
         $config = new Configuration();
         $strategy = new SimpleStrategy();
@@ -20,7 +20,7 @@ class SimpleStrategyTest extends TestCase
     }
 
     #[Test]
-    public function itProvidesA18LoginParser()
+    public function itProvidesA18LoginParser(): void
     {
         $config = new Configuration();
         $config->setRetsVersion('1.8');
@@ -31,7 +31,7 @@ class SimpleStrategyTest extends TestCase
     }
 
     #[Test]
-    public function itProvidesSingletons()
+    public function itProvidesSingletons(): void
     {
         $config = new Configuration();
         $strategy = new SimpleStrategy();

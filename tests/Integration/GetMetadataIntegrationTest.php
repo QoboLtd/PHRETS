@@ -11,14 +11,14 @@ class GetMetadataIntegrationTest extends BaseIntegration
      */
 
     #[Test]
-    public function itGetsSystemData()
+    public function itGetsSystemData(): void
     {
         $system = $this->session->GetSystemMetadata();
-        $this->assertTrue($system instanceof \PHRETS\Models\Metadata\System);
+        $this->assertNotNull($system->getSystemID());
     }
 
     #[Test]
-    public function itGetsSystemDataFor15()
+    public function itGetsSystemDataFor15(): void
     {
         $config = new \PHRETS\Configuration();
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
@@ -30,12 +30,11 @@ class GetMetadataIntegrationTest extends BaseIntegration
         $session->Login();
 
         $system = $session->GetSystemMetadata();
-        $this->assertTrue($system instanceof \PHRETS\Models\Metadata\System);
         $this->assertSame('demomls', $system->getSystemID());
     }
 
     #[Test]
-    public function itMakesAGoodUrl()
+    public function itMakesAGoodUrl(): void
     {
         $this->session->GetSystemMetadata();
         $this->assertSame(
@@ -45,7 +44,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itSeesSomeAttributes()
+    public function itSeesSomeAttributes(): void
     {
         $system = $this->session->GetSystemMetadata();
         $this->assertSame('demomls', $system->getSystemID());
@@ -53,7 +52,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsRelatedResources()
+    public function itGetsRelatedResources(): void
     {
         $system = $this->session->GetSystemMetadata()->getResources();
         $resources = $this->session->GetResourcesMetadata();
@@ -65,7 +64,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
      */
 
     #[Test]
-    public function itGetsResourceData()
+    public function itGetsResourceData(): void
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayHasKey('Property', $resources);
@@ -77,7 +76,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsAllResourceData()
+    public function itGetsAllResourceData(): void
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertCount(9, $resources);
@@ -86,7 +85,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsKeyedResourceData()
+    public function itGetsKeyedResourceData(): void
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayHasKey('Property', $resources);
@@ -94,14 +93,14 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itErrorsWithBadResourceName()
+    public function itErrorsWithBadResourceName(): void
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayNotHasKey('Bogus', $resources);
     }
 
     #[Test]
-    public function itGetsRelatedClasses()
+    public function itGetsRelatedClasses(): void
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayHasKey('Property', $resources);
@@ -112,7 +111,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsRelatedObjectMetadata()
+    public function itGetsRelatedObjectMetadata(): void
     {
         $resources = $this->session->GetResourcesMetadata();
         $this->assertArrayHasKey('Property', $resources);
@@ -126,7 +125,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
      */
 
     #[Test]
-    public function itGetsClassData()
+    public function itGetsClassData(): void
     {
         $classes = $this->session->GetClassesMetadata('Property');
         $this->assertIsArray($classes);
@@ -135,7 +134,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsRelatedTableData()
+    public function itGetsRelatedTableData(): void
     {
         $classes = $this->session->GetClassesMetadata('Property');
         $this->assertIsArray($classes);
@@ -145,7 +144,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsKeyedClassMetadata()
+    public function itGetsKeyedClassMetadata(): void
     {
         $classes = $this->session->GetClassesMetadata('Property');
         $this->assertInstanceOf(\PHRETS\Models\Metadata\ResourceClass::class, $classes['A']);
@@ -156,7 +155,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
      */
 
      #[Test]
-    public function itGetsTableData()
+    public function itGetsTableData(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
         $this->assertTrue(count($fields) > 100, 'Verify that a lot of fields came back');
@@ -164,7 +163,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itSeesTableAttributes()
+    public function itSeesTableAttributes(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
         $this->assertSame('Property', Arr::first($fields)?->getResource());
@@ -172,21 +171,21 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itSeesFieldsByKey()
+    public function itSeesFieldsByKey(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
         $this->assertSame('Listing ID', $fields['LIST_105']->getLongName());
     }
 
     #[Test]
-    public function itSeesFieldsByStandardKey()
+    public function itSeesFieldsByStandardKey(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A', 'StandardName');
         $this->assertSame('Listing ID', $fields['ListingID']->getLongName());
     }
 
     #[Test]
-    public function itGetsObjectMetadata()
+    public function itGetsObjectMetadata(): void
     {
         $object_types = $this->session->GetObjectMetadata('Property');
         $this->assertTrue(count($object_types) > 4, 'Verify that a few came back');
@@ -195,7 +194,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsKeyedObjectMetadata()
+    public function itGetsKeyedObjectMetadata(): void
     {
         $object_types = $this->session->GetObjectMetadata('Property');
         $this->assertInstanceOf('\PHRETS\Models\Metadata\BaseObject', $object_types['Photo']);
@@ -206,7 +205,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
      */
 
     #[Test]
-    public function itGetsLookupValues()
+    public function itGetsLookupValues(): void
     {
         $values = $this->session->GetLookupValues('Property', '20000426151013376279000000');
         $first = Arr::first($values);
@@ -216,7 +215,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itGetsRelatedLookupValues()
+    public function itGetsRelatedLookupValues(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
 
@@ -227,7 +226,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itRecoversFromBadLookuptypeTag()
+    public function itRecoversFromBadLookuptypeTag(): void
     {
         $config = new \PHRETS\Configuration();
         $config->setLoginUrl('http://retsgw.flexmls.com/lookup/rets2_1/Login')
@@ -243,7 +242,7 @@ class GetMetadataIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itHandlesIncompleteObjectMetadataCorrectly()
+    public function itHandlesIncompleteObjectMetadataCorrectly(): void
     {
         $config = new \PHRETS\Configuration();
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')

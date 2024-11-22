@@ -9,7 +9,7 @@ use PHRETS\Models\Search\Results;
 class RecordTest extends TestCase
 {
     #[Test]
-    public function itHoldsValues()
+    public function itHoldsValues(): void
     {
         $r = new Record();
         $r->set('name', 'value');
@@ -18,7 +18,7 @@ class RecordTest extends TestCase
     }
 
     #[Test]
-    public function itHoldsMultipleValues()
+    public function itHoldsMultipleValues(): void
     {
         $r = new Record();
         $r->set('one', '1');
@@ -31,7 +31,7 @@ class RecordTest extends TestCase
     }
 
     #[Test]
-    public function itDetectsRestrictedValues()
+    public function itDetectsRestrictedValues(): void
     {
         $rs = new Results();
         $rs->setRestrictedIndicator('RESTRICTED');
@@ -46,7 +46,7 @@ class RecordTest extends TestCase
     }
 
     #[Test]
-    public function itChangesToArray()
+    public function itChangesToArray(): void
     {
         $r = new Record();
         $r->set('ListingID', '123456789');
@@ -56,7 +56,7 @@ class RecordTest extends TestCase
     }
 
     #[Test]
-    public function itChangesToJson()
+    public function itChangesToJson(): void
     {
         $r = new Record();
         $r->set('ListingID', '123456789');
@@ -67,7 +67,7 @@ class RecordTest extends TestCase
     }
 
     #[Test]
-    public function itAccessesParentGivenAttributes()
+    public function itAccessesParentGivenAttributes(): void
     {
         $rs = new Results();
         $rs->setResource('Property');
@@ -85,7 +85,7 @@ class RecordTest extends TestCase
     }
 
     #[Test]
-    public function itAllowsArrayAccess()
+    public function itAllowsArrayAccess(): void
     {
         $r = new Record();
         $r->set('one', '1');

@@ -9,7 +9,7 @@ use PHRETS\Models\Metadata\Resource;
 class ResourceTest extends TestCase
 {
     #[Test]
-    public function itHolds()
+    public function itHolds(): void
     {
         $metadata = new Resource();
         $metadata->setDescription('Test Description');
@@ -18,7 +18,7 @@ class ResourceTest extends TestCase
     }
 
     #[Test]
-    public function itDoesntLikeBadMethods()
+    public function itDoesntLikeBadMethods(): void
     {
         $this->expectException(BadMethodCallException::class);
         $metadata = new Resource();
@@ -27,7 +27,7 @@ class ResourceTest extends TestCase
     }
 
     #[Test]
-    public function itReturnsNullForUnrecognizedAttributes()
+    public function itReturnsNullForUnrecognizedAttributes(): void
     {
         $metadata = new Resource();
         // @phpstan-ignore-next-line method.notFound
@@ -35,7 +35,7 @@ class ResourceTest extends TestCase
     }
 
     #[Test]
-    public function itWorksLikeAnArray()
+    public function itWorksLikeAnArray(): void
     {
         $metadata = new Resource();
         $metadata->setDescription('Test Description');
@@ -45,7 +45,7 @@ class ResourceTest extends TestCase
     }
 
     #[Test]
-    public function itSetsLikeAnArray()
+    public function itSetsLikeAnArray(): void
     {
         $metadata = new Resource();
         $metadata['Description'] = 'Array setter';

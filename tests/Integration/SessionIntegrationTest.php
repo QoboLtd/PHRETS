@@ -10,7 +10,7 @@ use PHRETS\Session;
 class SessionIntegrationTest extends BaseIntegration
 {
     #[Test]
-    public function itLogsIn()
+    public function itLogsIn(): void
     {
         assert($this->session !== null);
         $connect = $this->session->Login();
@@ -18,14 +18,14 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itMadeTheRequest()
+    public function itMadeTheRequest(): void
     {
         $this->session->Login();
         $this->assertSame('http://retsgw.flexmls.com:80/rets2_1/Login', $this->session->getLastRequestURL());
     }
 
     #[Test]
-    public function itThrowsAnExceptionWhenMakingABadRequest()
+    public function itThrowsAnExceptionWhenMakingABadRequest(): void
     {
         $this->expectException(\PHRETS\Exceptions\RETSException::class);
         $this->session->Login();
@@ -34,7 +34,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itTracksTheLastResponseBody()
+    public function itTracksTheLastResponseBody(): void
     {
         $this->session->Login();
 
@@ -43,7 +43,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itDisconnects()
+    public function itDisconnects(): void
     {
         $this->session->Login();
 
@@ -51,7 +51,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itRequestsTheServersActionTransaction()
+    public function itRequestsTheServersActionTransaction(): void
     {
         $config = new \PHRETS\Configuration();
 
@@ -68,7 +68,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itUsesHttpPostMethodWhenDesired()
+    public function itUsesHttpPostMethodWhenDesired(): void
     {
         $config = new \PHRETS\Configuration();
 
@@ -90,7 +90,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itTracksAGivenSessionId()
+    public function itTracksAGivenSessionId(): void
     {
         $this->session->Login();
 
@@ -101,7 +101,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itDetectsWhenToUseUserAgentAuthentication()
+    public function itDetectsWhenToUseUserAgentAuthentication(): void
     {
         $config = new Configuration();
 
@@ -133,7 +133,7 @@ class SessionIntegrationTest extends BaseIntegration
     }
 
     #[Test]
-    public function itDoesntAllowRequestsToUnsupportedCapabilities()
+    public function itDoesntAllowRequestsToUnsupportedCapabilities(): void
     {
         $this->expectException(\PHRETS\Exceptions\CapabilityUnavailable::class);
         $config = new \PHRETS\Configuration();
@@ -151,7 +151,7 @@ class SessionIntegrationTest extends BaseIntegration
         $session->GetSystemMetadata();
     }
 
-    public function testDetailsAreAvailableFromLogin()
+    public function testDetailsAreAvailableFromLogin(): void
     {
         $connect = $this->session->Login();
         $this->assertSame('UNKNOWN', $connect->getMemberName());

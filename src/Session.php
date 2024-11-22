@@ -64,7 +64,6 @@ class Session
     /**
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\MissingConfiguration
-     * @return \PHRETS\Models\Bulletin
      */
     public function Login(): Bulletin
     {
@@ -100,7 +99,6 @@ class Session
      * @param string $content_id
      * @param int $location
      *
-     * @return ?\PHRETS\Models\BaseObject
      */
     public function GetPreferredObject(string $resource, string $type, string $content_id, int $location = 0): ?BaseObject
     {
@@ -153,11 +151,10 @@ class Session
     }
 
     /**
-     * @return \PHRETS\Models\Metadata\System
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetSystemMetadata()
+    public function GetSystemMetadata(): \PHRETS\Models\Metadata\System
     {
         $response = $this->MakeMetadataRequest('METADATA-SYSTEM', 0);
 
@@ -187,7 +184,7 @@ class Session
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetClassesMetadata(string $resource_id)
+    public function GetClassesMetadata(string $resource_id): array
     {
         $response = $this->MakeMetadataRequest('METADATA-CLASS', $resource_id);
 
@@ -221,7 +218,7 @@ class Session
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetObjectMetadata(string|int $resource_id)
+    public function GetObjectMetadata(string|int $resource_id): array
     {
         $response = $this->MakeMetadataRequest('METADATA-OBJECT', $resource_id);
 
@@ -253,7 +250,7 @@ class Session
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetLookupValues(string $resource_id, string $lookup_name)
+    public function GetLookupValues(string $resource_id, string $lookup_name): array
     {
         $response = $this->MakeMetadataRequest('METADATA-LOOKUP_TYPE', $resource_id . ':' . $lookup_name);
 
@@ -266,7 +263,6 @@ class Session
     /**
      * @param string $type
      * @param string|int $id
-     * @return \PHRETS\Http\Response
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
@@ -290,7 +286,6 @@ class Session
      * @param ?string $dmql_query
      * @param array{Class?:string,SearchType?:string,Query?:?string,RestrictedIndicator?:?string} $optional_parameters
      *
-     * @return \PHRETS\Models\Search\Results
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
@@ -423,11 +418,10 @@ class Session
     }
 
     /**
-     * @return bool
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function Logout()
+    public function Logout(): bool
     {
         $this->request('Logout');
 
@@ -435,11 +429,10 @@ class Session
     }
 
     /**
-     * @return bool
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function Disconnect()
+    public function Disconnect(): bool
     {
         return $this->Logout();
     }
@@ -449,7 +442,6 @@ class Session
      * @param array<string,mixed> $options
      * @param bool $is_retry
      *
-     * @return \PHRETS\Http\Response
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException

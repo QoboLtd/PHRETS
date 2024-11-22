@@ -57,7 +57,6 @@ class SimpleStrategy implements Strategy
     }
 
     /**
-     * @return void
      */
     public function initialize(Configuration $configuration): void
     {
@@ -75,7 +74,6 @@ class SimpleStrategy implements Strategy
      *
      * @param \PHRETS\Parsers\ParserType $parser Parser
      * @param mixed $instance Instance
-     * @return void
      */
     public function setInstance(ParserType $parser, mixed $instance): void
     {

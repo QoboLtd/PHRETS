@@ -21,7 +21,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setContent(?string $content): self
     {
@@ -51,7 +50,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setContentId(?string $content_id): self
     {
@@ -66,7 +64,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setContentSubDescription(?string $content_sub_description): self
     {
@@ -81,7 +78,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setContentType(?string $content_type): self
     {
@@ -96,7 +92,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setLocation(?string $location): self
     {
@@ -111,7 +106,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setMimeVersion(?string $mime_version): self
     {
@@ -126,7 +120,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setObjectId(string|int|null $object_id): self
     {
@@ -179,7 +172,6 @@ class BaseObject
     }
 
     /**
-     * @return self
      */
     public function setPreferred(int|string|null $preferred): self
     {

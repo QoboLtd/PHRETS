@@ -24,7 +24,6 @@ class RETSVersion implements \Stringable
 
     /**
      * @param string $version
-     * @return self
      *
      * @throws \PHRETS\Exceptions\InvalidRETSVersion
      */
