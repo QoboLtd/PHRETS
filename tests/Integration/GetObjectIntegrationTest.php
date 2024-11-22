@@ -6,7 +6,6 @@ class GetObjectIntegrationTest extends BaseIntegration
     public function itFetchesObjects()
     {
         $objects = $this->session->GetObject('Property', 'Photo', '14-52', '*', 0);
-        $this->assertIsArray($objects);
         $this->assertSame(22, count($objects));
     }
 
@@ -14,7 +13,6 @@ class GetObjectIntegrationTest extends BaseIntegration
     public function itFetchesPrimaryObject()
     {
         $objects = $this->session->GetObject('Property', 'Photo', '00-1669', 0, 1);
-        $this->assertIsArray($objects);
         $this->assertSame(1, count($objects));
 
         $primary = $objects[0];

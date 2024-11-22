@@ -6,8 +6,12 @@ class Record implements \ArrayAccess, \Stringable
 {
     protected ?string $resource = '';
     protected ?string $class = '';
+    
+    /** @var list<string> */
     protected array $fields = [];
     protected ?string $restricted_value = '****';
+
+    /** @var array<int|string,mixed> */
     protected array $values = [];
 
     public function get(string|int $field): mixed
@@ -18,12 +22,12 @@ class Record implements \ArrayAccess, \Stringable
     /**
      * @param $value
      */
-    public function set(string|int $field, $value)
+    public function set(string|int $field, mixed $value): void
     {
         $this->values[$field] = $value;
     }
 
-    public function remove(string|int $field)
+    public function remove(string|int $field): void
     {
         unset($this->values[$field]);
     }
@@ -58,11 +62,17 @@ class Record implements \ArrayAccess, \Stringable
         return $this->class;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getFields(): array
     {
         return $this->fields;
     }
 
+    /**
+     * @return array<int|string,mixed>
+     */
     public function toArray(): array
     {
         return $this->values;

@@ -12,12 +12,13 @@ class Multiple
      */
     public function parse(PHRETSResponse $response): array
     {
-        if (!$response->getBody()) {
+        $body = (string)$response->getBody();
+        if ($body === '') {
             return [];
         }
 
         // help bad responses be more multipart compliant
-        $body = "\r\n" . $response->getBody()->__toString() . "\r\n";
+        $body = "\r\n" . $body . "\r\n";
 
         // multipart
         preg_match('/boundary\=\"(.*?)\"/', (string) $response->getHeader('Content-Type'), $matches);

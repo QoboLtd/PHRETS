@@ -157,7 +157,6 @@ class GetMetadataIntegrationTest extends BaseIntegration
     public function itGetsTableData()
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
-        $this->assertIsArray($fields);
         $this->assertTrue(count($fields) > 100, 'Verify that a lot of fields came back');
         $this->assertSame('LIST_0', $this->first($fields)?->getSystemName());
     }

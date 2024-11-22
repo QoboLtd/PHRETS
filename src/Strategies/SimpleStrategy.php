@@ -30,7 +30,10 @@ class SimpleStrategy implements Strategy
         ParserType::XML->value => \PHRETS\Parsers\XML::class,
     ];
 
+    /** @var array<string,class-string> */
     private array $classes;
+
+    /** @var list<mixed> */
     private array $instances;
 
     public function __construct()

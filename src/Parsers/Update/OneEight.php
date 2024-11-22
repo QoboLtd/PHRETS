@@ -8,7 +8,7 @@ class OneEight
     /**
      * @return array<string,mixed>
      */
-    public function parse(Session $rets, Response $response, array $parameters): array
+    public function parse(Session $rets, Response $response): array
     {
         $xml = $response->xml();
 

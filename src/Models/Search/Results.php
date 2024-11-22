@@ -18,12 +18,16 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     protected ?string $resource = '';
     protected ?string $class = '';
     protected ?Session $session = null;
-    protected mixed $metadata = null;
+
+    /** @var array<int|string,mixed> */
+    protected ?array $metadata = null;
     protected int $total_results_count = 0;
     protected int $returned_results_count = 0;
     protected mixed $error = null;
     /** @var array<int|string,\PHRETS\Models\Search\Record> */
     protected array $results;
+
+    /** @var list<string> */
     protected array $headers = [];
     protected string $restricted_indicator = '****';
     protected bool $maxrows_reached = false;
@@ -33,12 +37,16 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         $this->results = [];
     }
 
+    /**
+     * @return list<string>
+     */
     public function getHeaders(): array
     {
         return $this->headers;
     }
 
     /**
+     * @param list<string> $headers Headers
      * @return self
      */
     public function setHeaders(array $headers): self
@@ -70,9 +78,8 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Set which field's value will be used to key the records by.
      *
-     * @param $field
      */
-    public function keyResultsBy($field): void
+    public function keyResultsBy(callable|string|int|null $field): void
     {
         $results = $this->results;
         $this->results = [];
@@ -190,10 +197,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     *
+     * @return array<int|string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getMetadata()
+    public function getMetadata(): array
     {
         if (!$this->metadata) {
             $this->metadata = $this->session->GetTableMetadata($this->getResource(), $this->getClass());
@@ -203,11 +210,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param mixed $metadata
+     * @param array<int|string,mixed> $metadata
      *
      * @return self
      */
-    public function setMetadata(mixed $metadata): self
+    public function setMetadata(array $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -220,11 +227,11 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param $indicator
+     * @param string $indicator
      *
-     * @return $this
+     * @return self
      */
-    public function setRestrictedIndicator($indicator): static
+    public function setRestrictedIndicator(string $indicator): self
     {
         $this->restricted_indicator = $indicator;
 
@@ -302,9 +309,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Returns an array containing the values from the given field.
      *
-     * @param $field
+     * @param string|int $field
+     * @return list<mixed>
      */
-    public function lists($field): array
+    public function lists(string|int $field): array
     {
         $l = [];
         foreach ($this->results as $r) {
@@ -357,6 +365,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * Return results as a simple array.
+     * @return list<array<int|string,mixed>>
      */
     public function toArray(): array
     {

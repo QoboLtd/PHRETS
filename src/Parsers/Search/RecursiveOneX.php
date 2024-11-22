@@ -11,6 +11,7 @@ use PHRETS\Session;
 class RecursiveOneX
 {
     /**
+     * @param array<string,mixed> $parameters Parameters
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\AutomaticPaginationError
      */
@@ -22,7 +23,7 @@ class RecursiveOneX
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::SEARCH);
         $rs = $parser->parse($rets, $response, $parameters);
 
-        while ($this->continuePaginating($rets, $parameters, $rs)) {
+        while ($this->continuePaginating($rs)) {
             $pms = $parameters;
 
             $rets->debug('Continuing pagination...');
@@ -32,7 +33,7 @@ class RecursiveOneX
             $class = $pms['Class'];
             $query = $pms['Query'] ?? null;
 
-            $pms['Offset'] = $this->getNewOffset($rets, $parameters, $rs);
+            $pms['Offset'] = $this->getNewOffset($rs);
 
             unset($pms['SearchType']);
             unset($pms['Class']);
@@ -55,18 +56,12 @@ class RecursiveOneX
         return $rs;
     }
 
-    /**
-     * @param $parameters
-     */
-    protected function continuePaginating(Session $rets, $parameters, Results $rs): bool
+    protected function continuePaginating(Results $rs): bool
     {
         return $rs->isMaxRowsReached();
     }
 
-    /**
-     * @param $parameters
-     */
-    protected function getNewOffset(Session $rets, $parameters, Results $rs): int
+    protected function getNewOffset(Results $rs): int
     {
         return $rs->getReturnedResultsCount() + 1;
     }

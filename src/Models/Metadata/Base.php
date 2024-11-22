@@ -8,8 +8,19 @@ use PHRETS\Session;
 abstract class Base implements \ArrayAccess
 {
     protected Session $session;
+
+    /**
+     * @var list<string>
+     */
     protected array $elements = [];
+
+    /**
+     * @var list<string>
+     */
     protected array $attributes = [];
+
+
+    /** @var array<string,mixed> */
     protected array $values = [];
 
     public function getSession(): Session
@@ -28,6 +39,7 @@ abstract class Base implements \ArrayAccess
     }
 
     /**
+     * @param array<int,mixed> $args Arguments
      * @return mixed
      */
     public function __call(mixed $name, array $args = [])
@@ -57,11 +69,17 @@ abstract class Base implements \ArrayAccess
         throw new \BadMethodCallException();
     }
 
+    /**
+     * @return list<string>
+     */
     public function getXmlElements(): array
     {
         return $this->elements;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getXmlAttributes(): array
     {
         return $this->attributes;

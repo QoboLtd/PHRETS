@@ -13,6 +13,8 @@ class Arr
     /**
      * Gets elements from the array with dot notation support
      *
+     * @param array<int|string,mixed> $array
+     *
      * Lifted from: https://medium.com/@assertchris/dot-notation-3fd3e42edc61
     */
     public static function get(array $array, string $key): mixed

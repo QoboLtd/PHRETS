@@ -4,8 +4,13 @@ namespace PHRETS\Parsers\Login;
 
 abstract class OneX
 {
+    /** @var array<string,string> */
     protected array $capabilities = [];
+
+    /** @var array<string,string> */
     protected array $details = [];
+
+    /** @var list<string> */
     protected array $valid_transactions = [
         'Action', 'ChangePassword', 'GetObject', 'Login', 'LoginComplete', 'Logout', 'Search', 'GetMetadata',
         'ServerInformation', 'Update', 'PostObject', 'GetPayloadList',
@@ -35,11 +40,17 @@ abstract class OneX
         }
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getCapabilities(): array
     {
         return $this->capabilities;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getDetails(): array
     {
         return $this->details;

@@ -13,7 +13,8 @@ class RETSVersion implements \Stringable
     public const VERSION_1_8 = '1.8';
 
     protected string $number;
-    protected array $valid_versions = [
+
+    private const VALID_VERSIONS = [
         self::VERSION_1_5,
         self::VERSION_1_7,
         self::VERSION_1_7_1,
@@ -22,16 +23,15 @@ class RETSVersion implements \Stringable
     ];
 
     /**
-     * @param $version
-     *
-     * @return $this
+     * @param string $version
+     * @return self
      *
      * @throws \PHRETS\Exceptions\InvalidRETSVersion
      */
-    public function setVersion($version): static
+    public function setVersion(string $version): self
     {
-        $this->number = str_replace('RETS/', '', (string) $version);
-        if (!in_array($this->number, $this->valid_versions)) {
+        $this->number = str_replace('RETS/', '', $version);
+        if (!in_array($this->number, self::VALID_VERSIONS)) {
             throw new InvalidRETSVersion("RETS version '{$version}' given is not understood");
         }
 
@@ -69,9 +69,9 @@ class RETSVersion implements \Stringable
     }
 
     /**
-     * @param $version
+     * @param string $version
      */
-    public function isAtLeast($version): bool
+    public function isAtLeast(string $version): bool
     {
         return version_compare($this->number, $version) >= 0;
     }
@@ -96,9 +96,12 @@ class RETSVersion implements \Stringable
         return $this->isAtLeast(self::VERSION_1_8);
     }
 
+    /**
+     * @return list<string>
+     */
     public function getValidVersions(): array
     {
-        return $this->valid_versions;
+        return self::VALID_VERSIONS;
     }
 
     public function __toString(): string

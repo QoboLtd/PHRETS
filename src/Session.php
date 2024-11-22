@@ -27,7 +27,7 @@ class Session
     protected ?LoggerInterface $logger = null;
     protected ?string $rets_session_id = null;
     protected CookieJarInterface $cookie_jar;
-    protected $last_request_url;
+    protected ?string $last_request_url;
     protected ?Response $last_response = null;
 
     public function __construct(protected readonly Configuration $configuration)
@@ -47,9 +47,9 @@ class Session
     /**
      * PSR-3 compatible logger can be attached here.
      *
-     * @param $logger
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function setLogger($logger)
+    public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
         $this->debug('Loading ' . $logger::class . ' logger');
@@ -58,9 +58,9 @@ class Session
     /**
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\MissingConfiguration
-     * @returns Bulletin
+     * @return \PHRETS\Models\Bulletin
      */
-    public function Login()
+    public function Login(): Bulletin
     {
         if (!$this->configuration->valid()) {
             throw new MissingConfiguration('Cannot issue Login without a valid configuration loaded');
@@ -89,14 +89,14 @@ class Session
     }
 
     /**
-     * @param $resource
-     * @param $type
-     * @param $content_id
+     * @param string $resource
+     * @param string $type
+     * @param string $content_id
      * @param int $location
      *
      * @return ?\PHRETS\Models\BaseObject
      */
-    public function GetPreferredObject($resource, $type, $content_id, $location = 0): ?BaseObject
+    public function GetPreferredObject(string $resource, string $type, string $content_id, int $location = 0): ?BaseObject
     {
         $collection = $this->GetObject($resource, $type, $content_id, '0', $location);
 
@@ -104,17 +104,17 @@ class Session
     }
 
     /**
-     * @param $resource
-     * @param $type
-     * @param $content_ids
-     * @param mixed $object_ids
+     * @param string $resource
+     * @param string $type
+     * @param string $content_ids
+     * @param string $object_ids
      * @param int $location
      *
      * @return list<\PHRETS\Models\BaseObject>
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetObject($resource, $type, $content_ids, mixed $object_ids = '*', $location = 0): array
+    public function GetObject(string $resource, string $type, string $content_ids, string|int $object_ids = '*', $location = 0): array
     {
         $request_id = GetObject::ids($content_ids, $object_ids);
 
@@ -224,11 +224,11 @@ class Session
     }
 
     /**
-     * @param $resource_id
+     * @param string|int $resource_id
      * @return array<string,\PHRETS\Models\Metadata\Lookup>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetLookups($resource_id): array
+    public function GetLookups(string|int $resource_id): array
     {
         $response = $this->MakeMetadataRequest('METADATA-LOOKUP', $resource_id);
         
@@ -277,17 +277,22 @@ class Session
     }
 
     /**
-     * @param $resource_id
-     * @param $class_id
+     * @param string $resource_id
+     * @param string $class_id
      * @param ?string $dmql_query
-     * @param array $optional_parameters
+     * @param array<string,mixed> $optional_parameters
      *
      * @return \PHRETS\Models\Search\Results
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function Search($resource_id, $class_id, ?string $dmql_query, array $optional_parameters = [], bool $recursive = false): Results
-    {
+    public function Search(
+        string $resource_id,
+        string $class_id,
+        ?string $dmql_query,
+        array $optional_parameters = [],
+        bool $recursive = false
+    ): Results {
         $dmql_query = Search::dmql($dmql_query);
 
         $defaults = [
@@ -327,22 +332,22 @@ class Session
     }
 
     /**
-     * @param $resource_id
-     * @param $class_id
-     * @param $action
+     * @param string $resource_id
+     * @param string $class_id
+     * @param string $action
      * @param string $data
      * @param string|null $warning_response
      * @param int $validation_mode
      * @param string $delimiter
-     * @param array $additional_parameters
+     * @param array<string,mixed> $additional_parameters
      * @return array<string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
      */
     public function Update(
-        $resource_id,
-        $class_id,
-        $action,
+        string $resource_id,
+        string $class_id,
+        string $action,
         string $data,
         ?string $warning_response = null,
         int $validation_mode = 0,
@@ -369,22 +374,28 @@ class Session
         /** @var \PHRETS\Parsers\Update\OneEight $parser */
         $parser = $this->grab(ParserType::UPDATE);
 
-        return $parser->parse($this, $response, $parameters);
+        return $parser->parse($this, $response);
     }
 
     /**
-     * @param $resource
-     * @param $type
-     * @param $content_type
-     * @param $action
-     * @param mixed $body
-     * @param array $attributes
+     * @param string $resource
+     * @param string $type
+     * @param string $content_type
+     * @param string $action
+     * @param string|resource|\Psr\Http\Message\StreamInterface $body
+     * @param array<string,mixed> $attributes
      * @return array<string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
      */
-    public function PostObject($resource, $type, $content_type, $action, mixed $body, array $attributes = []): array
-    {
+    public function PostObject(
+        string $resource,
+        string $type,
+        string $content_type,
+        string $action,
+        mixed $body,
+        array $attributes = []
+    ): array {
         $headers = array_merge([
             'Resource' => $resource,
             'Type' => $type,
@@ -627,6 +638,9 @@ class Session
         return $this->configuration;
     }
 
+    /**
+     * @param array<int|string,mixed> $context
+     */
     public function debug(string|Stringable $message, array|string $context = []): void
     {
         if ($this->logger) {
@@ -682,9 +696,13 @@ class Session
     }
 
     /**
+     * Note: Make sure to add a type hint to the result
+     * whenever you are using this function to make sure we
+     * have visibility on the parser.
+     *
      * @param \PHRETS\Parsers\ParserType $parser
      */
-    protected function grab(ParserType $parser)
+    protected function grab(ParserType $parser): mixed
     {
         return $this->configuration->getStrategy()->provide($parser);
     }

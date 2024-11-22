@@ -9,6 +9,9 @@ class Client
 {
     protected static ?ClientInterface $client = null;
 
+    /**
+     * @param array<string,mixed> $options Options
+     */
     public static function make(array $options = []): ClientInterface
     {
         if (self::$client === null) {

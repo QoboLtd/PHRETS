@@ -8,7 +8,6 @@ class SearchIntegrationTest extends BaseIntegration
     public function itMakesRequests()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
-        $this->assertTrue($results instanceof \PHRETS\Models\Search\Results);
         $this->assertCount(3, $results);
     }
 
@@ -67,7 +66,6 @@ class SearchIntegrationTest extends BaseIntegration
     public function itProvidesAccessToAssociatedMetadata()
     {
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
-        $this->assertIsArray($results->getMetadata());
         $this->assertInstanceOf(\PHRETS\Models\Metadata\Table::class, Arr::first($results->getMetadata()));
     }
 

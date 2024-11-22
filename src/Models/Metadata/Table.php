@@ -40,6 +40,9 @@ namespace PHRETS\Models\Metadata;
  */
 class Table extends Base
 {
+    /**
+     * @var list<string>
+     */
     protected array $elements = [
         'SystemName',
         'StandardName',
@@ -70,6 +73,10 @@ class Table extends Base
         'ForeignField',
         'InKeyIndex',
     ];
+
+    /**
+     * @var list<string>
+     */
     protected array $attributes = [
         'Version',
         'Date',

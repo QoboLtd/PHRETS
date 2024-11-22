@@ -8,7 +8,7 @@ class SessionIntegrationTest extends BaseIntegration
     public function itLogsIn()
     {
         $connect = $this->session->Login();
-        $this->assertTrue($connect instanceof \PHRETS\Models\Bulletin);
+        $this->assertNotNull($connect->getBody());
     }
 
     /** @test **/
@@ -152,8 +152,6 @@ class SessionIntegrationTest extends BaseIntegration
     public function testDetailsAreAvailableFromLogin()
     {
         $connect = $this->session->Login();
-        $this->assertTrue($connect instanceof \PHRETS\Models\Bulletin);
-
         $this->assertSame('UNKNOWN', $connect->getMemberName());
         $this->assertNotNull($connect->getMetadataVersion());
     }
