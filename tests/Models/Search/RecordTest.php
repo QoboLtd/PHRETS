@@ -60,7 +60,7 @@ class RecordTest extends TestCase
         $r->set('ListingID', '123456789');
         $r->set('MLS', 'demo');
 
-        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', json_encode($r,JSON_THROW_ON_ERROR));
+        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', json_encode($r, JSON_THROW_ON_ERROR));
         $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', (string) $r);
     }
 

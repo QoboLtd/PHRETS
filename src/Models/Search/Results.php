@@ -8,10 +8,8 @@ use Closure;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
-use League\Csv\Writer;
 use PHRETS\Arr;
 use PHRETS\Session;
-use SplTempFileObject;
 use Traversable;
 
 class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializable
