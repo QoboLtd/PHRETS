@@ -12,11 +12,11 @@ class Configuration
     public const AUTH_BASIC = 'basic';
     public const AUTH_DIGEST = 'digest';
 
-    protected ?string $username;
-    protected ?string $password;
-    protected ?string $login_url;
+    protected ?string $username = null;
+    protected ?string $password = null;
+    protected ?string $login_url = null;
     protected string $user_agent = 'PHRETS/2.6.4';
-    protected ?string $user_agent_password;
+    protected ?string $user_agent_password = null;
     protected RETSVersion $rets_version;
     protected string $http_authentication = 'digest';
     protected ?Strategy $strategy = null;

@@ -13,8 +13,8 @@ class GetObject
     {
         $result = [];
 
-        $content_ids = self::split((string)$content_ids, false);
-        $object_ids = self::split((string)$object_ids);
+        $content_ids = self::split($content_ids, false);
+        $object_ids = self::split($object_ids);
 
         foreach ($content_ids as $cid) {
             $result[] = $cid . ':' . implode(':', $object_ids);
