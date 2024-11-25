@@ -1,30 +1,32 @@
 <?php
+namespace PHRETS\Test\Versions;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Versions\RETSVersion;
 
 class RETSVersionTest extends TestCase
 {
-    /** @test **/
-    public function itLoads()
+    #[Test]
+    public function itLoads(): void
     {
         $this->assertSame('1.7.2', (new RETSVersion())->setVersion('1.7.2')->getVersion());
     }
 
-    /** @test **/
-    public function itCleans()
+    #[Test]
+    public function itCleans(): void
     {
         $this->assertSame('1.7.2', (new RETSVersion())->setVersion('RETS/1.7.2')->getVersion());
     }
 
-    /** @test **/
-    public function itMakesTheHeader()
+    #[Test]
+    public function itMakesTheHeader(): void
     {
         $this->assertSame('RETS/1.7.2', (new RETSVersion())->setVersion('1.7.2')->asHeader());
     }
 
-    /** @test **/
-    public function itIs15()
+    #[Test]
+    public function itIs15(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.5');
@@ -33,8 +35,8 @@ class RETSVersionTest extends TestCase
         $this->assertTrue($v->isAtLeast1_5());
     }
 
-    /** @test **/
-    public function itIs17()
+    #[Test]
+    public function itIs17(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.7');
@@ -46,8 +48,8 @@ class RETSVersionTest extends TestCase
         $this->assertFalse($v->isAtLeast1_7_2());
     }
 
-    /** @test **/
-    public function itIs172()
+    #[Test]
+    public function itIs172(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.7.2');
@@ -60,8 +62,8 @@ class RETSVersionTest extends TestCase
         $this->assertFalse($v->isAtLeast1_8());
     }
 
-    /** @test **/
-    public function itIs18()
+    #[Test]
+    public function itIs18(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.8');
@@ -75,8 +77,8 @@ class RETSVersionTest extends TestCase
         $this->assertTrue($v->isAtLeast1_8());
     }
 
-    /** @test **/
-    public function itCompares()
+    #[Test]
+    public function itCompares(): void
     {
         $v = new RETSVersion();
         $v->setVersion('RETS/1.8');
@@ -86,18 +88,16 @@ class RETSVersionTest extends TestCase
         $this->assertTrue($v->isAtLeast('1.7.2'));
     }
 
-    /**
-     * @test
-     * **/
-    public function itFailsBadVersions()
+    #[Test]
+    public function itFailsBadVersions(): void
     {
         $this->expectException(\PHRETS\Exceptions\InvalidRETSVersion::class);
         $v = new RETSVersion();
         $v->setVersion('2.0');
     }
 
-    /** @test **/
-    public function itConvertsToString()
+    #[Test]
+    public function itConvertsToString(): void
     {
         $v = new RETSVersion();
         $v->setVersion('1.7.2');

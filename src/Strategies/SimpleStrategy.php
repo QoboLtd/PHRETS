@@ -4,7 +4,6 @@ namespace PHRETS\Strategies;
 
 use PHRETS\Configuration;
 use PHRETS\Exceptions\ParserNotFound;
-use PHRETS\Parsers\Login\OneEight;
 use PHRETS\Parsers\ParserType;
 
 class SimpleStrategy implements Strategy
@@ -25,12 +24,13 @@ class SimpleStrategy implements Strategy
         ParserType::METADATA_OBJECT->value => \PHRETS\Parsers\GetMetadata\BaseObject::class,
         ParserType::METADATA_LOOKUP->value => \PHRETS\Parsers\GetMetadata\Lookup::class,
         ParserType::METADATA_LOOKUPTYPE->value => \PHRETS\Parsers\GetMetadata\LookupType::class,
-        ParserType::UPDATE->value => \PHRETS\Parsers\Update\OneEight::class,
-        ParserType::OBJECT_POST->value => \PHRETS\Parsers\PostObject\OneEight::class,
         ParserType::XML->value => \PHRETS\Parsers\XML::class,
     ];
 
+    /** @var array<string,class-string> */
     private array $classes;
+
+    /** @var array<string,mixed> */
     private array $instances;
 
     public function __construct()
@@ -54,12 +54,13 @@ class SimpleStrategy implements Strategy
     }
 
     /**
-     * @return void
      */
     public function initialize(Configuration $configuration): void
     {
         if ($configuration->getRetsVersion()->isAtLeast1_8()) {
-            $this->classes[ParserType::LOGIN->value] = OneEight::class;
+            $this->classes[ParserType::LOGIN->value] = \PHRETS\Parsers\Login\OneEight::class;
+            $this->classes[ParserType::OBJECT_POST->value] = \PHRETS\Parsers\PostObject\OneEight::class;
+            $this->classes[ParserType::UPDATE->value] = \PHRETS\Parsers\Update\OneEight::class;
         }
 
         foreach ($this->classes as $k => $v) {
@@ -72,7 +73,6 @@ class SimpleStrategy implements Strategy
      *
      * @param \PHRETS\Parsers\ParserType $parser Parser
      * @param mixed $instance Instance
-     * @return void
      */
     public function setInstance(ParserType $parser, mixed $instance): void
     {

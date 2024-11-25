@@ -1,24 +1,26 @@
 <?php
+namespace PHRETS\Test\Interpreters;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Interpreters\Search;
 
 class SearchTest extends TestCase
 {
-    /** @test **/
-    public function itDoesntTouchProperlyFormattedDmql()
+    #[Test]
+    public function itDoesntTouchProperlyFormattedDmql(): void
     {
         $this->assertSame('(FIELD=VALUE)', Search::dmql('(FIELD=VALUE)'));
     }
 
-    /** @test **/
-    public function itWrapsSimplifiedDmqlInParens()
+    #[Test]
+    public function itWrapsSimplifiedDmqlInParens(): void
     {
         $this->assertSame('(FIELD=VALUE)', Search::dmql('FIELD=VALUE'));
     }
 
-    /** @test **/
-    public function itDoesntModifyWhenSpecialCharactersAreUsed()
+    #[Test]
+    public function itDoesntModifyWhenSpecialCharactersAreUsed(): void
     {
         $this->assertSame('*', Search::dmql('*'));
         $this->assertSame('', Search::dmql(''));

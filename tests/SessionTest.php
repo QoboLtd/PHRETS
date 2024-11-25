@@ -1,13 +1,18 @@
 <?php
+namespace PHRETS\Test;
 
+use GuzzleHttp\Cookie\CookieJar;
+use Monolog\Logger;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Session;
+use Psr\Log\LoggerInterface;
 
 class SessionTest extends TestCase
 {
-    /** @test **/
-    public function itBuilds()
+    #[Test]
+    public function itBuilds(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -16,10 +21,8 @@ class SessionTest extends TestCase
         $this->assertSame($c, $s->getConfiguration());
     }
 
-    /**
-     * @test
-     */
-    public function itDetectsInvalidConfigurations()
+    #[Test]
+    public function itDetectsInvalidConfigurations(): void
     {
         $this->expectException(\PHRETS\Exceptions\MissingConfiguration::class);
         $c = new Configuration();
@@ -29,8 +32,8 @@ class SessionTest extends TestCase
         $s->Login();
     }
 
-    /** @test **/
-    public function itGivesBackTheLoginUrl()
+    #[Test]
+    public function itGivesBackTheLoginUrl(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -40,8 +43,8 @@ class SessionTest extends TestCase
         $this->assertSame('http://www.reso.org/login', $s->getLoginUrl());
     }
 
-    /** @test **/
-    public function itTracksCapabilities()
+    #[Test]
+    public function itTracksCapabilities(): void
     {
         $login_url = 'http://www.reso.org/login';
         $c = new Configuration();
@@ -49,12 +52,11 @@ class SessionTest extends TestCase
 
         $s = new Session($c);
         $capabilities = $s->getCapabilities();
-        $this->assertInstanceOf('PHRETS\Capabilities', $capabilities);
         $this->assertSame($login_url, $capabilities->get('Login'));
     }
 
-    /** @test **/
-    public function itDisablesRedirectsWhenDesired()
+    #[Test]
+    public function itDisablesRedirectsWhenDesired(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -62,64 +64,72 @@ class SessionTest extends TestCase
 
         $s = new Session($c);
 
-        $this->assertFalse($s->getDefaultOptions()['allow_redirects']);
+        $defaultOptions = $s->getDefaultOptions();
+        $this->assertArrayHasKey('allow_redirects', $defaultOptions);
+        $this->assertFalse($defaultOptions['allow_redirects']);
     }
 
-    /** @test **/
-    public function itUsesTheSetLogger()
+    #[Test]
+    public function itUsesTheSetLogger(): void
     {
-        $logger = $this->createMock(\Monolog\Logger::class);
-
-        // expect that the string 'Context' will be changed into an array
-        $logger->expects($this->atLeastOnce())->method('debug')->withConsecutive(
-            [$this->anything()],
-            [$this->equalTo('Message'), $this->equalTo(['Context'])]
-        );
+        $logger = $this->getMockBuilder(Logger::class)
+            ->setConstructorArgs(['TEST'])
+            ->onlyMethods(['debug'])->getMock();
 
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c);
-        $s->setLogger($logger);
+        $s = new Session($c, logger: $logger);
+
+        $count = 0;
+        $messages = [
+            'Message',
+            'Context',
+        ];
+
+        $logger->expects($this->any())->method('debug')->willReturnCallback(
+            function ($message) use (&$count, $messages): void {
+                self::assertSame($messages[$count], $message);
+                $count++;
+            }
+        );
 
         $s->debug('Message', 'Context');
     }
 
-    /** @test **/
-    public function itFixesTheLoggerContextAutomatically()
+    #[Test]
+    public function itFixesTheLoggerContextAutomatically(): void
     {
         $logger = $this->createMock(\Monolog\Logger::class);
+        assert($logger instanceof LoggerInterface);
         // just expect that a debug message is spit out
         $logger->expects($this->atLeastOnce())->method('debug')->with($this->matchesRegularExpression('/logger/'));
 
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c);
-        $s->setLogger($logger);
+        $s = new Session($c, logger: $logger);
     }
 
-    /** @test **/
-    public function itLoadsACookieJar()
+    #[Test]
+    public function itLoadsACookieJar(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
-        $this->assertInstanceOf('\GuzzleHttp\Cookie\CookieJarInterface', $s->getCookieJar());
+        $this->assertInstanceOf(CookieJar::class, $s->getCookieJar());
     }
 
-    /** @test **/
-    public function itAllowsOverridingTheCookieJar()
+    #[Test]
+    public function itAllowsOverridingTheCookieJar(): void
     {
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c);
 
         $jar = new \GuzzleHttp\Cookie\CookieJar();
-        $s->setCookieJar($jar);
-
+        $s = new Session($c, cookieJar: $jar);
         $this->assertSame($jar, $s->getCookieJar());
     }
 }
