@@ -45,4 +45,20 @@ class CapabilitiesTest extends TestCase
         $cpb->add('Search', '/search');
         $this->assertSame('http://www.google.com:8080/search', $cpb->get('Search'));
     }
+
+    public function testBoolCapability(): void
+    {
+        $caps = new Capabilities();
+        $caps->add('BoolFlag', true);
+
+        $this->assertSame(true, $caps->get('BoolFlag'));
+    }
+
+    public function testIntCapability(): void
+    {
+        $caps = new Capabilities();
+        $caps->add('IntFlag', 256);
+
+        $this->assertSame(256, $caps->get('IntFlag'));
+    }
 }
