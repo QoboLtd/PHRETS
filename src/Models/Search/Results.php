@@ -256,10 +256,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
         return count($this->results);
     }
 
-    /**
-     * @param ?\PHRETS\Models\Search\Record $default
-     */
-    public function first(Closure $callback = null, ?Record $default = null): ?Record
+    public function first(?Closure $callback = null, ?Record $default = null): ?Record
     {
         foreach ($this->results as $record) {
             if ($callback === null || $callback($record)) {
