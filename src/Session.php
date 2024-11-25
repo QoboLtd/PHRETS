@@ -22,11 +22,12 @@ use Stringable;
 
 class Session
 {
-    protected Capabilities $capabilities;
     protected readonly ClientInterface $client;
-    protected ?LoggerInterface $logger = null;
+    protected readonly CookieJarInterface $cookie_jar;
+    protected readonly Capabilities $capabilities;
+    protected readonly ?LoggerInterface $logger;
+
     protected ?string $rets_session_id = null;
-    protected CookieJarInterface $cookie_jar;
     protected ?string $last_request_url;
     protected ?Response $last_response = null;
 
@@ -35,30 +36,26 @@ class Session
      */
     public function __construct(
         protected readonly Configuration $configuration,
-        ?ClientInterface $client = null
+        ?ClientInterface $client = null,
+        ?CookieJarInterface $cookieJar = null,
+        ?LoggerInterface $logger = null
     ) {
         $loginUrl = $configuration->getLoginUrl();
         if ($loginUrl === null) {
             throw new MissingConfiguration('Login URL is not configured');
         }
 
+        $this->logger = $logger;
+        if ($logger !== null) {
+            $this->debug('Loading ' . $logger::class . ' logger');
+        }
+
         $this->client = $client ?? new Client([]);
-        $this->cookie_jar = new CookieJar();
+        $this->cookie_jar = $cookieJar ?? new CookieJar();
 
         // start up the Capabilities tracker and add Login as the first one
         $this->capabilities = new Capabilities();
         $this->capabilities->add('Login', $loginUrl);
-    }
-
-    /**
-     * PSR-3 compatible logger can be attached here.
-     *
-     * @param \Psr\Log\LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger): void
-    {
-        $this->logger = $logger;
-        $this->debug('Loading ' . $logger::class . ' logger');
     }
 
     /**
@@ -660,13 +657,6 @@ class Session
     public function getCookieJar(): CookieJarInterface
     {
         return $this->cookie_jar;
-    }
-
-    public function setCookieJar(CookieJarInterface $cookie_jar): self
-    {
-        $this->cookie_jar = $cookie_jar;
-
-        return $this;
     }
 
     public function getLastRequestURL(): ?string

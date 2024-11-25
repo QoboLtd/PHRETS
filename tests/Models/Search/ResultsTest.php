@@ -51,7 +51,7 @@ class ResultsTest extends TestCase
         $this->rs->keyResultsBy(
             function (Record $record) {
                 $id = $record->get('id');
-                assert(is_string($id));
+                assert(is_string($id) || is_int($id));
                 $name = $record->get('name');
                 assert(is_string($name));
                 return $id . '_' . $name;

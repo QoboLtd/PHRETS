@@ -79,9 +79,7 @@ class SessionTest extends TestCase
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c);
-        $s->setLogger($logger);
-
+        $s = new Session($c, logger: $logger);
 
         $count = 0;
         $messages = [
@@ -110,8 +108,7 @@ class SessionTest extends TestCase
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c);
-        $s->setLogger($logger);
+        $s = new Session($c, logger: $logger);
     }
 
     #[Test]
@@ -130,11 +127,9 @@ class SessionTest extends TestCase
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c);
 
         $jar = new \GuzzleHttp\Cookie\CookieJar();
-        $s->setCookieJar($jar);
-
+        $s = new Session($c, cookieJar: $jar);
         $this->assertSame($jar, $s->getCookieJar());
     }
 }
