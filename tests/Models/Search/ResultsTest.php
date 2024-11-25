@@ -50,7 +50,11 @@ class ResultsTest extends TestCase
     {
         $this->rs->keyResultsBy(
             function (Record $record) {
-                return $record->get('id') . '_' . $record->get('name');
+                $id = $record->get('id');
+                assert(is_string($id));
+                $name = $record->get('name');
+                assert(is_string($name));
+                return $id . '_' . $name;
             }
         );
 

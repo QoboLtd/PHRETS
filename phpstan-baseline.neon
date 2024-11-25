@@ -5,15 +5,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Parsers/Search/OneX.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''_'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Models/Search/ResultsTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Models/Search/ResultsTest.php
