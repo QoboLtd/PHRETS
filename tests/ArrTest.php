@@ -21,12 +21,18 @@ class ArrTest extends TestCase
         $this->assertSame('VAL2', Arr::last(['VAL', 'VAL2']));
     }
 
+    /**
+     * @param list<array{0:array<int|string,mixed>,1:string,2:mixed}> $array
+     */
     #[DataProvider('provideGet')]
     public function testGet(array $array, string $key, mixed $expected): void
     {
         $this->assertSame($expected, Arr::get($array, $key));
     }
 
+    /**
+     * @return list<array{0:array<int|string,mixed>,1:string,2:mixed}>
+     */
     public static function provideGet(): array
     {
         return [
