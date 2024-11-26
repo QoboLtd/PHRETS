@@ -4,16 +4,19 @@ namespace PHRETS\Parsers\Login;
 
 class OneEight extends OneX
 {
-    public function readLine($line): array
+    /**
+     * @inheritDoc
+     */
+    public function readLine(string $line): array
     {
         $name = null;
         $value = null;
 
-        if (str_contains((string) $line, '=')) {
-            @[$name, $value] = explode('=', (string) $line, 2);
+        if (str_contains($line, '=')) {
+            @[$name, $value] = explode('=', $line, 2);
         }
 
-        $value = trim($value);
+        $value = trim($value ?? '');
 
         if ($name == 'Info' && $value) {
             // break it up on the 2 required parts
@@ -38,6 +41,6 @@ class OneEight extends OneX
             $value = $info_token_value;
         }
 
-        return [trim($name), $value];
+        return [trim($name ?? ''), $value];
     }
 }

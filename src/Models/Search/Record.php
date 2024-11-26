@@ -2,12 +2,18 @@
 
 namespace PHRETS\Models\Search;
 
-class Record implements \ArrayAccess, \Stringable
+use JsonSerializable;
+
+class Record implements \ArrayAccess, \Stringable, JsonSerializable
 {
-    protected ?string $resource = '';
-    protected ?string $class = '';
+    protected string $resource = '';
+    protected string $class = '';
+
+    /** @var list<string> */
     protected array $fields = [];
     protected ?string $restricted_value = '****';
+
+    /** @var array<int|string,mixed> */
     protected array $values = [];
 
     public function get(string|int $field): mixed
@@ -18,12 +24,12 @@ class Record implements \ArrayAccess, \Stringable
     /**
      * @param $value
      */
-    public function set(string|int $field, $value)
+    public function set(string|int $field, mixed $value): void
     {
         $this->values[$field] = $value;
     }
 
-    public function remove(string|int $field)
+    public function remove(string|int $field): void
     {
         unset($this->values[$field]);
     }
@@ -58,12 +64,23 @@ class Record implements \ArrayAccess, \Stringable
         return $this->class;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getFields(): array
     {
         return $this->fields;
     }
 
+    /**
+     * @return array<int|string,mixed>
+     */
     public function toArray(): array
+    {
+        return $this->values;
+    }
+
+    public function jsonSerialize(): mixed
     {
         return $this->values;
     }
@@ -71,36 +88,32 @@ class Record implements \ArrayAccess, \Stringable
     /**
      * @throws \JsonException
      */
-    public function toJson(): string
-    {
-        return json_encode($this->values, JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * @throws \JsonException
-     */
     public function __toString(): string
     {
-        return $this->toJson();
+        return json_encode($this->jsonSerialize(), JSON_THROW_ON_ERROR);
     }
 
     public function offsetExists(mixed $offset): bool
     {
+        assert(is_int($offset) || is_string($offset));
         return array_key_exists($offset, $this->values);
     }
 
-    public function offsetGet(mixed $offset): ?string
+    public function offsetGet(mixed $offset): mixed
     {
+        assert(is_int($offset) || is_string($offset));
         return $this->get($offset);
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert(is_int($offset) || is_string($offset));
         $this->set($offset, $value);
     }
 
     public function offsetUnset(mixed $offset): void
     {
+        assert(is_int($offset) || is_string($offset));
         if (array_key_exists($offset, $this->values)) {
             unset($this->values[$offset]);
         }
