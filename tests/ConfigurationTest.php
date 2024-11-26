@@ -5,6 +5,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
 use PHRETS\Session;
 use PHRETS\Strategies\SimpleStrategy;
 
@@ -48,15 +49,14 @@ class ConfigurationTest extends TestCase
     public function itLoadsDefaultRetsVersion(): void
     {
         $config = new Configuration();
-        $this->assertTrue($config->getRetsVersion()->is1_5());
+        $this->assertSame(RETSVersion::VERSION_1_5, $config->getRetsVersion());
     }
 
     #[Test]
     public function itHandlesVersionsCorrectly(): void
     {
-        $config = new Configuration();
-        $config->setRetsVersion('1.7.2');
-        $this->assertTrue($config->getRetsVersion()->is1_7_2());
+        $config = new Configuration(version: RETSVersion::VERSION_1_7_2);
+        $this->assertSame(RETSVersion::VERSION_1_7_2, $config->getRetsVersion());
     }
 
     #[Test]
@@ -103,11 +103,10 @@ class ConfigurationTest extends TestCase
     #[Test]
     public function itGeneratesUserAgentAuthHashesCorrectly(): void
     {
-        $c = new Configuration();
+        $c = new Configuration(version: RETSVersion::VERSION_1_7_2);
         $c->setLoginUrl('http://www.reso.org/login')
             ->setUserAgent('PHRETS/2.0')
-            ->setUserAgentPassword('12345')
-            ->setRetsVersion('1.7.2');
+            ->setUserAgentPassword('12345');
 
         $s = new Session($c);
         $this->assertSame('123c96e02e514da469db6bc61ab998dc', $c->userAgentDigestHash($s));

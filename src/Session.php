@@ -97,8 +97,12 @@ class Session
      * @param int $location
      *
      */
-    public function GetPreferredObject(string $resource, string $type, string $content_id, int $location = 0): ?BaseObject
-    {
+    public function GetPreferredObject(
+        string $resource,
+        string $type,
+        string $content_id,
+        int $location = 0
+    ): ?BaseObject {
         $collection = $this->GetObject($resource, $type, $content_id, '0', $location);
 
         return $collection[0] ?? null;
@@ -115,8 +119,13 @@ class Session
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function GetObject(string $resource, string $type, string $content_ids, string|int $object_ids = '*', $location = 0): array
-    {
+    public function GetObject(
+        string $resource,
+        string $type,
+        string $content_ids,
+        string|int $object_ids = '*',
+        int $location = 0
+    ): array {
         $request_id = GetObject::ids($content_ids, $object_ids);
 
         $response = $this->request(
@@ -476,7 +485,10 @@ class Session
                     'headers' => $options['headers'],
                     'body' => $options['body'],
                 ]);
-            } elseif ($this->configuration->readOption('use_post_method') || array_key_exists('form_params', $options)) {
+            } elseif (
+                $this->configuration->readOption('use_post_method') ||
+                array_key_exists('form_params', $options)
+            ) {
                 if (array_key_exists('form_params', $options)) {
                     $this->debug('Using POST method per form_params option');
                     $query = $options['form_params'];
@@ -667,11 +679,6 @@ class Session
     public function getLastResponse(): string
     {
         return (string) $this->last_response?->getBody();
-    }
-
-    public function getClient(): ClientInterface
-    {
-        return $this->client;
     }
 
     public function getRetsSessionId(): ?string

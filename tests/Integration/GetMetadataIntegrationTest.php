@@ -3,6 +3,8 @@ namespace PHRETS\Test\Integration;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHRETS\Arr;
+use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
 
 class GetMetadataIntegrationTest extends BaseIntegration
 {
@@ -20,11 +22,10 @@ class GetMetadataIntegrationTest extends BaseIntegration
     #[Test]
     public function itGetsSystemDataFor15(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_5);
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.5');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
         $session = $this->createSession($config);
         $session->Login();
@@ -228,11 +229,10 @@ class GetMetadataIntegrationTest extends BaseIntegration
     #[Test]
     public function itRecoversFromBadLookuptypeTag(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_5);
         $config->setLoginUrl('http://retsgw.flexmls.com/lookup/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.5');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
         $session = $this->createSession($config);
         $session->Login();
@@ -244,11 +244,10 @@ class GetMetadataIntegrationTest extends BaseIntegration
     #[Test]
     public function itHandlesIncompleteObjectMetadataCorrectly(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new \PHRETS\Configuration(version: RETSVersion::VERSION_1_5);
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
             ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-            ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-            ->setRetsVersion('1.5');
+            ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
         $session = $this->createSession($config);
         $session->Login();

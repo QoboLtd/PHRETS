@@ -2,10 +2,10 @@
 
 namespace PHRETS;
 
+use PHRETS\Enums\RETSVersion;
 use PHRETS\Exceptions\InvalidConfiguration;
 use PHRETS\Strategies\SimpleStrategy;
 use PHRETS\Strategies\Strategy;
-use PHRETS\Versions\RETSVersion;
 
 class Configuration
 {
@@ -17,22 +17,21 @@ class Configuration
     protected ?string $login_url = null;
     protected string $user_agent = 'PHRETS/2.6.4';
     protected ?string $user_agent_password = null;
-    protected RETSVersion $rets_version;
+    protected readonly RETSVersion $rets_version;
     protected readonly Strategy $strategy;
     protected string $http_authentication = 'digest';
 
     /** @var array<string,mixed> */
     protected array $options = [];
 
-    public function __construct(?Strategy $strategy = null)
-    {
-        if ($strategy === null) {
-            $strategy = new SimpleStrategy();
-        }
+    public function __construct(
+        ?Strategy $strategy = null,
+        ?RETSVersion $version = null
+    ) {
+        $this->rets_version = $version ?? RETSVersion::VERSION_1_5;
+        $this->strategy = $strategy ?? new SimpleStrategy();
 
-        $this->rets_version = (new RETSVersion())->setVersion('1.5');
-        $this->strategy = $strategy;
-        $strategy->initialize($this);
+        $this->strategy->initialize($this);
     }
 
     public function getLoginUrl(): ?string
@@ -64,18 +63,6 @@ class Configuration
     public function getRetsVersion(): RETSVersion
     {
         return $this->rets_version;
-    }
-
-    /**
-     * @param string $rets_version
-     *
-     * @return $this
-     */
-    public function setRetsVersion(string $rets_version)
-    {
-        $this->rets_version = (new RETSVersion())->setVersion($rets_version);
-
-        return $this;
     }
 
     public function getUserAgent(): string
@@ -140,11 +127,22 @@ class Configuration
             'login_url' => 'LoginUrl',
             'user_agent' => 'UserAgent',
             'user_agent_password' => 'UserAgentPassword',
-            'rets_version' => 'RetsVersion',
             'http_authentication' => 'HttpAuthenticationMethod',
         ];
 
-        $me = new self();
+        $version = null;
+        $retsVersion = $configuration['rets_version'] ?? null;
+        if ($retsVersion !== null && $retsVersion !== '') {
+            if (str_starts_with($retsVersion, 'RETS/')) {
+                $retsVersion = substr($retsVersion, strlen('RETS/'));
+            }
+            $version = RETSVersion::tryFrom($retsVersion);
+            if ($version === null) {
+                throw new InvalidConfiguration('Invalid RETS version: ' . $retsVersion);
+            }
+        }
+
+        $me = new self(version: $version);
 
         foreach ($variables as $k => $m) {
             if (array_key_exists($k, $configuration)) {
@@ -169,7 +167,7 @@ class Configuration
 
     /**
      */
-    public function getStrategy(): \PHRETS\Strategies\Strategy
+    public function getStrategy(): Strategy
     {
         return $this->strategy;
     }
@@ -181,17 +179,12 @@ class Configuration
         $ua_a1 = md5($this->getUserAgent() . ':' . $this->getUserAgentPassword());
 
         return md5(
-            trim((string) $ua_a1) . '::' . trim((string) $session->getRetsSessionId()) .
-            ':' . trim((string) $this->getRetsVersion()->asHeader())
+            trim($ua_a1) . '::' . trim((string) $session->getRetsSessionId()) .
+            ':' . trim($this->getRetsVersion()->asHeader())
         );
     }
 
-    /**
-     * @param $auth_method
-     *
-     * @return $this
-     */
-    public function setHttpAuthenticationMethod(string $auth_method)
+    public function setHttpAuthenticationMethod(string $auth_method): self
     {
         if (!in_array($auth_method, [self::AUTH_BASIC, self::AUTH_DIGEST])) {
             throw new \InvalidArgumentException("Given authentication method is invalid.  Must be 'basic' or 'digest'");
@@ -201,8 +194,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     */
     public function getHttpAuthenticationMethod(): string
     {
         return $this->http_authentication;

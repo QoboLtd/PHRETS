@@ -6,6 +6,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
 use PHRETS\Session;
 use Psr\Http\Message\RequestInterface;
 
@@ -31,11 +32,10 @@ class BaseIntegration extends TestCase
     public function setUp(): void
     {
         $this->path = __DIR__ . '/Fixtures/Http';
-        $config = new Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_7_2);
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.7.2');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
         $this->session = $this->createSession($config);
         $this->session->Login();

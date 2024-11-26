@@ -3,6 +3,7 @@
 namespace PHRETS\Strategies;
 
 use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
 use PHRETS\Exceptions\ParserNotFound;
 use PHRETS\Parsers\ParserType;
 
@@ -57,7 +58,7 @@ class SimpleStrategy implements Strategy
      */
     public function initialize(Configuration $configuration): void
     {
-        if ($configuration->getRetsVersion()->isAtLeast1_8()) {
+        if ($configuration->getRetsVersion()->isAtLeast(RETSVersion::VERSION_1_8)) {
             $this->classes[ParserType::LOGIN->value] = \PHRETS\Parsers\Login\OneEight::class;
             $this->classes[ParserType::OBJECT_POST->value] = \PHRETS\Parsers\PostObject\OneEight::class;
             $this->classes[ParserType::UPDATE->value] = \PHRETS\Parsers\Update\OneEight::class;
