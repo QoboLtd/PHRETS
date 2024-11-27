@@ -485,8 +485,7 @@ class Session
                     'headers' => $options['headers'],
                     'body' => $options['body'],
                 ]);
-            } elseif (
-                $this->configuration->readOption('use_post_method') ||
+            } elseif ($this->configuration->readOption('use_post_method') ||
                 array_key_exists('form_params', $options)
             ) {
                 if (array_key_exists('form_params', $options)) {

@@ -13,27 +13,27 @@ class MultipleTest extends TestCase
     public function itBreaksThingsApart(): void
     {
         $headers = [
-                'Server' => [
-                        0 => 'Apache-Coyote/1.1',
-                ],
-                'Cache-Control' => [
-                        0 => 'private',
-                ],
-                'RETS-Version' => [
-                        0 => 'RETS/1.5',
-                ],
-                'MIME-Version' => [
-                        0 => '1.0',
-                ],
-                'Content-Type' => [
-                        0 => 'multipart/parallel; boundary="FLEXeTNY6TFTGAwV1agjJsFyFogbnfoS1dm6y489g08F2TjwZWzQEW"',
-                ],
-                'Content-Length' => [
-                        0 => '1249',
-                ],
-                'Date' => [
-                        0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
-                ],
+            'Server' => [
+                0 => 'Apache-Coyote/1.1',
+            ],
+            'Cache-Control' => [
+                0 => 'private',
+            ],
+            'RETS-Version' => [
+                0 => 'RETS/1.5',
+            ],
+            'MIME-Version' => [
+                0 => '1.0',
+            ],
+            'Content-Type' => [
+                0 => 'multipart/parallel; boundary="FLEXeTNY6TFTGAwV1agjJsFyFogbnfoS1dm6y489g08F2TjwZWzQEW"',
+            ],
+            'Content-Length' => [
+                0 => '1249',
+            ],
+            'Date' => [
+                0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
+            ],
         ];
         $body = json_decode(file_get_contents('tests/Fixtures/GetObject/Multiple1.txt'), true, 512, JSON_THROW_ON_ERROR);
 
@@ -59,27 +59,27 @@ class MultipleTest extends TestCase
     public function itHandlesUnquotedBoundaries(): void
     {
         $headers = [
-                'Server' => [
-                        0 => 'Apache-Coyote/1.1',
-                ],
-                'Cache-Control' => [
-                        0 => 'private',
-                ],
-                'RETS-Version' => [
-                        0 => 'RETS/1.5',
-                ],
-                'MIME-Version' => [
-                        0 => '1.0',
-                ],
-                'Content-Type' => [
-                        0 => 'multipart/parallel; boundary=FLEXeTNY6TFTGAwV1agjJsFyFogbnfoS1dm6y489g08F2TjwZWzQEW',
-                ],
-                'Content-Length' => [
-                        0 => '1249',
-                ],
-                'Date' => [
-                        0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
-                ],
+            'Server' => [
+                0 => 'Apache-Coyote/1.1',
+            ],
+            'Cache-Control' => [
+                0 => 'private',
+            ],
+            'RETS-Version' => [
+                0 => 'RETS/1.5',
+            ],
+            'MIME-Version' => [
+                0 => '1.0',
+            ],
+            'Content-Type' => [
+                0 => 'multipart/parallel; boundary=FLEXeTNY6TFTGAwV1agjJsFyFogbnfoS1dm6y489g08F2TjwZWzQEW',
+            ],
+            'Content-Length' => [
+                0 => '1249',
+            ],
+            'Date' => [
+                0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
+            ],
         ];
         $body = json_decode(file_get_contents('tests/Fixtures/GetObject/Multiple1.txt', true));
 

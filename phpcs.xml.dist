@@ -1,6 +1,7 @@
 <ruleset name="coding-style">
     <description>QoboLtd PHRETS coding style</description>
 
+    <rule ref="Generic.Arrays.ArrayIndent"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
     <rule ref="PSR2"/>
 
@@ -9,11 +10,18 @@
         <exclude-pattern>./src/Versions/RETSVersion.php</exclude-pattern>
     </rule>
 
+    <rule ref="SlevomatCodingStandard.Arrays.DisallowImplicitArrayCreation" />
+    <rule ref="SlevomatCodingStandard.Classes.UselessLateStaticBinding" />
     <rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses" />
+    <rule ref="SlevomatCodingStandard.Functions.DisallowTrailingCommaInCall" />
+    <rule ref="SlevomatCodingStandard.Functions.DisallowTrailingCommaInClosureUse" />
+    <rule ref="SlevomatCodingStandard.Functions.DisallowTrailingCommaInDeclaration" />
     <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation" />
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" />
+    <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint" />
+    <rule ref="SlevomatCodingStandard.Variables.UselessVariable" />
 
     <file>./src/</file>
     <file>./tests/</file>
