@@ -701,7 +701,7 @@ class Session
      * @return array{
      *   auth:list<?string>,
      *   headers: array{User-Agent: string, RETS-Version: string, Accept-Encoding: string, Accept: string},
-     *   curl: array{10031: string|false},
+     *   curl: array<int, string>,
      *   allow_redirects?: false
      * }
      */
@@ -719,7 +719,7 @@ class Session
                 'Accept-Encoding' => 'gzip',
                 'Accept' => '*/*',
             ],
-            'curl' => [CURLOPT_COOKIEFILE => tempnam('/tmp', 'phrets')],
+            'curl' => [CURLOPT_COOKIEFILE => ''],
         ];
 
         // disable following 'Location' header (redirects) automatically
