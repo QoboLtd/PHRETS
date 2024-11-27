@@ -1,6 +1,19 @@
-This is a fork of [troydavisson/PHRETS](https://github.com/troydavisson/PHRETS)
+# QoboLtd PHRETS
+PHP client library for interacting with a RETS server to pull real estate listings,
+photos and other data made available from an MLS system.
 
-The purpose of this fork is to:
+PHRETS handles the following aspects for you:
+
+* Response parsing (XML, HTTP multipart, etc.)
+* Simple variables, arrays and objects returned to the developer
+* RETS communication (over HTTP)
+* HTTP Header management
+* Authentication
+* Session/Cookie management
+
+## Permanent Fork
+This library is a fork of [troydavisson/PHRETS](https://github.com/troydavisson/PHRETS) which
+was forked to:
 
 1. support modern PHP versions
 2. Allow the library to be used without too many dependencies.
@@ -11,18 +24,43 @@ Includes changes from the following forks:
 - [maxlipsky-ca/PHRETS-PHP8](https://github.com/maxlipsky-ca/PHRETS-PHP8)
 - [ocusellinc/PHRETS](https://github.com/ocusellinc/PHRETS)
 
-## Compability
+Due to the nature and quantity of the changes we do not expect this fork to be merged back.
+We welcome any contributions as long as they are generally useful (ie. not hacks)
+
+### Compatibility
 It should be a drop-in replacement for troydavisson/PHRETS with the following exceptions:
 
 1. No support for PHP versions before 8.2.
 2. RETS version is now an enum and can only be set in the constructor of the Configuration.
 3. The client, cookie jar and logger can only be set in the constructor of the Session.
 
-PHRETS
-======
+## Installation
 
-PHP client library for interacting with a RETS server to pull real estate listings, photos and other data made available from an MLS system
+The easiest way to get started is using [Composer](http://getcomposer.org) to install
 
+```js
+{
+    "repositories": [
+        {
+          "type": "git",
+          "url": "https://github.com/QoboLtd/PHRETS.git"
+        }
+    ],
+    "require": {
+        "qoboltd/phrets": "^3.0"
+    }
+}
+```
+
+## Get Help
+Please use the GitHub's issue tracker for bugs/suggestions.
+
+## Disclaimer
+In many cases, the capabilities provided by this library are dependent on these features being properly implemented by the RETS server you're accessing.  The RETS specification defines how clients and servers communicate, and if a server is doing something unexpected, this library may not work without tweaking some options.
+
+## Documentation
+
+### Quick Start
 ```php
 <?php
 require_once("vendor/autoload.php");
@@ -71,48 +109,11 @@ foreach ($results as $r) {
 }
 ```
 
-### Introduction
-
-PHRETS provides PHP developers a way to integrate RETS functionality directly within new or existing code by handling the following aspects for you:
-
-* Response parsing (XML, HTTP multipart, etc.)
-* Simple variables, arrays and objects returned to the developer
-* RETS communication (over HTTP)
-* HTTP Header management
-* Authentication
-* Session/Cookie management
-
-### Installation
-
-The easiest way to get started is using [Composer](http://getcomposer.org) to install
-
-```js
-{
-    "repositories": [
-        {
-          "type": "git",
-          "url": "https://github.com/QoboLtd/PHRETS.git"
-        }
-    ],
-    "require": {
-        "qoboltd/phrets": "^3.0"
-    }
-}
-```
-
-### Get Help
-Please use the GitHub's issue tracker for bugs/suggestions.
-
-### Disclaimer
-In many cases, the capabilities provided by this library are dependent on these features being properly implemented by the RETS server you're accessing.  The RETS specification defines how clients and servers communicate, and if a server is doing something unexpected, this library may not work without tweaking some options.
-
-## Documentation
-
 #### Configuration
 
 The first step with getting connected to a RETS server is to configure the connection.
 
-```php\
+```php
 $config = new \PHRETS\Configuration(version: \PHRETS\Enums\RETSVersion::VERSION_1_7_2);
 $config->setLoginUrl($rets_login_url);
 $config->setUsername($rets_username);
