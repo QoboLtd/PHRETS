@@ -4,7 +4,10 @@ namespace PHRETS\Parsers\Login;
 
 class OneFive extends OneX
 {
-    public function readLine($line): array
+    /**
+     * @inheritDoc
+     */
+    public function readLine(string $line): array
     {
         $name = null;
         $value = null;
@@ -13,6 +16,6 @@ class OneFive extends OneX
             @[$name, $value] = explode('=', (string) $line, 2);
         }
 
-        return [trim($name), trim($value)];
+        return [trim($name ?? ''), trim($value ?? '')];
     }
 }

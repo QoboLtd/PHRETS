@@ -1,5 +1,7 @@
 <?php
+namespace PHRETS\Test\Parsers\Login;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Parsers\Login\OneEight;
 
@@ -40,33 +42,33 @@ GetPayloadList=/GetPayloadList.asmx/GetPayloadList
         ');
     }
 
-    /** @test **/
-    public function itSeesAllTransactions()
+    #[Test]
+    public function itSeesAllTransactions(): void
     {
         $this->assertSame(7, count($this->parser->getCapabilities()));
     }
 
-    /** @test **/
-    public function itSeesCoreTransactions()
+    #[Test]
+    public function itSeesCoreTransactions(): void
     {
         $this->assertSame('/Search.asmx/Search', $this->parser->getCapabilities()['Search']);
         $this->assertSame('/Logout.asmx/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
-    /** @test **/
-    public function itSeesAllDetails()
+    #[Test]
+    public function itSeesAllDetails(): void
     {
         $this->assertSame(18, count($this->parser->getDetails()));
     }
 
-    /** @test **/
-    public function itSeesUserDetails()
+    #[Test]
+    public function itSeesUserDetails(): void
     {
         $this->assertSame('RESOWG', $this->parser->getDetails()['USER']);
     }
 
-    /** @test **/
-    public function itCastsDetails()
+    #[Test]
+    public function itCastsDetails(): void
     {
         $this->assertIsBool($this->parser->getDetails()['BROKERRECIPFLAG']);
         $this->assertIsInt($this->parser->getDetails()['SUL']);

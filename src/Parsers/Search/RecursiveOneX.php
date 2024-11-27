@@ -4,6 +4,7 @@ namespace PHRETS\Parsers\Search;
 
 use PHRETS\Exceptions\AutomaticPaginationError;
 use PHRETS\Http\Response;
+use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\ParserType;
 use PHRETS\Session;
@@ -11,10 +12,11 @@ use PHRETS\Session;
 class RecursiveOneX
 {
     /**
+     * @param array{Class:string,SearchType:string,Query?:?string,RestrictedIndicator?:?string} $parameters Parameters
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\AutomaticPaginationError
      */
-    public function parse(Session $rets, Response $response, $parameters): Results
+    public function parse(Session $rets, Response $response, array $parameters): Results
     {
         // we're given the first response automatically, so parse this and start the recursion
 
@@ -22,17 +24,16 @@ class RecursiveOneX
         $parser = $rets->getConfiguration()->getStrategy()->provide(ParserType::SEARCH);
         $rs = $parser->parse($rets, $response, $parameters);
 
-        while ($this->continuePaginating($rets, $parameters, $rs)) {
+        while ($this->continuePaginating($rs)) {
             $pms = $parameters;
 
             $rets->debug('Continuing pagination...');
             $rets->debug('Current count collected already: ' . $rs->count());
 
             $resource = $pms['SearchType'];
-            $class = $pms['Class'];
+            $class = $pms['Class'] ?? null;
             $query = $pms['Query'] ?? null;
-
-            $pms['Offset'] = $this->getNewOffset($rets, $parameters, $rs);
+            $pms['Offset'] = $this->getNewOffset($rs);
 
             unset($pms['SearchType']);
             unset($pms['Class']);
@@ -48,6 +49,7 @@ class RecursiveOneX
             }
 
             foreach ($inner_rs as $ir) {
+                assert($ir instanceof Record);
                 $rs->addRecord($ir);
             }
         }
@@ -55,18 +57,12 @@ class RecursiveOneX
         return $rs;
     }
 
-    /**
-     * @param $parameters
-     */
-    protected function continuePaginating(Session $rets, $parameters, Results $rs): bool
+    protected function continuePaginating(Results $rs): bool
     {
         return $rs->isMaxRowsReached();
     }
 
-    /**
-     * @param $parameters
-     */
-    protected function getNewOffset(Session $rets, $parameters, Results $rs): int
+    protected function getNewOffset(Results $rs): int
     {
         return $rs->getReturnedResultsCount() + 1;
     }

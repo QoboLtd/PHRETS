@@ -3,44 +3,51 @@
 namespace PHRETS\Models\Search;
 
 use ArrayAccess;
+use ArrayIterator;
 use Closure;
 use Countable;
-use Illuminate\Support\Collection;
 use IteratorAggregate;
-use League\Csv\Writer;
+use JsonSerializable;
+use PHRETS\Arr;
 use PHRETS\Session;
-use SplTempFileObject;
 use Traversable;
 
-class Results implements Countable, ArrayAccess, IteratorAggregate
+class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializable
 {
-    protected ?string $resource = '';
-    protected ?string $class = '';
+    protected string $resource = '';
+    protected string $class = '';
     protected ?Session $session = null;
-    protected mixed $metadata = null;
+
+    /** @var array<int|string,mixed> */
+    protected ?array $metadata = null;
     protected int $total_results_count = 0;
     protected int $returned_results_count = 0;
-    protected mixed $error = null;
-    /** @var \Illuminate\Support\Collection|\PHRETS\Models\Search\Record[] */
-    protected Collection|array $results;
+    protected ?string $error = null;
+    /** @var array<int|string,\PHRETS\Models\Search\Record> */
+    protected array $results;
+
+    /** @var list<string> */
     protected array $headers = [];
     protected string $restricted_indicator = '****';
     protected bool $maxrows_reached = false;
 
     public function __construct()
     {
-        $this->results = new Collection();
+        $this->results = [];
     }
 
+    /**
+     * @return list<string>
+     */
     public function getHeaders(): array
     {
         return $this->headers;
     }
 
     /**
-     * @return $this
+     * @param list<string> $headers Headers
      */
-    public function setHeaders(array $headers): static
+    public function setHeaders(array $headers): self
     {
         $this->headers = $headers;
 
@@ -48,9 +55,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param mixed $keyed_by
+     * @param callable|string|int|null $keyed_by
      */
-    public function addRecord(Record $record, mixed $keyed_by = null): void
+    public function addRecord(Record $record, callable|string|int|null $keyed_by = null): void
     {
         // register this Results object as the record's parent automatically
         $record->setParent($this);
@@ -58,23 +65,22 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         $this->returned_results_count++;
 
         if (is_callable($keyed_by)) {
-            $this->results->put($keyed_by($record), $record);
+            $this->results[$keyed_by($record)] = $record;
         } elseif ($keyed_by) {
-            $this->results->put($record->get($keyed_by), $record);
+            $this->results[$record->get($keyed_by)] = $record;
         } else {
-            $this->results->push($record);
+            $this->results[] = $record;
         }
     }
 
     /**
      * Set which field's value will be used to key the records by.
      *
-     * @param $field
      */
-    public function keyResultsBy($field): void
+    public function keyResultsBy(callable|string|int|null $field): void
     {
-        $results = clone $this->results;
-        $this->results = new Collection();
+        $results = $this->results;
+        $this->results = [];
         foreach ($results as $r) {
             $this->addRecord($r, $field);
         }
@@ -83,27 +89,19 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Grab a record by it's tracked key.
      *
-     * @param $key_id
+     * @param string|int $keyId
      */
-    public function find($key_id): ?Record
+    public function find(string|int $keyId): ?Record
     {
-        return $this->results->get($key_id);
+        return $this->results[$keyId] ?? null;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getError()
+    public function getError(): ?string
     {
         return $this->error;
     }
 
-    /**
-     * @param mixed $error
-     *
-     * @return self
-     */
-    public function setError(mixed $error): self
+    public function setError(?string $error): self
     {
         $this->error = $error;
 
@@ -116,7 +114,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return self
      */
     public function setReturnedResultsCount(int $returned_results_count): self
     {
@@ -131,7 +128,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return self
      */
     public function setTotalResultsCount(int $total_results_count): self
     {
@@ -140,30 +136,26 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return $this;
     }
 
-    public function getClass(): ?string
+    public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * @return $this
-     */
-    public function setClass(string $class): static
+    public function setClass(string $class): self
     {
         $this->class = $class;
 
         return $this;
     }
 
-    public function getResource(): ?string
+    public function getResource(): string
     {
         return $this->resource;
     }
 
     /**
-     * @return $this
      */
-    public function setResource(string $resource): static
+    public function setResource(string $resource): self
     {
         $this->resource = $resource;
 
@@ -171,7 +163,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return \PHRETS\Session
      */
     public function getSession(): ?Session
     {
@@ -179,7 +170,6 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @return self
      */
     public function setSession(Session $session): self
     {
@@ -189,12 +179,12 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     *
+     * @return ?array<int|string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getMetadata()
+    public function getMetadata(): ?array
     {
-        if (!$this->metadata) {
+        if ($this->metadata === null && $this->session !== null) {
             $this->metadata = $this->session->GetTableMetadata($this->getResource(), $this->getClass());
         }
 
@@ -202,11 +192,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param mixed $metadata
+     * @param array<int|string,mixed> $metadata
      *
-     * @return self
      */
-    public function setMetadata(mixed $metadata): self
+    public function setMetadata(array $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -219,11 +208,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param $indicator
+     * @param string $indicator
      *
-     * @return $this
      */
-    public function setRestrictedIndicator($indicator): static
+    public function setRestrictedIndicator(string $indicator): self
     {
         $this->restricted_indicator = $indicator;
 
@@ -232,21 +220,25 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     public function getIterator(): Traversable
     {
-        return $this->results->getIterator();
+        return new ArrayIterator($this->results);
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return $this->results->offsetExists($offset);
+        assert(is_string($offset) || is_int($offset));
+        return array_key_exists($offset, $this->results);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->results->offsetGet($offset);
+        assert(is_string($offset) || is_int($offset));
+        return $this->results[$offset] ?? null;
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert($value instanceof Record);
+        assert($offset === null || is_string($offset) || is_int($offset));
         if ($offset) {
             $this->addRecord($value, fn () => $offset);
         } else {
@@ -256,25 +248,28 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
 
     public function offsetUnset(mixed $offset): void
     {
-        $this->results->offsetUnset($offset);
+        unset($this->results[$offset]);
     }
 
     public function count(): int
     {
-        return $this->results->count();
+        return count($this->results);
     }
 
-    /**
-     * @param null $default
-     */
-    public function first(Closure $callback = null, $default = null): ?Record
+    public function first(?Closure $callback = null, ?Record $default = null): ?Record
     {
-        return $this->results->first($callback, $default);
+        foreach ($this->results as $record) {
+            if ($callback === null || $callback($record)) {
+                return $record;
+            }
+        }
+
+        return $default;
     }
 
     public function last(): ?Record
     {
-        return $this->results->last();
+        return Arr::last($this->results);
     }
 
     public function isMaxRowsReached(): bool
@@ -295,9 +290,10 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Returns an array containing the values from the given field.
      *
-     * @param $field
+     * @param string|int $field
+     * @return list<mixed>
      */
-    public function lists($field): array
+    public function lists(string|int $field): array
     {
         $l = [];
         foreach ($this->results as $r) {
@@ -310,46 +306,14 @@ class Results implements Countable, ArrayAccess, IteratorAggregate
         return $l;
     }
 
-    /**
-     * Return results as a large prepared CSV string.
-     *
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function toCSV(): string
+    public function jsonSerialize(): mixed
     {
-        // create a temporary file so we can write the CSV out
-        $writer = Writer::createFromFileObject(new SplTempFileObject());
-
-        // add the header line
-        $writer->insertOne($this->getHeaders());
-
-        // go through each record
-        foreach ($this->results as $r) {
-            $record = [];
-
-            // go through each field and ensure that each record is prepared in an order consistent with the headers
-            foreach ($this->getHeaders() as $h) {
-                $record[] = $r->get($h);
-            }
-            $writer->insertOne($record);
-        }
-
-        // return as a string
-        return (string) $writer;
-    }
-
-    /**
-     * Return results as a JSON string.
-     *
-     * @throws \JsonException
-     */
-    public function toJSON(): string
-    {
-        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+        return $this->results;
     }
 
     /**
      * Return results as a simple array.
+     * @return list<array<int|string,mixed>>
      */
     public function toArray(): array
     {

@@ -2,14 +2,25 @@
 
 namespace PHRETS\Models\Metadata;
 
-use Illuminate\Support\Arr;
+use PHRETS\Arr;
 use PHRETS\Session;
 
 abstract class Base implements \ArrayAccess
 {
     protected Session $session;
+
+    /**
+     * @var list<string>
+     */
     protected array $elements = [];
+
+    /**
+     * @var list<string>
+     */
     protected array $attributes = [];
+
+
+    /** @var array<int|string,mixed> */
     protected array $values = [];
 
     public function getSession(): Session
@@ -28,11 +39,13 @@ abstract class Base implements \ArrayAccess
     }
 
     /**
-     * @return $this|mixed|null
+     * @param array<int,mixed> $args Arguments
      */
-    public function __call(mixed $name, array $args = [])
+    public function __call(mixed $name, array $args): mixed
     {
-        $name = strtolower((string) $name);
+        assert(is_string($name));
+
+        $name = strtolower($name);
         $action = substr($name, 0, 3);
 
         if ($action === 'set') {
@@ -57,11 +70,17 @@ abstract class Base implements \ArrayAccess
         throw new \BadMethodCallException();
     }
 
+    /**
+     * @return list<string>
+     */
     public function getXmlElements(): array
     {
         return $this->elements;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getXmlAttributes(): array
     {
         return $this->attributes;
@@ -84,6 +103,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetExists(mixed $offset): bool
     {
+        assert(is_string($offset) || is_int($offset));
+
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
             if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return true;
@@ -107,6 +128,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetGet(mixed $offset): mixed
     {
+        assert(is_string($offset) || is_int($offset));
+
         foreach (array_merge($this->getXmlElements(), $this->getXmlAttributes()) as $attr) {
             if (strtolower((string) $attr) === strtolower((string) $offset)) {
                 return Arr::get($this->values, $attr);
@@ -131,6 +154,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert(is_string($offset) || is_int($offset));
+
         $this->values[$offset] = $value;
     }
 
@@ -146,6 +171,8 @@ abstract class Base implements \ArrayAccess
      */
     public function offsetUnset(mixed $offset): void
     {
+        assert(is_string($offset) || is_int($offset));
+
         if ($this->offsetExists($offset)) {
             unset($this->values[$offset]);
         }
