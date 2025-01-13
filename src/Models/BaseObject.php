@@ -90,14 +90,12 @@ class BaseObject
 
     /**
      * Set a specific header.
-     *
-     * @param string $name
-     * @param string $value
      */
     public function setHeader(string $name, string $value): void
     {
         $this->headers[$name] = $value;
     }
+
     /**
      * Set multiple headers.
      *
@@ -120,9 +118,6 @@ class BaseObject
 
     /**
      * Get a specific header by name.
-     *
-     * @param string $name
-     * @return string|null
      */
     public function getHeader(string $name): ?string
     {
