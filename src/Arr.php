@@ -45,7 +45,7 @@ class Arr
     /**
      * Determine if the given key exists in the provided array.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param  \ArrayAccess|array<int|string,mixed>  $array
      * @param  string|int|float  $key
      */
     public static function exists(ArrayAccess|array $array, string|int|float $key): bool
@@ -63,6 +63,8 @@ class Arr
 
     /**
      * Get an item from an array using "dot" notation.
+     *
+     * @param  \ArrayAccess|array<int|string,mixed>  $array
      */
     public static function get(ArrayAccess|array $array, string|int|null $key): mixed
     {
@@ -78,7 +80,7 @@ class Arr
             return $array[$key];
         }
 
-        if (! str_contains($key, '.')) {
+        if (!is_string($key) || !str_contains($key, '.')) {
             return $array[$key] ?? null;
         }
 
