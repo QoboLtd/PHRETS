@@ -1,5 +1,4 @@
 <?php
-
 namespace PHRETS\Models;
 
 class BaseObject
@@ -14,6 +13,9 @@ class BaseObject
     protected ?string $content = null;
     protected int|string|null $preferred = null;
     protected ?RETSError $error = null;
+
+    /** @var array<string,string> */
+    protected array $headers = [];
 
     public function getContent(): ?string
     {
@@ -84,6 +86,47 @@ class BaseObject
         $this->content_type = $content_type;
 
         return $this;
+    }
+
+    /**
+     * Set a specific header.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function setHeader(string $name, string $value): void
+    {
+        $this->headers[$name] = $value;
+    }
+    /**
+     * Set multiple headers.
+     *
+     * @param array<string,string> $headers
+     */
+    public function setHeaders(array $headers): void
+    {
+        $this->headers = $headers;
+    }
+
+    /**
+     * Get all headers.
+     *
+     * @return array<string,string>
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Get a specific header by name.
+     *
+     * @param string $name
+     * @return string|null
+     */
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[$name] ?? null;
     }
 
     public function getLocation():? string
