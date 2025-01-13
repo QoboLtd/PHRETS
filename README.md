@@ -23,6 +23,7 @@ was forked to:
 Includes changes from the following forks:
 - [maxlipsky-ca/PHRETS-PHP8](https://github.com/maxlipsky-ca/PHRETS-PHP8)
 - [ocusellinc/PHRETS](https://github.com/ocusellinc/PHRETS)
+- [okua/PHRETS](https://github.com/okua/PHRETS)
 
 Due to the nature and quantity of the changes we do not expect this fork to be merged back.
 We welcome any contributions as long as they are generally useful (ie. not hacks)
