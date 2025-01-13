@@ -7,7 +7,7 @@ class Search
     public static function dmql(?string $query): ?string
     {
         // automatically surround the given query with parentheses if it doesn't have them already
-        if (!empty($query) && $query != '*' && !preg_match('/^\((.*)\)$/', (string) $query)) {
+        if (!empty($query) && $query != '*' && !preg_match('/^\((.*)\)$/', $query)) {
             $query = '(' . $query . ')';
         }
 

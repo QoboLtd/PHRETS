@@ -136,7 +136,7 @@ class BaseIntegration extends TestCase
 
         $request = $result . "\r\n\r\n" . $request->getBody();
 
-        return md5((string) $request) . '.txt';
+        return md5($request) . '.txt';
     }
 
     protected function getFullFilePath(RequestInterface $request): string

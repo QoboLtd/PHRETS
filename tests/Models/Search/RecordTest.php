@@ -74,8 +74,7 @@ class RecordTest extends TestCase
         $rs->setClass('A');
         $rs->setHeaders(['LIST_1', 'LIST_2', 'LIST_3']);
 
-        $r = new Record();
-        $rs->addRecord($r);
+        $rs->addRecord(new Record());
 
         foreach ($rs as $r) {
             $this->assertSame('Property', $r->getResource());
