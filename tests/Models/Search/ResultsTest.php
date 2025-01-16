@@ -1,13 +1,14 @@
 <?php
+namespace PHRETS\Test\Models\Search;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 
 class ResultsTest extends TestCase
 {
-    /** @var \PHRETS\Models\Search\Results */
-    protected $rs;
+    protected Results $rs;
 
     public function setUp(): void
     {
@@ -28,28 +29,32 @@ class ResultsTest extends TestCase
         $this->rs->addRecord($rc);
     }
 
-    /** @test * */
-    public function itHoldsRecords()
+    #[Test]
+    public function itHoldsRecords(): void
     {
         $this->assertCount(2, $this->rs);
     }
 
-    /** @test * */
-    public function itKeysRecords()
+    #[Test]
+    public function itKeysRecords(): void
     {
         $this->rs->keyResultsBy('id');
 
-        $this->assertSame('left', $this->rs->find(1)->get('name'));
-        $this->assertSame('right', $this->rs->find(2)->get('name'));
+        $this->assertSame('left', $this->rs->find(1)?->get('name'));
+        $this->assertSame('right', $this->rs->find(2)?->get('name'));
         $this->assertNull($this->rs->find(3));
     }
 
-    /** @test * */
-    public function itKeysRecordsWithClosure()
+    #[Test]
+    public function itKeysRecordsWithClosure(): void
     {
         $this->rs->keyResultsBy(
             function (Record $record) {
-                return $record->get('id') . '_' . $record->get('name');
+                $id = $record->get('id');
+                assert(is_string($id) || is_int($id));
+                $name = $record->get('name');
+                assert(is_string($name));
+                return $id . '_' . $name;
             }
         );
 
@@ -57,8 +62,8 @@ class ResultsTest extends TestCase
         $this->assertSame('up', $this->rs->find('1_left')->get('value'));
     }
 
-    /** @test **/
-    public function itTraverses()
+    #[Test]
+    public function itTraverses(): void
     {
         $found = false;
         foreach ($this->rs as $rs) {
@@ -69,8 +74,8 @@ class ResultsTest extends TestCase
         $this->assertTrue($found);
     }
 
-    /** @test **/
-    public function itAssociatesMetadata()
+    #[Test]
+    public function itAssociatesMetadata(): void
     {
         $metadata = ['test', 'fields'];
         $rs = new Results();
@@ -79,8 +84,8 @@ class ResultsTest extends TestCase
         $this->assertSame($metadata, $rs->getMetadata());
     }
 
-    /** @test **/
-    public function itTracksHeaders()
+    #[Test]
+    public function itTracksHeaders(): void
     {
         $fields = ['A', 'B', 'C', 'D', 'E'];
         $rs = new Results();
@@ -89,8 +94,8 @@ class ResultsTest extends TestCase
         $this->assertSame($fields, $rs->getHeaders());
     }
 
-    /** @test **/
-    public function itTracksCounts()
+    #[Test]
+    public function itTracksCounts(): void
     {
         $rs = new Results();
         $rs->setTotalResultsCount(1000);
@@ -100,8 +105,8 @@ class ResultsTest extends TestCase
         $this->assertSame(500, $rs->getReturnedResultsCount());
     }
 
-    /** @test **/
-    public function itTracksResourcesAndClasses()
+    #[Test]
+    public function itTracksResourcesAndClasses(): void
     {
         $rs = new Results();
         $rs->setResource('Property');
@@ -111,8 +116,8 @@ class ResultsTest extends TestCase
         $this->assertSame('A', $rs->getClass());
     }
 
-    /** @test **/
-    public function itAllowsArrayAccessingKeyedResults()
+    #[Test]
+    public function itAllowsArrayAccessingKeyedResults(): void
     {
         $r = new Record();
         $r->set('id', 'extra');
@@ -135,16 +140,16 @@ class ResultsTest extends TestCase
         $this->assertTrue(isset($this->rs['bonus']));
     }
 
-    /** @test **/
-    public function itHoldsErrors()
+    #[Test]
+    public function itHoldsErrors(): void
     {
         $rs = new Results();
         $rs->setError('test');
         $this->assertSame('test', $rs->getError());
     }
 
-    /** @test **/
-    public function itHoldsASession()
+    #[Test]
+    public function itHoldsASession(): void
     {
         $rs = new Results();
         $config = new \PHRETS\Configuration();
@@ -154,8 +159,8 @@ class ResultsTest extends TestCase
         $this->assertSame($session, $rs->getSession());
     }
 
-    /** @test **/
-    public function itGivesAList()
+    #[Test]
+    public function itGivesAList(): void
     {
         $rs = new Results();
 
@@ -177,8 +182,8 @@ class ResultsTest extends TestCase
         $this->assertSame(['extra', 'bonus'], $rs->lists('id'));
     }
 
-    /** @test **/
-    public function itGivesAListExcludingRestrictedValues()
+    #[Test]
+    public function itGivesAListExcludingRestrictedValues(): void
     {
         $rs = new Results();
         $rs->setRestrictedIndicator('****');
@@ -201,22 +206,15 @@ class ResultsTest extends TestCase
         $this->assertSame(['extra', 'bonus'], $rs->lists('id'));
     }
 
-    /** @test **/
-    public function itConvertsObjectToCSV()
-    {
-        $expected = "id,name,value\n1,left,up\n2,right,down\n";
-        $this->assertSame($expected, $this->rs->toCSV());
-    }
-
-    /** @test **/
-    public function itConvertsObjectToJSON()
+    #[Test]
+    public function itConvertsObjectToJSON(): void
     {
         $expected = '[{"id":1,"name":"left","value":"up"},{"id":2,"name":"right","value":"down"}]';
-        $this->assertSame($expected, $this->rs->toJSON());
+        $this->assertSame($expected, json_encode($this->rs, JSON_THROW_ON_ERROR));
     }
 
-    /** @test **/
-    public function itConvertsObjectToArray()
+    #[Test]
+    public function itConvertsObjectToArray(): void
     {
         $expected = [
             ['id' => 1, 'name' => 'left', 'value' => 'up'],

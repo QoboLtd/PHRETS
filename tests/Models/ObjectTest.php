@@ -1,12 +1,14 @@
 <?php
+namespace PHRETS\Test\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\BaseObject;
 
 class ObjectTest extends TestCase
 {
-    /** @test **/
-    public function itHolds()
+    #[Test]
+    public function itHolds(): void
     {
         $o = new BaseObject();
         $o->setContent('Test Content');
@@ -14,8 +16,8 @@ class ObjectTest extends TestCase
         $this->assertSame('Test Content', $o->getContent());
     }
 
-    /** @test **/
-    public function itReturnsASize()
+    #[Test]
+    public function itReturnsASize(): void
     {
         $o = new BaseObject();
         $o->setContent('Hello');
@@ -23,8 +25,8 @@ class ObjectTest extends TestCase
         $this->assertSame(5, $o->getSize());
     }
 
-    /** @test **/
-    public function itMakesFromHeaders()
+    #[Test]
+    public function itMakesFromHeaders(): void
     {
         $headers = [
             'Content-Type' => 'image/jpeg',
@@ -50,8 +52,8 @@ class ObjectTest extends TestCase
         $this->assertSame('Mime Version', $o->getMimeVersion());
     }
 
-    /** @test **/
-    public function itMarksPreferredObjects()
+    #[Test]
+    public function itMarksPreferredObjects(): void
     {
         $o = new BaseObject();
         $this->assertFalse($o->isPreferred());
@@ -60,8 +62,8 @@ class ObjectTest extends TestCase
         $this->assertSame(1, $o->getPreferred());
     }
 
-    /** @test **/
-    public function itMarksErrors()
+    #[Test]
+    public function itMarksErrors(): void
     {
         $e = new \PHRETS\Models\RETSError();
         $e->setCode('1234');
@@ -71,7 +73,7 @@ class ObjectTest extends TestCase
         $this->assertFalse($o->isError());
         $o->setError($e);
         $this->assertTrue($o->isError());
-        $this->assertSame('1234', $o->getError()->getCode());
+        $this->assertSame('1234', $o->getError()?->getCode());
         $this->assertSame('Test Error Message', $o->getError()->getMessage());
     }
 }

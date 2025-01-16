@@ -1,18 +1,16 @@
 <?php
+namespace PHRETS\Test\Integration\Parsers;
 
 use PHRETS\Http\Response;
-use Psr\Http\Message\ResponseInterface;
+use PHRETS\Parsers\XML;
+use SimpleXMLElement;
 
-class CustomXMLParser
+class CustomXMLParser extends XML
 {
-    public function parse($string)
+    public function parse(Response $response): SimpleXMLElement
     {
-        if ($string instanceof ResponseInterface or $string instanceof Response) {
-            $string = $string->getBody()->__toString();
-        }
+        $string = str_replace('LIST_1', 'LIST_10000', (string)$response->getBody());
 
-        $string = str_replace('LIST_1', 'LIST_10000', $string);
-
-        return new \SimpleXMLElement((string) $string);
+        return new SimpleXMLElement($string);
     }
 }

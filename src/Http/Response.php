@@ -3,14 +3,12 @@
 namespace PHRETS\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use SimpleXMLElement;
 
 /**
  * Class Response.
  *
- * @method int getStatusCode()
- * @method \Psr\Http\Message\StreamInterface getBody()
- * @method array getHeaders()
  */
 class Response
 {
@@ -31,9 +29,22 @@ class Response
         return new SimpleXMLElement($body);
     }
 
-    public function __call($method, array $args = [])
+    public function getBody(): StreamInterface
     {
-        return call_user_func_array([$this->response, $method], $args);
+        return $this->response->getBody();
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->response->getStatusCode();
+    }
+
+    /**
+     * @return array<string,array<int,string>>
+     */
+    public function getHeaders(): array
+    {
+        return $this->response->getHeaders();
     }
 
     public function getHeader(string $name): ?string

@@ -2,6 +2,7 @@
 
 namespace PHRETS\Parsers\GetMetadata;
 
+use PHRETS\Enums\RETSVersion;
 use PHRETS\Http\Response;
 use PHRETS\Models\Metadata\System as SystemModel;
 use PHRETS\Parsers\ParserType;
@@ -22,7 +23,7 @@ class System extends Base
 
         $configuration = $rets->getConfiguration();
 
-        if ($configuration->getRetsVersion()->is1_5()) {
+        if ($configuration->getRetsVersion() === RETSVersion::VERSION_1_5) {
             if (property_exists($base->System, 'SystemID') && $base->System->SystemID !== null) {
                 $metadata->setSystemID((string) $base->System->SystemID);
             }

@@ -2,13 +2,18 @@
 
 namespace PHRETS\Models;
 
-use Illuminate\Support\Arr;
+use PHRETS\Arr;
 
 class Bulletin implements \Stringable
 {
     protected ?string $body = null;
+
+    /** @var array<string,bool|int|string> */
     protected array $details = [];
 
+    /**
+     * @param array<string,bool|int|string> $details
+     */
     public function __construct(array $details = [])
     {
         $this->details = array_change_key_case($details, CASE_UPPER);
@@ -21,7 +26,6 @@ class Bulletin implements \Stringable
 
     /**
      * @param ?string $body Body
-     * @return self
      */
     public function setBody(?string $body): self
     {
@@ -30,39 +34,45 @@ class Bulletin implements \Stringable
         return $this;
     }
 
-    public function setDetail(string $name, $value): static
+    public function setDetail(string $name, string $value): self
     {
         $this->details[strtoupper($name)] = $value;
 
         return $this;
     }
 
-    public function getDetail(string $name): mixed
+    public function getDetail(string $name): ?string
     {
-        return Arr::get($this->details, strtoupper($name));
+        /** @var bool|int|string|null $value */
+        $value = Arr::get($this->details, strtoupper($name));
+        if ($value === null) {
+            return null;
+        }
+
+        return (string)$value;
     }
 
-    public function getMemberName()
+    public function getMemberName(): ?string
     {
         return $this->getDetail('MemberName');
     }
 
-    public function getUser()
+    public function getUser(): ?string
     {
         return $this->getDetail('User');
     }
 
-    public function getBroker()
+    public function getBroker(): ?string
     {
         return $this->getDetail('Broker');
     }
 
-    public function getMetadataVersion()
+    public function getMetadataVersion(): ?string
     {
         return $this->getDetail('MetadataVersion');
     }
 
-    public function getMetadataTimestamp()
+    public function getMetadataTimestamp(): ?string
     {
         return $this->getDetail('MetadataTimestamp');
     }

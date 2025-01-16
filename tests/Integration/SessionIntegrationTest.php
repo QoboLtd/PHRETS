@@ -1,27 +1,32 @@
 <?php
+namespace PHRETS\Test\Integration;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
+use PHPUnit\Framework\Attributes\Test;
+use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
+use PHRETS\Session;
 
 class SessionIntegrationTest extends BaseIntegration
 {
-    /** @test * */
-    public function itLogsIn()
+    #[Test]
+    public function itLogsIn(): void
     {
+        assert($this->session !== null);
         $connect = $this->session->Login();
-        $this->assertTrue($connect instanceof \PHRETS\Models\Bulletin);
+        $this->assertNull($connect->getBody());
     }
 
-    /** @test **/
-    public function itMadeTheRequest()
+    #[Test]
+    public function itMadeTheRequest(): void
     {
         $this->session->Login();
         $this->assertSame('http://retsgw.flexmls.com:80/rets2_1/Login', $this->session->getLastRequestURL());
     }
 
-    /**
-     * @test
-     * **/
-    public function itThrowsAnExceptionWhenMakingABadRequest()
+    #[Test]
+    public function itThrowsAnExceptionWhenMakingABadRequest(): void
     {
         $this->expectException(\PHRETS\Exceptions\RETSException::class);
         $this->session->Login();
@@ -29,8 +34,8 @@ class SessionIntegrationTest extends BaseIntegration
         $this->session->Search('Property', 'Z', '*'); // no such class by that name
     }
 
-    /** @test **/
-    public function itTracksTheLastResponseBody()
+    #[Test]
+    public function itTracksTheLastResponseBody(): void
     {
         $this->session->Login();
 
@@ -38,45 +43,42 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertMatchesRegularExpression('/NotificationFeed/', $this->session->getLastResponse());
     }
 
-    /** @test **/
-    public function itDisconnects()
+    #[Test]
+    public function itDisconnects(): void
     {
         $this->session->Login();
 
         $this->assertTrue($this->session->Disconnect());
     }
 
-    /** @test **/
-    public function itRequestsTheServersActionTransaction()
+    #[Test]
+    public function itRequestsTheServersActionTransaction(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new \PHRETS\Configuration(version: RETSVersion::VERSION_1_7_2);
 
         // this endpoint doesn't actually exist, but the response is mocked, so...
         $config->setLoginUrl('http://retsgw.flexmls.com/action/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.7.2');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $bulletin = $session->Login();
 
-        $this->assertInstanceOf('\PHRETS\Models\Bulletin', $bulletin);
         $this->assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
     }
 
-    /** @test **/
-    public function itUsesHttpPostMethodWhenDesired()
+    #[Test]
+    public function itUsesHttpPostMethodWhenDesired(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new \PHRETS\Configuration(version: RETSVersion::VERSION_1_7_2);
 
         // this endpoint doesn't actually exist, but the response is mocked, so...
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.7.2')
                 ->setOption('use_post_method', true);
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $system = $session->GetSystemMetadata();
@@ -86,8 +88,8 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertCount(1, $results);
     }
 
-    /** @test **/
-    public function itTracksAGivenSessionId()
+    #[Test]
+    public function itTracksAGivenSessionId(): void
     {
         $this->session->Login();
 
@@ -97,28 +99,27 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertSame('21AC8993DC98DDCE648423628ECF4AB5', $this->session->getRetsSessionId());
     }
 
-    /** @test **/
-    public function itDetectsWhenToUseUserAgentAuthentication()
+    #[Test]
+    public function itDetectsWhenToUseUserAgentAuthentication(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_7_2);
 
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
                 ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
                 ->setUserAgent('PHRETS/2.0')
-                ->setUserAgentPassword('bogus_password')
-                ->setRetsVersion('1.7.2');
+                ->setUserAgentPassword('bogus_password');
 
-        $session = new \PHRETS\Session($config);
+        $handler = $this->createHandler();
+        $session = new Session($config, new Client(['handler' => $handler]));
 
         /**
          * Attach a history container to Guzzle so we can verify the needed header is sent.
          */
         $container = [];
-        /** @var \GuzzleHttp\HandlerStack $stack */
-        $stack = $session->getClient()->getConfig('handler');
+
         $history = Middleware::history($container);
-        $stack->push($history);
+        $handler->push($history);
 
         $session->Login();
 
@@ -128,32 +129,27 @@ class SessionIntegrationTest extends BaseIntegration
         $this->assertArrayHasKey('Accept', $last_request['request']->getHeaders());
     }
 
-    /**
-     * @test
-     **/
-    public function itDoesntAllowRequestsToUnsupportedCapabilities()
+    #[Test]
+    public function itDoesntAllowRequestsToUnsupportedCapabilities(): void
     {
         $this->expectException(\PHRETS\Exceptions\CapabilityUnavailable::class);
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_7_2);
 
         // fake, mocked endpoint
         $config->setLoginUrl('http://retsgw.flexmls.com/limited/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.7.2');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         // make a request for metadata to a server that doesn't support metadata
         $session->GetSystemMetadata();
     }
 
-    public function testDetailsAreAvailableFromLogin()
+    public function testDetailsAreAvailableFromLogin(): void
     {
         $connect = $this->session->Login();
-        $this->assertTrue($connect instanceof \PHRETS\Models\Bulletin);
-
         $this->assertSame('UNKNOWN', $connect->getMemberName());
         $this->assertNotNull($connect->getMetadataVersion());
     }

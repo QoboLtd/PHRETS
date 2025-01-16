@@ -1,13 +1,15 @@
 <?php
+namespace PHRETS\Test\Models\Search;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Search\Record;
 use PHRETS\Models\Search\Results;
 
 class RecordTest extends TestCase
 {
-    /** @test **/
-    public function itHoldsValues()
+    #[Test]
+    public function itHoldsValues(): void
     {
         $r = new Record();
         $r->set('name', 'value');
@@ -15,8 +17,8 @@ class RecordTest extends TestCase
         $this->assertSame('value', $r->get('name'));
     }
 
-    /** @test **/
-    public function itHoldsMultipleValues()
+    #[Test]
+    public function itHoldsMultipleValues(): void
     {
         $r = new Record();
         $r->set('one', '1');
@@ -28,8 +30,8 @@ class RecordTest extends TestCase
         $this->assertSame('three', $r->get('3'));
     }
 
-    /** @test **/
-    public function itDetectsRestrictedValues()
+    #[Test]
+    public function itDetectsRestrictedValues(): void
     {
         $rs = new Results();
         $rs->setRestrictedIndicator('RESTRICTED');
@@ -43,8 +45,8 @@ class RecordTest extends TestCase
         $this->assertTrue($r->isRestricted('another'));
     }
 
-    /** @test **/
-    public function itChangesToArray()
+    #[Test]
+    public function itChangesToArray(): void
     {
         $r = new Record();
         $r->set('ListingID', '123456789');
@@ -53,27 +55,26 @@ class RecordTest extends TestCase
         $this->assertSame(['ListingID' => '123456789', 'MLS' => 'demo'], $r->toArray());
     }
 
-    /** @test **/
-    public function itChangesToJson()
+    #[Test]
+    public function itChangesToJson(): void
     {
         $r = new Record();
         $r->set('ListingID', '123456789');
         $r->set('MLS', 'demo');
 
-        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', $r->toJson());
+        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', json_encode($r, JSON_THROW_ON_ERROR));
         $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', (string) $r);
     }
 
-    /** @test **/
-    public function itAccessesParentGivenAttributes()
+    #[Test]
+    public function itAccessesParentGivenAttributes(): void
     {
         $rs = new Results();
         $rs->setResource('Property');
         $rs->setClass('A');
         $rs->setHeaders(['LIST_1', 'LIST_2', 'LIST_3']);
 
-        $r = new Record();
-        $rs->addRecord($r);
+        $rs->addRecord(new Record());
 
         foreach ($rs as $r) {
             $this->assertSame('Property', $r->getResource());
@@ -82,8 +83,8 @@ class RecordTest extends TestCase
         }
     }
 
-    /** @test **/
-    public function itAllowsArrayAccess()
+    #[Test]
+    public function itAllowsArrayAccess(): void
     {
         $r = new Record();
         $r->set('one', '1');

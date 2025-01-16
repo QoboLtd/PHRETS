@@ -1,14 +1,16 @@
 <?php
+namespace PHRETS\Test\Parsers\GetObject;
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Http\Response as PHRETSResponse;
 use PHRETS\Parsers\GetObject\Single;
 
 class SingleTest extends TestCase
 {
-    /** @test **/
-    public function itUnderstandsTheBasics()
+    #[Test]
+    public function itUnderstandsTheBasics(): void
     {
         $parser = new Single();
         $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/plain'], 'Test'));
@@ -18,8 +20,8 @@ class SingleTest extends TestCase
         $this->assertSame('text/plain', $obj->getContentType());
     }
 
-    /** @test **/
-    public function itDetectsAndHandlesErrors()
+    #[Test]
+    public function itDetectsAndHandlesErrors(): void
     {
         $error = '<RETS ReplyCode="20203" ReplyText="RETS Server: Some error">
         Valid Classes are: A B C E F G H I
@@ -29,12 +31,12 @@ class SingleTest extends TestCase
         $obj = $parser->parse($single);
 
         $this->assertTrue($obj->isError());
-        $this->assertSame('20203', $obj->getError()->getCode());
+        $this->assertSame('20203', $obj->getError()?->getCode());
         $this->assertSame('RETS Server: Some error', $obj->getError()->getMessage());
     }
 
-    /** @test **/
-    public function itSeesTheNewRetsErrorHeader()
+    #[Test]
+    public function itSeesTheNewRetsErrorHeader(): void
     {
         $error = '<RETS ReplyCode="20203" ReplyText="RETS Server: Some error">
         Valid Classes are: A B C E F G H I

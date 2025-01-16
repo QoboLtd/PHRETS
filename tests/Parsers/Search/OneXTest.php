@@ -1,16 +1,18 @@
 <?php
+namespace PHRETS\Test\Parsers\Search;
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Http\Response as PHRETSResponse;
+use PHRETS\Models\Search\Results;
 use PHRETS\Parsers\Search\OneX;
 use PHRETS\Session;
 
 class OneXTest extends TestCase
 {
-    /** @var \PHRETS\Models\Search\Results */
-    protected $results;
+    protected Results $results;
 
     public function setUp(): void
     {
@@ -41,26 +43,26 @@ class OneXTest extends TestCase
         $this->results = $parser->parse($s, new PHRETSResponse(new Response(200, [], $data)), $parameters);
     }
 
-    /** @test **/
-    public function itSeesCounts()
+    #[Test]
+    public function itSeesCounts(): void
     {
         $this->assertSame(9057, $this->results->getTotalResultsCount());
     }
 
-    /** @test **/
-    public function itSeesColumns()
+    #[Test]
+    public function itSeesColumns(): void
     {
         $this->assertSame(['LIST_1', 'LIST_105'], $this->results->getHeaders());
     }
 
-    /** @test **/
-    public function itSeesTheFirstRecord()
+    #[Test]
+    public function itSeesTheFirstRecord(): void
     {
-        $this->assertSame('20111007152642181995000000', $this->results->first()['LIST_1']);
+        $this->assertSame('20111007152642181995000000', $this->results->first()['LIST_1'] ?? null);
     }
 
-    /** @test **/
-    public function itSeesMaxrows()
+    #[Test]
+    public function itSeesMaxrows(): void
     {
         $this->assertTrue($this->results->isMaxRowsReached());
     }

@@ -2,8 +2,6 @@
 
 namespace PHRETS\Models\Metadata;
 
-use Illuminate\Support\Collection;
-
 /**
  * Class System.
  *
@@ -29,11 +27,12 @@ class System extends Base
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Resource[]
+     * @return array<string,\PHRETS\Models\Metadata\Resource>
      *
-     * @throws \PHRETS\Exceptions\MetadataNotFound|\PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\MetadataNotFound
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getResources(): Collection|array
+    public function getResources(): array
     {
         return $this->getSession()->GetResourcesMetadata();
     }

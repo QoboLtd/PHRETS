@@ -1,4 +1,10 @@
 <?php
+namespace PHRETS\Test\Integration;
+
+use PHPUnit\Framework\Attributes\Test;
+use PHRETS\Arr;
+use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
 
 class GetMetadataIntegrationTest extends BaseIntegration
 {
@@ -6,32 +12,30 @@ class GetMetadataIntegrationTest extends BaseIntegration
      * System.
      */
 
-    /** @test **/
-    public function itGetsSystemData()
+    #[Test]
+    public function itGetsSystemData(): void
     {
         $system = $this->session->GetSystemMetadata();
-        $this->assertTrue($system instanceof \PHRETS\Models\Metadata\System);
+        $this->assertNotNull($system->getSystemID());
     }
 
-    /** @test **/
-    public function itGetsSystemDataFor15()
+    #[Test]
+    public function itGetsSystemDataFor15(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_5);
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.5');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $system = $session->GetSystemMetadata();
-        $this->assertTrue($system instanceof \PHRETS\Models\Metadata\System);
         $this->assertSame('demomls', $system->getSystemID());
     }
 
-    /** @test **/
-    public function itMakesAGoodUrl()
+    #[Test]
+    public function itMakesAGoodUrl(): void
     {
         $this->session->GetSystemMetadata();
         $this->assertSame(
@@ -40,16 +44,16 @@ class GetMetadataIntegrationTest extends BaseIntegration
         );
     }
 
-    /** @test **/
-    public function itSeesSomeAttributes()
+    #[Test]
+    public function itSeesSomeAttributes(): void
     {
         $system = $this->session->GetSystemMetadata();
         $this->assertSame('demomls', $system->getSystemID());
         $this->assertSame('-05:00', $system->getTimeZoneOffset());
     }
 
-    /** @test **/
-    public function itGetsRelatedResources()
+    #[Test]
+    public function itGetsRelatedResources(): void
     {
         $system = $this->session->GetSystemMetadata()->getResources();
         $resources = $this->session->GetResourcesMetadata();
@@ -60,136 +64,138 @@ class GetMetadataIntegrationTest extends BaseIntegration
      * Resources.
      */
 
-    /** @test **/
-    public function itGetsResourceData()
+    #[Test]
+    public function itGetsResourceData(): void
     {
-        $resource = $this->session->GetResourcesMetadata('Property');
+        $resources = $this->session->GetResourcesMetadata();
+        $this->assertArrayHasKey('Property', $resources);
+        $resource = $resources['Property'];
+
         $this->assertTrue($resource instanceof \PHRETS\Models\Metadata\Resource);
         $this->assertSame('Property', $resource->getStandardName());
         $this->assertSame('7', $resource->getClassCount());
     }
 
-    /** @test **/
-    public function itGetsAllResourceData()
+    #[Test]
+    public function itGetsAllResourceData(): void
     {
         $resources = $this->session->GetResourcesMetadata();
-        $this->assertSame(9, $resources->count());
-        $this->assertSame('ActiveAgent', $resources->first()->getResourceId());
-        $this->assertSame('VirtualTour', $resources->last()->getResourceId());
+        $this->assertCount(9, $resources);
+        $this->assertSame('ActiveAgent', Arr::first($resources)?->getResourceID());
+        $this->assertSame('VirtualTour', Arr::last($resources)?->getResourceID());
     }
 
-    /** @test **/
-    public function itGetsKeyedResourceData()
+    #[Test]
+    public function itGetsKeyedResourceData(): void
     {
         $resources = $this->session->GetResourcesMetadata();
-        $this->assertInstanceOf('\PHRETS\Models\Metadata\Resource', $resources['Property']);
+        $this->assertArrayHasKey('Property', $resources);
+        $this->assertInstanceOf(\PHRETS\Models\Metadata\Resource::class, $resources['Property']);
     }
 
-    /**
-     * @test
-     * **/
-    public function itErrorsWithBadResourceName()
+    #[Test]
+    public function itErrorsWithBadResourceName(): void
     {
-        $this->expectException(\PHRETS\Exceptions\MetadataNotFound::class);
-        $this->session->GetResourcesMetadata('Bogus');
+        $resources = $this->session->GetResourcesMetadata();
+        $this->assertArrayNotHasKey('Bogus', $resources);
     }
 
-    /** @test **/
-    public function itGetsRelatedClasses()
+    #[Test]
+    public function itGetsRelatedClasses(): void
     {
-        $resource_classes = $this->session->GetResourcesMetadata('Property')->getClasses();
+        $resources = $this->session->GetResourcesMetadata();
+        $this->assertArrayHasKey('Property', $resources);
+
+        $resource_classes = $resources['Property']->getClasses();
         $classes = $this->session->GetClassesMetadata('Property');
         $this->assertEquals($resource_classes, $classes);
     }
 
-    /** @test **/
-    public function itGetsRelatedObjectMetadata()
+    #[Test]
+    public function itGetsRelatedObjectMetadata(): void
     {
-        $object_types = $this->session->GetResourcesMetadata('Property')->getObject();
-        $this->assertSame('Photo', $object_types->first()->getObjectType());
+        $resources = $this->session->GetResourcesMetadata();
+        $this->assertArrayHasKey('Property', $resources);
+
+        $object_types = $resources['Property']->getObject();
+        $this->assertSame('Photo', Arr::first($object_types)?->getObjectType());
     }
 
     /**
      * Classes.
      */
 
-    /** @test **/
-    public function itGetsClassData()
+    #[Test]
+    public function itGetsClassData(): void
     {
         $classes = $this->session->GetClassesMetadata('Property');
-        $this->assertTrue($classes instanceof \Illuminate\Support\Collection);
-        $this->assertSame(7, $classes->count());
-        $this->assertSame('A', $classes->first()->getClassName());
+        $this->assertIsArray($classes);
+        $this->assertSame(7, count($classes));
+        $this->assertSame('A', reset($classes)->getClassName());
     }
 
-    /** @test **/
-    public function itGetsRelatedTableData()
+    #[Test]
+    public function itGetsRelatedTableData(): void
     {
         $classes = $this->session->GetClassesMetadata('Property');
-        $this->assertTrue($classes instanceof \Illuminate\Support\Collection);
-        $this->assertSame('LIST_0', $classes->first()->getTable()->first()->getSystemName());
+        $this->assertIsArray($classes);
+        $firstClass = Arr::first($classes);
+
+        $this->assertSame('LIST_0', Arr::first($firstClass->getTable())->getSystemName());
     }
 
-    /** @test **/
-    public function itGetsKeyedClassMetadata()
+    #[Test]
+    public function itGetsKeyedClassMetadata(): void
     {
         $classes = $this->session->GetClassesMetadata('Property');
-        $this->assertInstanceOf('\PHRETS\Models\Metadata\ResourceClass', $classes['A']);
+        $this->assertInstanceOf(\PHRETS\Models\Metadata\ResourceClass::class, $classes['A']);
     }
 
     /**
      * Table.
      */
 
-    /** @test **/
-    public function itGetsTableData()
+     #[Test]
+    public function itGetsTableData(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
-        $this->assertTrue($fields instanceof \Illuminate\Support\Collection);
-        $this->assertTrue($fields->count() > 100, 'Verify that a lot of fields came back');
-        $this->assertSame('LIST_0', $fields->first()->getSystemName());
+        $this->assertTrue(count($fields) > 100, 'Verify that a lot of fields came back');
+        $this->assertSame('LIST_0', Arr::first($fields)?->getSystemName());
     }
 
-    /** @test **/
-    public function itSeesTableAttributes()
+    #[Test]
+    public function itSeesTableAttributes(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
-        $this->assertSame('Property', $fields->first()->getResource());
-        $this->assertSame('A', $fields->last()->getClass());
+        $this->assertSame('Property', Arr::first($fields)?->getResource());
+        $this->assertSame('A', Arr::last($fields)?->getClass());
     }
 
-    /** @test **/
-    public function itSeesFieldsByKey()
+    #[Test]
+    public function itSeesFieldsByKey(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
-        $this->assertTrue($fields instanceof \Illuminate\Support\Collection);
-        $this->assertSame('Listing ID', $fields->get('LIST_105')->getLongName());
+        $this->assertSame('Listing ID', $fields['LIST_105']->getLongName());
     }
 
-    /** @test **/
-    public function itSeesFieldsByStandardKey()
+    #[Test]
+    public function itSeesFieldsByStandardKey(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A', 'StandardName');
-        $this->assertTrue($fields instanceof \Illuminate\Support\Collection);
-        $this->assertSame('Listing ID', $fields->get('ListingID')->getLongName());
+        $this->assertSame('Listing ID', $fields['ListingID']->getLongName());
     }
 
-    /**
-     * Object.
-     */
-
-    /** @test **/
-    public function itGetsObjectMetadata()
+    #[Test]
+    public function itGetsObjectMetadata(): void
     {
         $object_types = $this->session->GetObjectMetadata('Property');
-        $this->assertTrue($object_types instanceof \Illuminate\Support\Collection);
-        $this->assertTrue($object_types->count() > 4, 'Verify that a few came back');
-        $this->assertSame('Photo', $object_types->first()->getObjectType());
-        $this->assertSame('LIST_133', $object_types->first()->getObjectCount());
+        $this->assertTrue(count($object_types) > 4, 'Verify that a few came back');
+        $this->assertSame('Photo', Arr::first($object_types)?->getObjectType());
+        $this->assertSame('LIST_133', Arr::first($object_types)->getObjectCount());
     }
 
-    /** @test **/
-    public function itGetsKeyedObjectMetadata()
+    #[Test]
+    public function itGetsKeyedObjectMetadata(): void
     {
         $object_types = $this->session->GetObjectMetadata('Property');
         $this->assertInstanceOf('\PHRETS\Models\Metadata\BaseObject', $object_types['Photo']);
@@ -199,53 +205,51 @@ class GetMetadataIntegrationTest extends BaseIntegration
      * Lookups.
      */
 
-    /** @test **/
-    public function itGetsLookupValues()
+    #[Test]
+    public function itGetsLookupValues(): void
     {
         $values = $this->session->GetLookupValues('Property', '20000426151013376279000000');
-        $this->assertTrue($values instanceof \Illuminate\Support\Collection);
-        $this->assertSame('Lake/Other', $values->first()->getLongValue());
-        $this->assertSame('5PSUX49PM1Q', $values->first()->getValue());
+        $first = Arr::first($values);
+
+        $this->assertSame('Lake/Other', $first->getLongValue());
+        $this->assertSame('5PSUX49PM1Q', $first->getValue());
     }
 
-    /** @test **/
-    public function itGetsRelatedLookupValues()
+    #[Test]
+    public function itGetsRelatedLookupValues(): void
     {
         $fields = $this->session->GetTableMetadata('Property', 'A');
-        $this->assertTrue($fields instanceof \Illuminate\Support\Collection);
 
-        $quick_way = $fields->get('LIST_9')->getLookupValues();
+        $quick_way = $fields['LIST_9']->getLookupValues();
         $manual_way = $this->session->GetLookupValues('Property', '20000426151013376279000000');
 
-        $this->assertEquals($quick_way->first(), $manual_way->first());
+        $this->assertEquals(Arr::first($quick_way), Arr::first($manual_way));
     }
 
-    /** @test **/
-    public function itRecoversFromBadLookuptypeTag()
+    #[Test]
+    public function itRecoversFromBadLookuptypeTag(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new Configuration(version: RETSVersion::VERSION_1_5);
         $config->setLoginUrl('http://retsgw.flexmls.com/lookup/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.5');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $values = $session->GetLookupValues('Property', '20000426151013376279000000');
         $this->assertCount(6, $values);
     }
 
-    /** @test **/
-    public function itHandlesIncompleteObjectMetadataCorrectly()
+    #[Test]
+    public function itHandlesIncompleteObjectMetadataCorrectly(): void
     {
-        $config = new \PHRETS\Configuration();
+        $config = new \PHRETS\Configuration(version: RETSVersion::VERSION_1_5);
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
             ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-            ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-            ->setRetsVersion('1.5');
+            ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
-        $session = new \PHRETS\Session($config);
+        $session = $this->createSession($config);
         $session->Login();
 
         $values = $session->GetObjectMetadata('PropertyPowerProduction');

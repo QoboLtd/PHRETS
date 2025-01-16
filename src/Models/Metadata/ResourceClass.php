@@ -2,8 +2,6 @@
 
 namespace PHRETS\Models\Metadata;
 
-use Illuminate\Support\Collection;
-
 /**
  * Class ResourceClass.
  *
@@ -46,11 +44,10 @@ class ResourceClass extends Base
     ];
 
     /**
-     * @return \Illuminate\Support\Collection|\PHRETS\Models\Metadata\Table[]
-     *
+     * @return array<string,\PHRETS\Models\Metadata\Table>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function getTable(): Collection|array
+    public function getTable(): array
     {
         return $this->getSession()->GetTableMetadata($this->getResource(), $this->getClassName());
     }

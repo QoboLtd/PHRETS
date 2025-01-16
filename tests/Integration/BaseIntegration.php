@@ -1,74 +1,76 @@
 <?php
+namespace PHRETS\Test\Integration;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
+use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
+use PHRETS\Session;
 use Psr\Http\Message\RequestInterface;
 
 class BaseIntegration extends TestCase
 {
-    protected $client;
-    /** @var \PHRETS\Session */
-    protected $session;
-    protected $search_select = [
+    protected ClientInterface $client;
+    protected ?Session $session;
+
+    /** @var list<string> */
+    protected array $search_select = [
         'LIST_0', 'LIST_1', 'LIST_5', 'LIST_106', 'LIST_105', 'LIST_15', 'LIST_22', 'LIST_10', 'LIST_30',
     ];
 
-    private $path;
-    private $ignored_headers = [
+    private string $path;
+
+    /** @var array<string,string> */
+    private array $ignored_headers = [
         'ACCEPT' => 'Accept',
         'USER-AGENT' => 'User-Agent',
         'COOKIE' => 'Cookie',
     ];
 
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        $this->path = __DIR__ . '/Fixtures/Http';
-    }
-
     public function setUp(): void
     {
-        $config = new \PHRETS\Configuration();
+        $this->path = __DIR__ . '/Fixtures/Http';
+        $config = new Configuration(version: RETSVersion::VERSION_1_7_2);
         $config->setLoginUrl('http://retsgw.flexmls.com/rets2_1/Login')
                 ->setUsername(getenv('PHRETS_TESTING_USERNAME'))
-                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'))
-                ->setRetsVersion('1.7.2');
+                ->setPassword(getenv('PHRETS_TESTING_PASSWORD'));
 
-        $this->session = new PHRETS\Session($config);
-        $client = $this->session->getClient();
-
-        $defaults = $client->getConfig();
-        $new_client = new GuzzleHttp\Client($defaults);
-
-        PHRETS\Http\Client::set($new_client);
-
-        $this->attachTo($new_client);
-
+        $this->session = $this->createSession($config);
         $this->session->Login();
     }
 
-    public function getIgnoredHeaders()
+    protected function createSession(Configuration $config): Session
+    {
+        $new_client = new Client(['handler' => $this->createHandler()]);
+        return new Session($config, $new_client);
+    }
+
+    /** @return list<string> */
+    public function getIgnoredHeaders(): array
     {
         return array_values($this->ignored_headers);
     }
 
-    public function addIgnoredHeader($name)
+    public function addIgnoredHeader(string $name): self
     {
         $this->ignored_headers[strtoupper($name)] = $name;
 
         return $this;
     }
 
-    public function attachTo(Client $client)
+    public function createHandler(): HandlerStack
     {
-        /** @var \GuzzleHttp\HandlerStack $stack */
-        $stack = $client->getConfig('handler');
+        $stack = HandlerStack::create();
+
         $stack->push($this->onBefore());
         $stack->push($this->onComplete());
+
+        return $stack;
     }
 
-    public function onBefore()
+    public function onBefore(): callable
     {
         return function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
@@ -85,7 +87,7 @@ class BaseIntegration extends TestCase
         };
     }
 
-    public function onComplete()
+    public function onComplete(): callable
     {
         return function (callable $handler) {
             return function ($request, array $options) use ($handler) {
@@ -106,7 +108,7 @@ class BaseIntegration extends TestCase
         };
     }
 
-    protected function getPath(RequestInterface $request)
+    protected function getPath(RequestInterface $request): string
     {
         $path = $this->path . DIRECTORY_SEPARATOR . strtolower($request->getMethod()) . DIRECTORY_SEPARATOR . $request->getUri()->getHost() . DIRECTORY_SEPARATOR;
 
@@ -121,7 +123,7 @@ class BaseIntegration extends TestCase
         return $path;
     }
 
-    protected function getFileName(RequestInterface $request)
+    protected function getFileName(RequestInterface $request): string
     {
         $result = trim($request->getMethod() . ' ' . $request->getRequestTarget())
             . ' HTTP/' . $request->getProtocolVersion();
@@ -133,15 +135,12 @@ class BaseIntegration extends TestCase
         }
 
         $request = $result . "\r\n\r\n" . $request->getBody();
-        $hash = md5((string) $request) . '.txt';
 
-        return $hash;
+        return md5($request) . '.txt';
     }
 
-    protected function getFullFilePath(RequestInterface $request)
+    protected function getFullFilePath(RequestInterface $request): string
     {
-        $fullFilePath = $this->getPath($request) . $this->getFileName($request);
-
-        return $fullFilePath;
+        return $this->getPath($request) . $this->getFileName($request);
     }
 }

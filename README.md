@@ -1,6 +1,19 @@
-This is a fork of [troydavisson/PHRETS](https://github.com/troydavisson/PHRETS)
+# QoboLtd PHRETS
+PHP client library for interacting with a RETS server to pull real estate listings,
+photos and other data made available from an MLS system.
 
-The purpose of this fork is to:
+PHRETS handles the following aspects for you:
+
+* Response parsing (XML, HTTP multipart, etc.)
+* Simple variables, arrays and objects returned to the developer
+* RETS communication (over HTTP)
+* HTTP Header management
+* Authentication
+* Session/Cookie management
+
+## Permanent Fork
+This library is a fork of [troydavisson/PHRETS](https://github.com/troydavisson/PHRETS) which
+was forked to:
 
 1. support modern PHP versions
 2. Allow the library to be used without too many dependencies.
@@ -10,34 +23,68 @@ The purpose of this fork is to:
 Includes changes from the following forks:
 - [maxlipsky-ca/PHRETS-PHP8](https://github.com/maxlipsky-ca/PHRETS-PHP8)
 - [ocusellinc/PHRETS](https://github.com/ocusellinc/PHRETS)
+- [okua/PHRETS](https://github.com/okua/PHRETS)
 
+Due to the nature and quantity of the changes we do not expect this fork to be merged back.
+We welcome any contributions as long as they are generally useful (ie. not hacks)
 
-PHRETS
-======
+### Compatibility
+It should be a drop-in replacement for troydavisson/PHRETS with the following exceptions:
 
-PHP client library for interacting with a RETS server to pull real estate listings, photos and other data made available from an MLS system
+1. No support for PHP versions before 8.2.
+2. RETS version is now an enum and can only be set in the constructor of the Configuration.
+3. The client, cookie jar and logger can only be set in the constructor of the Session.
 
+## Installation
+
+The easiest way to get started is using [Composer](http://getcomposer.org) to install
+
+```js
+{
+    "repositories": [
+        {
+          "type": "git",
+          "url": "https://github.com/QoboLtd/PHRETS.git"
+        }
+    ],
+    "require": {
+        "qoboltd/phrets": "^3.0"
+    }
+}
+```
+
+## Get Help
+Please use the GitHub's issue tracker for bugs/suggestions.
+
+## Disclaimer
+In many cases, the capabilities provided by this library are dependent on these features being properly implemented by the RETS server you're accessing.  The RETS specification defines how clients and servers communicate, and if a server is doing something unexpected, this library may not work without tweaking some options.
+
+## Documentation
+
+### Quick Start
 ```php
 <?php
+require_once("vendor/autoload.php");
+
+use PHRETS\Configuration;
+use PHRETS\Enums\RETSVersion;
+use PHRETS\Session;
 
 date_default_timezone_set('America/New_York');
 
-require_once("vendor/autoload.php");
-
-$config = new \PHRETS\Configuration;
+$config = new Configuration(version: RETSVersion::VERSION_1_7_2);
 $config->setLoginUrl('rets login url here')
         ->setUsername('rets username here')
-        ->setPassword('rets password here')
-        ->setRetsVersion('1.7.2');
+        ->setPassword('rets password here');
 
-$rets = new \PHRETS\Session($config);
+$rets = new Session($config);
 
-// If you're using Monolog already for logging, you can pass that logging instance to PHRETS for some additional
+// If you're using Monolog or any other PSR-3 logger, you can pass it to PHRETS for some additional
 // insight into what PHRETS is doing.
 //
 // $log = new \Monolog\Logger('PHRETS');
 // $log->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', \Monolog\Logger::DEBUG));
-// $rets->setLogger($log);
+// $rets = new Session($config, logger: $log);
 
 $connect = $rets->Login();
 
@@ -63,59 +110,20 @@ foreach ($results as $r) {
 }
 ```
 
-### Introduction
-
-PHRETS provides PHP developers a way to integrate RETS functionality directly within new or existing code by handling the following aspects for you:
-
-* Response parsing (XML, HTTP multipart, etc.)
-* Simple variables, arrays and objects returned to the developer
-* RETS communication (over HTTP)
-* HTTP Header management
-* Authentication
-* Session/Cookie management
-* PHP 8.2+ supported
-
-### Installation
-
-The easiest way to get started is using [Composer](http://getcomposer.org) to install 
-
-```js
-{
-    "repositories": [
-        {
-          "type": "git",
-          "url": "https://github.com/QoboLtd/PHRETS.git"
-        }
-    ],
-    "require": {
-        "qoboltd/phrets": "^2.0"
-    }
-}
-```
- 
-### Get Help
-Please use the GitHub's issue tracker for bugs/suggestions.
-
-### Disclaimer  
-In many cases, the capabilities provided by this library are dependent on these features being properly implemented by the RETS server you're accessing.  The RETS specification defines how clients and servers communicate, and if a server is doing something unexpected, this library may not work without tweaking some options.
-
-## Documentation
-
 #### Configuration
 
 The first step with getting connected to a RETS server is to configure the connection.
 
 ```php
-$config = new \PHRETS\Configuration;
+$config = new \PHRETS\Configuration(version: \PHRETS\Enums\RETSVersion::VERSION_1_7_2);
 $config->setLoginUrl($rets_login_url);
 $config->setUsername($rets_username);
 $config->setPassword($rets_password);
 
 // optional.  value shown below are the defaults used when not overridden
-$config->setRetsVersion('1.7.2'); // see constants from \PHRETS\Versions\RETSVersion
 $config->setUserAgent('PHRETS/2.0');
 $config->setUserAgentPassword($rets_user_agent_password); // string password, if given
-$config->setHttpAuthenticationMethod('digest'); // or 'basic' if required 
+$config->setHttpAuthenticationMethod('digest'); // or 'basic' if required
 $config->setOption('use_post_method', false); // boolean
 $config->setOption('disable_follow_location', false); // boolean
 ```
@@ -228,11 +236,8 @@ $results->last();
 // returns an array representing the collected values from the identified field
 $all_ids = $results->lists('ListingID');
 
-// export the results in CSV format
-$results->toCSV();
-
 // export the results in JSON format
-$results->toJSON();
+json_encode($results);
 
 // export the results in a simple array format
 $results->toArray();
@@ -244,29 +249,30 @@ Because each $record is an object, some helper methods exist:
 $record->isRestricted('Address'); // determine if the RETS server blocked this value
 $record->getFields(); // return an array of the field names associated with this record
 $record->toArray(); // returns a true PHP array of the given record
-$record->toJson(); // returns a JSON encoded string representing the record
+json_encode($record); // returns a JSON encoded string representing the record
 $record->getResource(); // returns the RETS Resource responsible for this record
 $record->getClass(); // returns the RETS Class responsible for this record
 ```
 
 #### Downloading Media (Photos, Images, Documents, etc.)
 
-The returned value from a `$rets->GetObject()` call is a `\Illuminate\Support\Collection` object which allows many common array-like features as well as some helper methods.
+The returned value from a `$rets->GetObject()` call is an array.
+The library provides some helper methods for convenience.
 
 ```php
 $objects = $rets->GetObject($rets_resource, $object_type, $object_keys);
 
 // grab the first object of the set
-$objects->first();
+\PHRETS\Arr::first($objects);
 
 // grab the last object of the set
-$objects->last();
+\PHRETS\Arr::last($objects);
 
 // throw out everything but the first 10 objects
-$objects = $objects->slice(0, 10);
+$objects = array_slice($objects, 0, 10);
 ```
 
-Each object within that collection is a `\PHRETS\Models\BaseObject` object with it's own set of helper methods:
+Each object within the array is a `\PHRETS\Models\BaseObject` object with it's own set of helper methods:
 
 ```php
 $objects = $rets->GetObject( see above documentation );

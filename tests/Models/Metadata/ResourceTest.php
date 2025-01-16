@@ -1,12 +1,15 @@
 <?php
+namespace PHRETS\Test\Models\Metadata;
 
+use BadMethodCallException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Models\Metadata\Resource;
 
 class ResourceTest extends TestCase
 {
-    /** @test **/
-    public function itHolds()
+    #[Test]
+    public function itHolds(): void
     {
         $metadata = new Resource();
         $metadata->setDescription('Test Description');
@@ -14,10 +17,8 @@ class ResourceTest extends TestCase
         $this->assertSame('Test Description', $metadata->getDescription());
     }
 
-    /**
-     * @test
-     **/
-    public function itDoesntLikeBadMethods()
+    #[Test]
+    public function itDoesntLikeBadMethods(): void
     {
         $this->expectException(BadMethodCallException::class);
         $metadata = new Resource();
@@ -25,16 +26,16 @@ class ResourceTest extends TestCase
         $metadata->totallyBogus();
     }
 
-    /** @test **/
-    public function itReturnsNullForUnrecognizedAttributes()
+    #[Test]
+    public function itReturnsNullForUnrecognizedAttributes(): void
     {
         $metadata = new Resource();
         // @phpstan-ignore-next-line method.notFound
         $this->assertNull($metadata->getSomethingFake());
     }
 
-    /** @test **/
-    public function itWorksLikeAnArray()
+    #[Test]
+    public function itWorksLikeAnArray(): void
     {
         $metadata = new Resource();
         $metadata->setDescription('Test Description');
@@ -43,8 +44,8 @@ class ResourceTest extends TestCase
         $this->assertSame('Test Description', $metadata['Description']);
     }
 
-    /** @test **/
-    public function itSetsLikeAnArray()
+    #[Test]
+    public function itSetsLikeAnArray(): void
     {
         $metadata = new Resource();
         $metadata['Description'] = 'Array setter';
