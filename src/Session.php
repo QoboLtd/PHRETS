@@ -10,6 +10,7 @@ use GuzzleHttp\Exception\ClientException;
 use PHRETS\Exceptions\CapabilityUnavailable;
 use PHRETS\Exceptions\MissingConfiguration;
 use PHRETS\Exceptions\RETSException;
+use PHRETS\Http\ClientBuilder;
 use PHRETS\Http\Response;
 use PHRETS\Interpreters\GetObject;
 use PHRETS\Interpreters\Search;
@@ -50,7 +51,7 @@ class Session
             $this->debug('Loading ' . $logger::class . ' logger');
         }
 
-        $this->client = $client ?? new Client([]);
+        $this->client = $client ?? ClientBuilder::build();
         $this->cookie_jar = $cookieJar ?? new CookieJar();
 
         // start up the Capabilities tracker and add Login as the first one
