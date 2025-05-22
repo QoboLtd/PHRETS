@@ -47,4 +47,16 @@ class SingleTest extends TestCase
 
         $this->assertTrue($obj->isError());
     }
+
+    #[Test]
+    public function it_sees_custom_headers()
+    {
+        $parser = new Single;
+        $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/plain', 'X-Custom' => 'Value'], 'Test'));
+        $obj = $parser->parse($single);
+
+        $this->assertSame('Test', $obj->getContent());
+        $this->assertSame('text/plain', $obj->getContentType());
+        $this->assertSame('Value', $obj->getHeader('X-Custom'));
+    }
 }
