@@ -35,7 +35,12 @@ class MultipleTest extends TestCase
                 0 => 'Mon, 09 Jun 2014 00:10:51 GMT',
             ],
         ];
-        $body = json_decode(file_get_contents('tests/Fixtures/GetObject/Multiple1.txt'), true, 512, JSON_THROW_ON_ERROR);
+        $body = json_decode(
+            file_get_contents('tests/Fixtures/GetObject/Multiple1.txt'),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
 
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));

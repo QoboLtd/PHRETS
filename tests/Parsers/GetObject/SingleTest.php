@@ -49,10 +49,12 @@ class SingleTest extends TestCase
     }
 
     #[Test]
-    public function it_sees_custom_headers()
+    public function itSeesCustomHeaders(): void
     {
-        $parser = new Single;
-        $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/plain', 'X-Custom' => 'Value'], 'Test'));
+        $parser = new Single();
+        $single = new PHRETSResponse(
+            new Response(200, ['Content-Type' => 'text/plain', 'X-Custom' => 'Value'], 'Test')
+        );
         $obj = $parser->parse($single);
 
         $this->assertSame('Test', $obj->getContent());

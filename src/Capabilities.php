@@ -31,7 +31,9 @@ class Capabilities
         // relative URL given, so build this into an absolute URL
         $login_url = $this->get('Login');
         if (!is_string($login_url)) {
-            throw new \InvalidArgumentException("Cannot automatically determine absolute path for '{$capability}' given");
+            throw new \InvalidArgumentException(
+                "Cannot automatically determine absolute path for '{$capability}' given"
+            );
         }
 
         $parts = parse_url($login_url);
