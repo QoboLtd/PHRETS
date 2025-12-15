@@ -37,11 +37,6 @@ use ArrayAccess;
  */
 class Arr
 {
-    public static function accessible(mixed $value): bool
-    {
-        return is_array($value) || $value instanceof ArrayAccess;
-    }
-
     /**
      * Determine if the given key exists in the provided array.
      *
@@ -68,10 +63,6 @@ class Arr
      */
     public static function get(ArrayAccess|array $array, string|int|null $key): mixed
     {
-        if (!self::accessible($array)) {
-            return null;
-        }
-
         if ($key === null) {
             return $array;
         }
@@ -85,11 +76,11 @@ class Arr
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (self::accessible($array) && self::exists($array, $segment)) {
-                $array = $array[$segment];
-            } else {
+            if (!is_array($array) && !$array instanceof ArrayAccess) {
                 return null;
             }
+
+            $array = $array[$segment];
         }
 
         return $array;

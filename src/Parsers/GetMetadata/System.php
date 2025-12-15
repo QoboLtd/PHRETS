@@ -31,13 +31,19 @@ class System extends Base
                 $metadata->setSystemDescription((string) $base->System->SystemDescription);
             }
         } else {
-            if (property_exists($base->SYSTEM->attributes(), 'SystemID') && $base->SYSTEM->attributes()->SystemID !== null) {
+            if (property_exists($base->SYSTEM->attributes(), 'SystemID') &&
+                $base->SYSTEM->attributes()->SystemID !== null
+            ) {
                 $metadata->setSystemID((string) $base->SYSTEM->attributes()->SystemID);
             }
-            if (property_exists($base->SYSTEM->attributes(), 'SystemDescription') && $base->SYSTEM->attributes()->SystemDescription !== null) {
+            if (property_exists($base->SYSTEM->attributes(), 'SystemDescription') &&
+                $base->SYSTEM->attributes()->SystemDescription !== null
+            ) {
                 $metadata->setSystemDescription((string) $base->SYSTEM->attributes()->SystemDescription);
             }
-            if (property_exists($base->SYSTEM->attributes(), 'TimeZoneOffset') && $base->SYSTEM->attributes()->TimeZoneOffset !== null) {
+            if (property_exists($base->SYSTEM->attributes(), 'TimeZoneOffset') &&
+                $base->SYSTEM->attributes()->TimeZoneOffset !== null
+            ) {
                 $metadata->setTimeZoneOffset((string) $base->SYSTEM->attributes()->TimeZoneOffset);
             }
         }

@@ -45,7 +45,9 @@ class RecursiveOneX
 
             // test if we're actually paginating
             if ($this->isPaginationBroken($rs, $inner_rs)) {
-                throw new AutomaticPaginationError("Automatic pagination doesn't not appear to be supported by the server");
+                throw new AutomaticPaginationError(
+                    "Automatic pagination doesn't not appear to be supported by the server"
+                );
             }
 
             foreach ($inner_rs as $ir) {
