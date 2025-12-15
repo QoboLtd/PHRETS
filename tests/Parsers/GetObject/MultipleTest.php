@@ -48,6 +48,7 @@ class MultipleTest extends TestCase
         $obj = $collection[0];
         $this->assertSame('Exterior Main View', $obj->getContentDescription());
         $this->assertSame('http://url1.jpg', $obj->getLocation());
+        $this->assertSame('http://url1.jpg', $obj->getHeader('Location'));
     }
 
     #[Test]

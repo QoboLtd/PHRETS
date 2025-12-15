@@ -22,12 +22,10 @@ class Single
         $obj->setMimeVersion($response->getHeader('MIME-Version'));
         $obj->setPreferred($response->getHeader('Preferred'));
 
-        // Store all headers
-        $headers = [];
-        foreach ($response->getHeaders() as $headerName => $headerValue) {
-            $headers[$headerName] = is_array($headerValue) ? implode(',', $headerValue) : $headerValue;
+        // collect all headers
+        foreach ($response->getHeaders() as $name => $value) {
+            $obj->setHeader($name, implode('; ', $value));
         }
-        $obj->setHeaders($headers);
 
         if ($this->isError($response)) {
             $xml = $response->xml();
