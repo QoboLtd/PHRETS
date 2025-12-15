@@ -125,7 +125,10 @@ class SessionIntegrationTest extends BaseIntegration
 
         $this->assertCount(1, $container);
         $last_request = $container[count($container) - 1];
-        $this->assertMatchesRegularExpression('/Digest/', implode(', ', $last_request['request']->getHeader('RETS-UA-Authorization')));
+        $this->assertMatchesRegularExpression(
+            '/Digest/',
+            implode(', ', $last_request['request']->getHeader('RETS-UA-Authorization'))
+        );
         $this->assertArrayHasKey('Accept', $last_request['request']->getHeaders());
     }
 

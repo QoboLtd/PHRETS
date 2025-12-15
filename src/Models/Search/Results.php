@@ -67,7 +67,9 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
         if (is_callable($keyed_by)) {
             $this->results[$keyed_by($record)] = $record;
         } elseif ($keyed_by) {
-            $this->results[$record->get($keyed_by)] = $record;
+            $key = $record->get($keyed_by);
+            assert(is_int($key) || is_string($key));
+            $this->results[$key] = $record;
         } else {
             $this->results[] = $record;
         }
@@ -248,6 +250,7 @@ class Results implements Countable, ArrayAccess, IteratorAggregate, JsonSerializ
 
     public function offsetUnset(mixed $offset): void
     {
+        assert(is_int($offset) || is_string($offset));
         unset($this->results[$offset]);
     }
 

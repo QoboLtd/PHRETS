@@ -4,6 +4,7 @@ namespace PHRETS\Test\Integration;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Message;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
 use PHRETS\Enums\RETSVersion;
@@ -98,7 +99,7 @@ class BaseIntegration extends TestCase
                         }
 
                         if (!file_exists($this->getFullFilePath($request))) {
-                            file_put_contents($this->getFullFilePath($request), \GuzzleHttp\Psr7\Message::toString($response));
+                            file_put_contents($this->getFullFilePath($request), Message::toString($response));
                         }
 
                         return $response;
@@ -110,7 +111,8 @@ class BaseIntegration extends TestCase
 
     protected function getPath(RequestInterface $request): string
     {
-        $path = $this->path . DIRECTORY_SEPARATOR . strtolower($request->getMethod()) . DIRECTORY_SEPARATOR . $request->getUri()->getHost() . DIRECTORY_SEPARATOR;
+        $path = $this->path . DIRECTORY_SEPARATOR . strtolower($request->getMethod()) . DIRECTORY_SEPARATOR .
+            $request->getUri()->getHost() . DIRECTORY_SEPARATOR;
 
         if ($request->getRequestTarget() !== '/') {
             $rpath = $request->getUri()->getPath();
