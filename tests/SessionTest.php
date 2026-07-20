@@ -79,16 +79,16 @@ class SessionTest extends TestCase
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        $s = new Session($c, logger: $logger);
-
         $count = 0;
         $messages = [
             'Message',
             'Context',
         ];
 
-        $logger->expects($this->any())->method('debug')->willReturnCallback(
-            function ($message) use (&$count, $messages): void {
+        $s = new Session($c, logger: $logger);
+
+        $logger->expects($this->atLeastOnce())->method('debug')->willReturnCallback(
+            function ($message, $context) use (&$count, $messages): void {
                 self::assertSame($messages[$count], $message);
                 $count++;
             }
