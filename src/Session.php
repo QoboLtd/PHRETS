@@ -290,8 +290,13 @@ class Session
      * @param string $resource_id
      * @param string $class_id
      * @param ?string $dmql_query
-     * @param array{Class?:string,SearchType?:string,Query?:?string,RestrictedIndicator?:?string} $optional_parameters
-     *
+     * @param array{
+     *    Class?:string,
+     *    SearchType?:string,
+     *    Query?:?string,
+     *    RestrictedIndicator?:?string,
+     *    Select?:?array<string>,
+     * } $optional_parameters
      *
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
