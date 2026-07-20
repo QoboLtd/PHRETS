@@ -61,8 +61,24 @@ class OneX
     protected function getDelimiter(Session $rets, SimpleXMLElement $xml): string
     {
         if (property_exists($xml, 'DELIMITER') && $xml->DELIMITER !== null) {
+            $codepoint = $xml->DELIMITER->attributes()->value;
+            if ($codepoint === null) {
+                throw new \RuntimeException('DELIMITER tag found but no value attribute given');
+            }
+
+            $codepoint = trim((string)$codepoint);
+
+            if (!is_numeric($codepoint)) {
+                throw new \RuntimeException('DELIMITER value attribute must be numeric');
+            }
+
+            $codepoint = (int)$codepoint;
+            if ($codepoint < 0 || $codepoint > 255) {
+                throw new \RuntimeException('DELIMITER value attribute must be between 0 and 255');
+            }
+
             // delimiter found so we have at least a COLUMNS row to parse
-            return chr("{$xml->DELIMITER->attributes()->value}");
+            return chr($codepoint);
         } else {
             // assume tab delimited since it wasn't given
             $rets->debug('Assuming TAB delimiter since none specified in response');
