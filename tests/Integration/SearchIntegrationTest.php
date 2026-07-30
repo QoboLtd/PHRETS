@@ -10,7 +10,7 @@ class SearchIntegrationTest extends BaseIntegration
     public function itMakesRequests(): void
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
-        $this->assertCount(3, $results);
+        self::assertCount(3, $results);
     }
 
     #[Test]
@@ -20,11 +20,11 @@ class SearchIntegrationTest extends BaseIntegration
 
         $record = $results->first();
 
-        $this->assertSame('20000426143505724628000000', $record->get('LIST_0'));
+        self::assertSame('20000426143505724628000000', $record->get('LIST_0'));
 
         $record = $results->last();
 
-        $this->assertTrue(preg_match('/000000$/', $record->get('LIST_1')) === 1);
+        self::assertTrue(preg_match('/000000$/', $record->get('LIST_1')) === 1);
     }
 
     #[Test]
@@ -32,8 +32,8 @@ class SearchIntegrationTest extends BaseIntegration
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
-        $this->assertSame(3, $results->getReturnedResultsCount());
-        $this->assertSame(9057, $results->getTotalResultsCount());
+        self::assertSame(3, $results->getReturnedResultsCount());
+        self::assertSame(9057, $results->getTotalResultsCount());
     }
 
     #[Test]
@@ -41,7 +41,7 @@ class SearchIntegrationTest extends BaseIntegration
     {
         $results = $this->session->Search('Property', 'A', '*', ['Select' => $this->search_select, 'Limit' => 3]);
 
-        $this->assertTrue($results->isMaxRowsReached());
+        self::assertTrue($results->isMaxRowsReached());
     }
 
     #[Test]
@@ -49,9 +49,9 @@ class SearchIntegrationTest extends BaseIntegration
     {
         /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => 'LIST_1,LIST_105']);
-        $this->assertContains('LIST_1', $results->getHeaders());
-        $this->assertCount(2, $results->getHeaders());
-        $this->assertNotContains('LIST_22', $results->getHeaders());
+        self::assertContains('LIST_1', $results->getHeaders());
+        self::assertCount(2, $results->getHeaders());
+        self::assertNotContains('LIST_22', $results->getHeaders());
     }
 
     #[Test]
@@ -59,16 +59,16 @@ class SearchIntegrationTest extends BaseIntegration
     {
         /** @var \PHRETS\Models\Search\Results $results */
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
-        $this->assertContains('LIST_1', $results->getHeaders());
-        $this->assertCount(2, $results->getHeaders());
-        $this->assertNotContains('LIST_22', $results->getHeaders());
+        self::assertContains('LIST_1', $results->getHeaders());
+        self::assertCount(2, $results->getHeaders());
+        self::assertNotContains('LIST_22', $results->getHeaders());
     }
 
     #[Test]
     public function itProvidesAccessToAssociatedMetadata(): void
     {
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
-        $this->assertInstanceOf(\PHRETS\Models\Metadata\Table::class, Arr::first($results->getMetadata()));
+        self::assertInstanceOf(\PHRETS\Models\Metadata\Table::class, Arr::first($results->getMetadata()));
     }
 
     #[Test]
@@ -84,7 +84,7 @@ class SearchIntegrationTest extends BaseIntegration
             true
         );
 
-        $this->assertCount(40, $results);
+        self::assertCount(40, $results);
     }
 
     #[Test]
@@ -100,7 +100,7 @@ class SearchIntegrationTest extends BaseIntegration
             ['Limit' => '15', 'Select' => 'LIST_1']
         );
 
-        $this->assertCount(1, $results->getHeaders());
+        self::assertCount(1, $results->getHeaders());
     }
 
     #[Test]
@@ -117,7 +117,7 @@ class SearchIntegrationTest extends BaseIntegration
             true
         );
 
-        $this->assertCount(40, $results);
+        self::assertCount(40, $results);
     }
 
     #[Test]

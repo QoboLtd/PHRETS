@@ -34,7 +34,7 @@ class StrategyIntegrationTest extends BaseIntegration
 
         $system = $this->session->GetSystemMetadata();
 
-        $this->assertEquals('custom', $system->getSystemID());
+        self::assertEquals('custom', $system->getSystemID());
     }
 
     #[Test]
@@ -52,7 +52,7 @@ class StrategyIntegrationTest extends BaseIntegration
         );
 
         $results = $this->session->Search('Property', 'A', '*', ['Limit' => 3, 'Select' => ['LIST_1', 'LIST_105']]);
-        $this->assertContains('LIST_10000', $results->getHeaders());
-        $this->assertNotContains('LIST_1', $results->getHeaders());
+        self::assertContains('LIST_10000', $results->getHeaders());
+        self::assertNotContains('LIST_1', $results->getHeaders());
     }
 }

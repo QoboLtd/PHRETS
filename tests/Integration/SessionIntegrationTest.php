@@ -15,14 +15,14 @@ class SessionIntegrationTest extends BaseIntegration
     {
         assert($this->session !== null);
         $connect = $this->session->Login();
-        $this->assertNull($connect->getBody());
+        self::assertNull($connect->getBody());
     }
 
     #[Test]
     public function itMadeTheRequest(): void
     {
         $this->session->Login();
-        $this->assertSame('http://retsgw.flexmls.com:80/rets2_1/Login', $this->session->getLastRequestURL());
+        self::assertSame('http://retsgw.flexmls.com:80/rets2_1/Login', $this->session->getLastRequestURL());
     }
 
     #[Test]
@@ -40,7 +40,7 @@ class SessionIntegrationTest extends BaseIntegration
         $this->session->Login();
 
         // find something in the login response that we can count on
-        $this->assertMatchesRegularExpression('/NotificationFeed/', $this->session->getLastResponse());
+        self::assertMatchesRegularExpression('/NotificationFeed/', $this->session->getLastResponse());
     }
 
     #[Test]
@@ -48,7 +48,7 @@ class SessionIntegrationTest extends BaseIntegration
     {
         $this->session->Login();
 
-        $this->assertTrue($this->session->Disconnect());
+        self::assertTrue($this->session->Disconnect());
     }
 
     #[Test]
@@ -64,7 +64,7 @@ class SessionIntegrationTest extends BaseIntegration
         $session = $this->createSession($config);
         $bulletin = $session->Login();
 
-        $this->assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
+        self::assertMatchesRegularExpression('/found an Action/', $bulletin->getBody());
     }
 
     #[Test]
@@ -82,10 +82,10 @@ class SessionIntegrationTest extends BaseIntegration
         $session->Login();
 
         $system = $session->GetSystemMetadata();
-        $this->assertSame('demomls', $system->getSystemID());
+        self::assertSame('demomls', $system->getSystemID());
 
         $results = $session->Search('Property', 'A', '*', ['Limit' => 1, 'Select' => 'LIST_1']);
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
     }
 
     #[Test]
@@ -96,7 +96,7 @@ class SessionIntegrationTest extends BaseIntegration
         // mocked request to give back a session ID
         $this->session->GetTableMetadata('Property', 'RETSSESSIONID');
 
-        $this->assertSame('21AC8993DC98DDCE648423628ECF4AB5', $this->session->getRetsSessionId());
+        self::assertSame('21AC8993DC98DDCE648423628ECF4AB5', $this->session->getRetsSessionId());
     }
 
     #[Test]
@@ -123,13 +123,13 @@ class SessionIntegrationTest extends BaseIntegration
 
         $session->Login();
 
-        $this->assertCount(1, $container);
+        self::assertCount(1, $container);
         $last_request = $container[count($container) - 1];
-        $this->assertMatchesRegularExpression(
+        self::assertMatchesRegularExpression(
             '/Digest/',
             implode(', ', $last_request['request']->getHeader('RETS-UA-Authorization'))
         );
-        $this->assertArrayHasKey('Accept', $last_request['request']->getHeaders());
+        self::assertArrayHasKey('Accept', $last_request['request']->getHeaders());
     }
 
     #[Test]
@@ -153,7 +153,7 @@ class SessionIntegrationTest extends BaseIntegration
     public function testDetailsAreAvailableFromLogin(): void
     {
         $connect = $this->session->Login();
-        $this->assertSame('UNKNOWN', $connect->getMemberName());
-        $this->assertNotNull($connect->getMetadataVersion());
+        self::assertSame('UNKNOWN', $connect->getMemberName());
+        self::assertNotNull($connect->getMetadataVersion());
     }
 }

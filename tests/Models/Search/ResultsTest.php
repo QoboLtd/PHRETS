@@ -32,7 +32,7 @@ class ResultsTest extends TestCase
     #[Test]
     public function itHoldsRecords(): void
     {
-        $this->assertCount(2, $this->rs);
+        self::assertCount(2, $this->rs);
     }
 
     #[Test]
@@ -40,9 +40,9 @@ class ResultsTest extends TestCase
     {
         $this->rs->keyResultsBy('id');
 
-        $this->assertSame('left', $this->rs->find(1)?->get('name'));
-        $this->assertSame('right', $this->rs->find(2)?->get('name'));
-        $this->assertNull($this->rs->find(3));
+        self::assertSame('left', $this->rs->find(1)?->get('name'));
+        self::assertSame('right', $this->rs->find(2)?->get('name'));
+        self::assertNull($this->rs->find(3));
     }
 
     #[Test]
@@ -58,8 +58,8 @@ class ResultsTest extends TestCase
             }
         );
 
-        $this->assertTrue(is_object($this->rs->find('1_left')));
-        $this->assertSame('up', $this->rs->find('1_left')->get('value'));
+        self::assertTrue(is_object($this->rs->find('1_left')));
+        self::assertSame('up', $this->rs->find('1_left')->get('value'));
     }
 
     #[Test]
@@ -67,11 +67,11 @@ class ResultsTest extends TestCase
     {
         $found = false;
         foreach ($this->rs as $rs) {
-            if ($rs->get('name') == 'right') {
+            if ($rs->get('name') === 'right') {
                 $found = true;
             }
         }
-        $this->assertTrue($found);
+        self::assertTrue($found);
     }
 
     #[Test]
@@ -81,7 +81,7 @@ class ResultsTest extends TestCase
         $rs = new Results();
         $rs->setMetadata($metadata);
 
-        $this->assertSame($metadata, $rs->getMetadata());
+        self::assertSame($metadata, $rs->getMetadata());
     }
 
     #[Test]
@@ -91,7 +91,7 @@ class ResultsTest extends TestCase
         $rs = new Results();
         $rs->setHeaders($fields);
 
-        $this->assertSame($fields, $rs->getHeaders());
+        self::assertSame($fields, $rs->getHeaders());
     }
 
     #[Test]
@@ -101,8 +101,8 @@ class ResultsTest extends TestCase
         $rs->setTotalResultsCount(1000);
         $rs->setReturnedResultsCount(500);
 
-        $this->assertSame(1000, $rs->getTotalResultsCount());
-        $this->assertSame(500, $rs->getReturnedResultsCount());
+        self::assertSame(1000, $rs->getTotalResultsCount());
+        self::assertSame(500, $rs->getReturnedResultsCount());
     }
 
     #[Test]
@@ -112,8 +112,8 @@ class ResultsTest extends TestCase
         $rs->setResource('Property');
         $rs->setClass('A');
 
-        $this->assertSame('Property', $rs->getResource());
-        $this->assertSame('A', $rs->getClass());
+        self::assertSame('Property', $rs->getResource());
+        self::assertSame('A', $rs->getClass());
     }
 
     #[Test]
@@ -132,12 +132,12 @@ class ResultsTest extends TestCase
 
         $this->rs->keyResultsBy('id');
 
-        $this->assertSame('left', $this->rs['1']->get('name'));
-        $this->assertFalse(isset($this->rs['bogus_record']));
+        self::assertSame('left', $this->rs['1']->get('name'));
+        self::assertFalse(isset($this->rs['bogus_record']));
         unset($this->rs['1']);
-        $this->assertFalse(isset($this->rs['1']));
-        $this->assertTrue(isset($this->rs['extra']));
-        $this->assertTrue(isset($this->rs['bonus']));
+        self::assertFalse(isset($this->rs['1']));
+        self::assertTrue(isset($this->rs['extra']));
+        self::assertTrue(isset($this->rs['bonus']));
     }
 
     #[Test]
@@ -145,7 +145,7 @@ class ResultsTest extends TestCase
     {
         $rs = new Results();
         $rs->setError('test');
-        $this->assertSame('test', $rs->getError());
+        self::assertSame('test', $rs->getError());
     }
 
     #[Test]
@@ -156,7 +156,7 @@ class ResultsTest extends TestCase
         $config->setLoginUrl('https://www.test-rets.com/login');
         $session = new \PHRETS\Session($config);
         $rs->setSession($session);
-        $this->assertSame($session, $rs->getSession());
+        self::assertSame($session, $rs->getSession());
     }
 
     #[Test]
@@ -179,7 +179,7 @@ class ResultsTest extends TestCase
         $r->set('name', 'another');
         $rs->addRecord($r);
 
-        $this->assertSame(['extra', 'bonus'], $rs->lists('id'));
+        self::assertSame(['extra', 'bonus'], $rs->lists('id'));
     }
 
     #[Test]
@@ -203,14 +203,14 @@ class ResultsTest extends TestCase
         $r->set('name', 'test');
         $rs->addRecord($r);
 
-        $this->assertSame(['extra', 'bonus'], $rs->lists('id'));
+        self::assertSame(['extra', 'bonus'], $rs->lists('id'));
     }
 
     #[Test]
     public function itConvertsObjectToJSON(): void
     {
         $expected = '[{"id":1,"name":"left","value":"up"},{"id":2,"name":"right","value":"down"}]';
-        $this->assertSame($expected, json_encode($this->rs, JSON_THROW_ON_ERROR));
+        self::assertSame($expected, json_encode($this->rs, JSON_THROW_ON_ERROR));
     }
 
     #[Test]
@@ -220,6 +220,6 @@ class ResultsTest extends TestCase
             ['id' => 1, 'name' => 'left', 'value' => 'up'],
             ['id' => 2, 'name' => 'right', 'value' => 'down'],
         ];
-        $this->assertSame($expected, $this->rs->toArray());
+        self::assertSame($expected, $this->rs->toArray());
     }
 }

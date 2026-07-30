@@ -14,8 +14,8 @@ class CapabilitiesTest extends TestCase
         $cpb = new Capabilities();
         $cpb->add('login', 'http://www.reso.org/login');
 
-        $this->assertNotNull($cpb->get('login'));
-        $this->assertNull($cpb->get('test'));
+        self::assertNotNull($cpb->get('login'));
+        self::assertNull($cpb->get('test'));
     }
 
     #[Test]
@@ -33,7 +33,7 @@ class CapabilitiesTest extends TestCase
         $cpb->add('Login', 'http://www.google.com/login');
 
         $cpb->add('Search', '/search');
-        $this->assertSame('http://www.google.com:80/search', $cpb->get('Search'));
+        self::assertSame('http://www.google.com:80/search', $cpb->get('Search'));
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class CapabilitiesTest extends TestCase
         $cpb->add('Login', 'http://www.google.com:8080/login');
 
         $cpb->add('Search', '/search');
-        $this->assertSame('http://www.google.com:8080/search', $cpb->get('Search'));
+        self::assertSame('http://www.google.com:8080/search', $cpb->get('Search'));
     }
 
     public function testBoolCapability(): void
@@ -51,7 +51,7 @@ class CapabilitiesTest extends TestCase
         $caps = new Capabilities();
         $caps->add('BoolFlag', true);
 
-        $this->assertSame(true, $caps->get('BoolFlag'));
+        self::assertSame(true, $caps->get('BoolFlag'));
     }
 
     public function testIntCapability(): void
@@ -59,6 +59,6 @@ class CapabilitiesTest extends TestCase
         $caps = new Capabilities();
         $caps->add('IntFlag', 256);
 
-        $this->assertSame(256, $caps->get('IntFlag'));
+        self::assertSame(256, $caps->get('IntFlag'));
     }
 }

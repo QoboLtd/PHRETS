@@ -10,18 +10,18 @@ class BulletinTest extends TestCase
     #[Test]
     public function itHolds(): void
     {
-        $this->assertSame('Hello World', (new Bulletin())->setBody('Hello World')->getBody());
+        self::assertSame('Hello World', (new Bulletin())->setBody('Hello World')->getBody());
     }
 
     #[Test]
     public function itTurnsItselfIntoAString(): void
     {
-        $this->assertSame('Hello World', (string) (new Bulletin())->setBody('Hello World'));
+        self::assertSame('Hello World', (string) (new Bulletin())->setBody('Hello World'));
     }
 
     public function testDetailsAreMadeAvailable(): void
     {
         $bulletin = new Bulletin(['Test' => 'Value']);
-        $this->assertSame('Value', $bulletin->getDetail('Test'));
+        self::assertSame('Value', $bulletin->getDetail('Test'));
     }
 }

@@ -14,7 +14,7 @@ class RecordTest extends TestCase
         $r = new Record();
         $r->set('name', 'value');
 
-        $this->assertSame('value', $r->get('name'));
+        self::assertSame('value', $r->get('name'));
     }
 
     #[Test]
@@ -25,9 +25,9 @@ class RecordTest extends TestCase
         $r->set(2, 'two');
         $r->set(3, 'three');
 
-        $this->assertSame('1', $r->get('one'));
-        $this->assertSame('two', $r->get(2));
-        $this->assertSame('three', $r->get('3'));
+        self::assertSame('1', $r->get('one'));
+        self::assertSame('two', $r->get(2));
+        self::assertSame('three', $r->get('3'));
     }
 
     #[Test]
@@ -41,8 +41,8 @@ class RecordTest extends TestCase
         $r->set('another', $rs->getRestrictedIndicator());
         $rs->addRecord($r);
 
-        $this->assertFalse($r->isRestricted('name'));
-        $this->assertTrue($r->isRestricted('another'));
+        self::assertFalse($r->isRestricted('name'));
+        self::assertTrue($r->isRestricted('another'));
     }
 
     #[Test]
@@ -52,7 +52,7 @@ class RecordTest extends TestCase
         $r->set('ListingID', '123456789');
         $r->set('MLS', 'demo');
 
-        $this->assertSame(['ListingID' => '123456789', 'MLS' => 'demo'], $r->toArray());
+        self::assertSame(['ListingID' => '123456789', 'MLS' => 'demo'], $r->toArray());
     }
 
     #[Test]
@@ -62,8 +62,8 @@ class RecordTest extends TestCase
         $r->set('ListingID', '123456789');
         $r->set('MLS', 'demo');
 
-        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', json_encode($r, JSON_THROW_ON_ERROR));
-        $this->assertSame('{"ListingID":"123456789","MLS":"demo"}', (string) $r);
+        self::assertSame('{"ListingID":"123456789","MLS":"demo"}', json_encode($r, JSON_THROW_ON_ERROR));
+        self::assertSame('{"ListingID":"123456789","MLS":"demo"}', (string) $r);
     }
 
     #[Test]
@@ -77,9 +77,9 @@ class RecordTest extends TestCase
         $rs->addRecord(new Record());
 
         foreach ($rs as $r) {
-            $this->assertSame('Property', $r->getResource());
-            $this->assertSame('A', $r->getClass());
-            $this->assertSame(['LIST_1', 'LIST_2', 'LIST_3'], $r->getFields());
+            self::assertSame('Property', $r->getResource());
+            self::assertSame('A', $r->getClass());
+            self::assertSame(['LIST_1', 'LIST_2', 'LIST_3'], $r->getFields());
         }
     }
 
@@ -94,10 +94,10 @@ class RecordTest extends TestCase
         $r['to'] = 'remove';
         unset($r['to']);
 
-        $this->assertSame('1', $r['one']);
-        $this->assertFalse(isset($r['bogus']));
-        $this->assertNull($r['bogus']);
-        $this->assertSame('else', $r['something']);
-        $this->assertNull($r['to']);
+        self::assertSame('1', $r['one']);
+        self::assertFalse(isset($r['bogus']));
+        self::assertNull($r['bogus']);
+        self::assertSame('else', $r['something']);
+        self::assertNull($r['to']);
     }
 }

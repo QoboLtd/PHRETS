@@ -10,19 +10,19 @@ class SearchTest extends TestCase
     #[Test]
     public function itDoesntTouchProperlyFormattedDmql(): void
     {
-        $this->assertSame('(FIELD=VALUE)', Search::dmql('(FIELD=VALUE)'));
+        self::assertSame('(FIELD=VALUE)', Search::dmql('(FIELD=VALUE)'));
     }
 
     #[Test]
     public function itWrapsSimplifiedDmqlInParens(): void
     {
-        $this->assertSame('(FIELD=VALUE)', Search::dmql('FIELD=VALUE'));
+        self::assertSame('(FIELD=VALUE)', Search::dmql('FIELD=VALUE'));
     }
 
     #[Test]
     public function itDoesntModifyWhenSpecialCharactersAreUsed(): void
     {
-        $this->assertSame('*', Search::dmql('*'));
-        $this->assertSame('', Search::dmql(''));
+        self::assertSame('*', Search::dmql('*'));
+        self::assertSame('', Search::dmql(''));
     }
 }

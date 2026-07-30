@@ -1,0 +1,283 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: src/Capabilities.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: '#^Only booleans are allowed in &&, string\|null given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: '#^Only booleans are allowed in &&, string\|null given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: '#^Variable method call on PHRETS\\Configuration\.$#'
+			identifier: method.dynamicName
+			count: 1
+			path: src/Configuration.php
+
+		-
+			message: '#^Only booleans are allowed in &&, int\|false given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: src/Interpreters/GetObject.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: src/Interpreters/Search.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: src/Interpreters/Search.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: src/Interpreters/Search.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: src/Models/BaseObject.php
+
+		-
+			message: '#^Variable method call on \$this\(PHRETS\\Models\\BaseObject\)\.$#'
+			identifier: method.dynamicName
+			count: 1
+			path: src/Models/BaseObject.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: src/Models/Search/Results.php
+
+		-
+			message: '#^Only booleans are allowed in &&, mixed given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: src/Models/Search/Results.php
+
+		-
+			message: '#^Only booleans are allowed in an elseif condition, int\|string\|null given\.$#'
+			identifier: elseif.condNotBoolean
+			count: 1
+			path: src/Models/Search/Results.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int\|string\|null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Models/Search/Results.php
+
+		-
+			message: '#^Variable method call on PHRETS\\Models\\Metadata\\Base\.$#'
+			identifier: method.dynamicName
+			count: 2
+			path: src/Parsers/GetMetadata/Base.php
+
+		-
+			message: '#^Only booleans are allowed in &&, \(SimpleXMLElement\|null\) given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/BaseObject.php
+
+		-
+			message: '#^Only booleans are allowed in &&, \(SimpleXMLElement\|null\) given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/BaseObject.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, \(SimpleXMLElement\|null\) given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/Lookup.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: src/Parsers/GetMetadata/LookupType.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, \(SimpleXMLElement\|null\) given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/LookupType.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, \(SimpleXMLElement\|null\) given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/Resource.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, \(SimpleXMLElement\|null\) given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/ResourceClass.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, \(SimpleXMLElement\|null\) given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/GetMetadata/Table.php
+
+		-
+			message: '#^Variable method call on PHRETS\\Models\\Metadata\\Table\.$#'
+			identifier: method.dynamicName
+			count: 1
+			path: src/Parsers/GetMetadata/Table.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: src/Parsers/GetObject/Single.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: src/Parsers/GetObject/Single.php
+
+		-
+			message: '#^Only booleans are allowed in &&, string given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: src/Parsers/GetObject/Single.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 3
+			path: src/Parsers/Login/OneEight.php
+
+		-
+			message: '#^Only booleans are allowed in &&, string given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: src/Parsers/Login/OneEight.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: src/Parsers/Login/OneX.php
+
+		-
+			message: '#^Casting to string something that''s already string\.$#'
+			identifier: cast.useless
+			count: 1
+			path: src/Parsers/Login/OneX.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: src/Parsers/Login/OneX.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, string given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/Login/OneX.php
+
+		-
+			message: '#^Only booleans are allowed in \|\|, int\|false given on the right side\.$#'
+			identifier: booleanOr.rightNotBoolean
+			count: 1
+			path: src/Parsers/Login/OneX.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, string\|null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Parsers/Search/OneX.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 2
+			path: src/Session.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 3
+			path: src/Session.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 3
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in &&, SimpleXMLElement given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in &&, int\|false given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in &&, mixed given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, Psr\\Log\\LoggerInterface\|null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, bool\|int\|string\|null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			identifier: if.condNotBoolean
+			count: 3
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, string\|null given\.$#'
+			identifier: if.condNotBoolean
+			count: 2
+			path: src/Session.php
+
+		-
+			message: '#^Only booleans are allowed in \|\|, mixed given on the left side\.$#'
+			identifier: booleanOr.leftNotBoolean
+			count: 1
+			path: src/Session.php

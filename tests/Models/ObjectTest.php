@@ -13,7 +13,7 @@ class ObjectTest extends TestCase
         $o = new BaseObject();
         $o->setContent('Test Content');
 
-        $this->assertSame('Test Content', $o->getContent());
+        self::assertSame('Test Content', $o->getContent());
     }
 
     #[Test]
@@ -22,7 +22,7 @@ class ObjectTest extends TestCase
         $o = new BaseObject();
         $o->setContent('Hello');
 
-        $this->assertSame(5, $o->getSize());
+        self::assertSame(5, $o->getSize());
     }
 
     #[Test]
@@ -43,23 +43,23 @@ class ObjectTest extends TestCase
             $o->setFromHeader($k, $v);
         }
 
-        $this->assertSame('image/jpeg', $o->getContentType());
-        $this->assertSame('12345678', $o->getContentId());
-        $this->assertSame('1', $o->getObjectId());
-        $this->assertSame('http://blah', $o->getLocation());
-        $this->assertSame('Main description', $o->getContentDescription());
-        $this->assertSame('Sub description', $o->getContentSubDescription());
-        $this->assertSame('Mime Version', $o->getMimeVersion());
+        self::assertSame('image/jpeg', $o->getContentType());
+        self::assertSame('12345678', $o->getContentId());
+        self::assertSame('1', $o->getObjectId());
+        self::assertSame('http://blah', $o->getLocation());
+        self::assertSame('Main description', $o->getContentDescription());
+        self::assertSame('Sub description', $o->getContentSubDescription());
+        self::assertSame('Mime Version', $o->getMimeVersion());
     }
 
     #[Test]
     public function itMarksPreferredObjects(): void
     {
         $o = new BaseObject();
-        $this->assertFalse($o->isPreferred());
+        self::assertFalse($o->isPreferred());
         $o->setPreferred(1);
-        $this->assertTrue($o->isPreferred());
-        $this->assertSame(1, $o->getPreferred());
+        self::assertTrue($o->isPreferred());
+        self::assertSame(1, $o->getPreferred());
     }
 
     #[Test]
@@ -70,10 +70,10 @@ class ObjectTest extends TestCase
         $e->setMessage('Test Error Message');
 
         $o = new BaseObject();
-        $this->assertFalse($o->isError());
+        self::assertFalse($o->isError());
         $o->setError($e);
-        $this->assertTrue($o->isError());
-        $this->assertSame('1234', $o->getError()?->getCode());
-        $this->assertSame('Test Error Message', $o->getError()->getMessage());
+        self::assertTrue($o->isError());
+        self::assertSame('1234', $o->getError()?->getCode());
+        self::assertSame('Test Error Message', $o->getError()->getMessage());
     }
 }

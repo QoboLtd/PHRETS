@@ -19,9 +19,9 @@ class ConfigurationTest extends TestCase
         $config->setUsername('user');
         $config->setPassword('pass');
 
-        $this->assertSame('http://www.reso.org/login', $config->getLoginUrl());
-        $this->assertSame('user', $config->getUsername());
-        $this->assertSame('pass', $config->getPassword());
+        self::assertSame('http://www.reso.org/login', $config->getLoginUrl());
+        self::assertSame('user', $config->getUsername());
+        self::assertSame('pass', $config->getPassword());
     }
 
     #[Test]
@@ -33,9 +33,9 @@ class ConfigurationTest extends TestCase
             'password' => 'pass',
         ]);
 
-        $this->assertSame('http://www.reso.org/login', $config->getLoginUrl());
-        $this->assertSame('user', $config->getUsername());
-        $this->assertSame('pass', $config->getPassword());
+        self::assertSame('http://www.reso.org/login', $config->getLoginUrl());
+        self::assertSame('user', $config->getUsername());
+        self::assertSame('pass', $config->getPassword());
     }
 
     #[Test]
@@ -49,14 +49,14 @@ class ConfigurationTest extends TestCase
     public function itLoadsDefaultRetsVersion(): void
     {
         $config = new Configuration();
-        $this->assertSame(RETSVersion::VERSION_1_5, $config->getRetsVersion());
+        self::assertSame(RETSVersion::VERSION_1_5, $config->getRetsVersion());
     }
 
     #[Test]
     public function itHandlesVersionsCorrectly(): void
     {
         $config = new Configuration(version: RETSVersion::VERSION_1_7_2);
-        $this->assertSame(RETSVersion::VERSION_1_7_2, $config->getRetsVersion());
+        self::assertSame(RETSVersion::VERSION_1_7_2, $config->getRetsVersion());
     }
 
     #[Test]
@@ -64,7 +64,7 @@ class ConfigurationTest extends TestCase
     {
         $config = new Configuration();
         $config->setUserAgent('PHRETS/2.0');
-        $this->assertSame('PHRETS/2.0', $config->getUserAgent());
+        self::assertSame('PHRETS/2.0', $config->getUserAgent());
     }
 
     #[Test]
@@ -73,8 +73,8 @@ class ConfigurationTest extends TestCase
         $config = new Configuration();
         $config->setUserAgent('PHRETS/2.0');
         $config->setUserAgentPassword('test12345');
-        $this->assertSame('PHRETS/2.0', $config->getUserAgent());
-        $this->assertSame('test12345', $config->getUserAgentPassword());
+        self::assertSame('PHRETS/2.0', $config->getUserAgent());
+        self::assertSame('test12345', $config->getUserAgentPassword());
     }
 
     #[Test]
@@ -82,14 +82,14 @@ class ConfigurationTest extends TestCase
     {
         $config = new Configuration();
         $config->setOption('param', true);
-        $this->assertTrue($config->readOption('param'));
+        self::assertTrue($config->readOption('param'));
     }
 
     #[Test]
     public function itLoadsAStrategy(): void
     {
         $config = new Configuration();
-        $this->assertInstanceOf(SimpleStrategy::class, $config->getStrategy());
+        self::assertInstanceOf(SimpleStrategy::class, $config->getStrategy());
     }
 
     #[Test]
@@ -97,7 +97,7 @@ class ConfigurationTest extends TestCase
     {
         $strategy = new SimpleStrategy();
         $config = new Configuration($strategy);
-        $this->assertSame($strategy, $config->getStrategy());
+        self::assertSame($strategy, $config->getStrategy());
     }
 
     #[Test]
@@ -109,14 +109,14 @@ class ConfigurationTest extends TestCase
             ->setUserAgentPassword('12345');
 
         $s = new Session($c);
-        $this->assertSame('123c96e02e514da469db6bc61ab998dc', $c->userAgentDigestHash($s));
+        self::assertSame('123c96e02e514da469db6bc61ab998dc', $c->userAgentDigestHash($s));
     }
 
     #[Test]
     public function itKeepsDigestAsTheDefault(): void
     {
         $c = new Configuration();
-        $this->assertSame(Configuration::AUTH_DIGEST, $c->getHttpAuthenticationMethod());
+        self::assertSame(Configuration::AUTH_DIGEST, $c->getHttpAuthenticationMethod());
     }
 
     #[Test]
@@ -132,6 +132,6 @@ class ConfigurationTest extends TestCase
     {
         $c = new Configuration();
         $c->setHttpAuthenticationMethod(Configuration::AUTH_BASIC);
-        $this->assertSame(Configuration::AUTH_BASIC, $c->getHttpAuthenticationMethod());
+        self::assertSame(Configuration::AUTH_BASIC, $c->getHttpAuthenticationMethod());
     }
 }
