@@ -16,8 +16,8 @@ class SingleTest extends TestCase
         $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/plain'], 'Test'));
         $obj = $parser->parse($single);
 
-        $this->assertSame('Test', $obj->getContent());
-        $this->assertSame('text/plain', $obj->getContentType());
+        self::assertSame('Test', $obj->getContent());
+        self::assertSame('text/plain', $obj->getContentType());
     }
 
     #[Test]
@@ -30,9 +30,9 @@ class SingleTest extends TestCase
         $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/xml'], $error));
         $obj = $parser->parse($single);
 
-        $this->assertTrue($obj->isError());
-        $this->assertSame('20203', $obj->getError()?->getCode());
-        $this->assertSame('RETS Server: Some error', $obj->getError()->getMessage());
+        self::assertTrue($obj->isError());
+        self::assertSame('20203', $obj->getError()?->getCode());
+        self::assertSame('RETS Server: Some error', $obj->getError()->getMessage());
     }
 
     #[Test]
@@ -45,7 +45,7 @@ class SingleTest extends TestCase
         $single = new PHRETSResponse(new Response(200, ['Content-Type' => 'text/plain', 'RETS-Error' => '1'], $error));
         $obj = $parser->parse($single);
 
-        $this->assertTrue($obj->isError());
+        self::assertTrue($obj->isError());
     }
 
     #[Test]
@@ -57,8 +57,8 @@ class SingleTest extends TestCase
         );
         $obj = $parser->parse($single);
 
-        $this->assertSame('Test', $obj->getContent());
-        $this->assertSame('text/plain', $obj->getContentType());
-        $this->assertSame('Value', $obj->getHeader('X-Custom'));
+        self::assertSame('Test', $obj->getContent());
+        self::assertSame('text/plain', $obj->getContentType());
+        self::assertSame('Value', $obj->getHeader('X-Custom'));
     }
 }

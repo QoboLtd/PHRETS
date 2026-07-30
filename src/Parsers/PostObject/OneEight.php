@@ -16,7 +16,7 @@ class OneEight
         $replyText = (string) $xml['ReplyText'];
         $errors = [];
 
-        if ($xml->ERRORBLOCK) {
+        if ($xml->ERRORBLOCK !== null) {
             $errors = array_map(fn($line) => explode("\t", trim($line)), (array) $xml->ERRORBLOCK->ERRORDATA);
         }
 

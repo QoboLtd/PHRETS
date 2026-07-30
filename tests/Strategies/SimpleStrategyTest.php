@@ -17,7 +17,7 @@ class SimpleStrategyTest extends TestCase
         $strategy = new SimpleStrategy();
         $strategy->initialize($config);
 
-        $this->assertInstanceOf(\PHRETS\Parsers\Login\OneFive::class, $strategy->provide(ParserType::LOGIN));
+        self::assertInstanceOf(\PHRETS\Parsers\Login\OneFive::class, $strategy->provide(ParserType::LOGIN));
     }
 
     #[Test]
@@ -27,7 +27,7 @@ class SimpleStrategyTest extends TestCase
         $strategy = new SimpleStrategy();
         $strategy->initialize($config);
 
-        $this->assertInstanceOf(\PHRETS\Parsers\Login\OneEight::class, $strategy->provide(ParserType::LOGIN));
+        self::assertInstanceOf(\PHRETS\Parsers\Login\OneEight::class, $strategy->provide(ParserType::LOGIN));
     }
 
     #[Test]
@@ -40,6 +40,6 @@ class SimpleStrategyTest extends TestCase
         $parser = $strategy->provide(ParserType::LOGIN);
         $another_parser = $strategy->provide(ParserType::LOGIN);
 
-        $this->assertSame($parser, $another_parser);
+        self::assertSame($parser, $another_parser);
     }
 }

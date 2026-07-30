@@ -37,18 +37,18 @@ class MultipleTest extends TestCase
         ];
 
         $contents = file_get_contents('tests/Fixtures/GetObject/Multiple1.txt');
-        $this->assertNotFalse($contents);
+        self::assertNotFalse($contents);
         $body = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
 
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));
 
-        $this->assertSame(5, count($collection));
+        self::assertSame(5, count($collection));
 
         $obj = $collection[0];
-        $this->assertSame('Exterior Main View', $obj->getContentDescription());
-        $this->assertSame('http://url1.jpg', $obj->getLocation());
-        $this->assertSame('http://url1.jpg', $obj->getHeader('Location'));
+        self::assertSame('Exterior Main View', $obj->getContentDescription());
+        self::assertSame('http://url1.jpg', $obj->getLocation());
+        self::assertSame('http://url1.jpg', $obj->getHeader('Location'));
     }
 
     #[Test]
@@ -56,7 +56,7 @@ class MultipleTest extends TestCase
     {
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, [], null)));
-        $this->assertCount(0, $collection);
+        self::assertCount(0, $collection);
     }
 
     #[Test]
@@ -90,10 +90,10 @@ class MultipleTest extends TestCase
         $parser = new Multiple();
         $collection = $parser->parse(new PHRETSResponse(new Response(200, $headers, $body)));
 
-        $this->assertSame(5, count($collection));
+        self::assertSame(5, count($collection));
 
         $obj = $collection[0];
-        $this->assertSame('Exterior Main View', $obj->getContentDescription());
-        $this->assertSame('http://url1.jpg', $obj->getLocation());
+        self::assertSame('Exterior Main View', $obj->getContentDescription());
+        self::assertSame('http://url1.jpg', $obj->getLocation());
     }
 }

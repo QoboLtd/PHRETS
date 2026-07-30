@@ -45,32 +45,32 @@ GetPayloadList=/GetPayloadList.asmx/GetPayloadList
     #[Test]
     public function itSeesAllTransactions(): void
     {
-        $this->assertSame(7, count($this->parser->getCapabilities()));
+        self::assertSame(7, count($this->parser->getCapabilities()));
     }
 
     #[Test]
     public function itSeesCoreTransactions(): void
     {
-        $this->assertSame('/Search.asmx/Search', $this->parser->getCapabilities()['Search']);
-        $this->assertSame('/Logout.asmx/Logout', $this->parser->getCapabilities()['Logout']);
+        self::assertSame('/Search.asmx/Search', $this->parser->getCapabilities()['Search']);
+        self::assertSame('/Logout.asmx/Logout', $this->parser->getCapabilities()['Logout']);
     }
 
     #[Test]
     public function itSeesAllDetails(): void
     {
-        $this->assertSame(18, count($this->parser->getDetails()));
+        self::assertSame(18, count($this->parser->getDetails()));
     }
 
     #[Test]
     public function itSeesUserDetails(): void
     {
-        $this->assertSame('RESOWG', $this->parser->getDetails()['USER']);
+        self::assertSame('RESOWG', $this->parser->getDetails()['USER']);
     }
 
     #[Test]
     public function itCastsDetails(): void
     {
-        $this->assertIsBool($this->parser->getDetails()['BROKERRECIPFLAG']);
-        $this->assertIsInt($this->parser->getDetails()['SUL']);
+        self::assertIsBool($this->parser->getDetails()['BROKERRECIPFLAG']);
+        self::assertIsInt($this->parser->getDetails()['SUL']);
     }
 }

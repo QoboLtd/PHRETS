@@ -46,24 +46,24 @@ class OneXTest extends TestCase
     #[Test]
     public function itSeesCounts(): void
     {
-        $this->assertSame(9057, $this->results->getTotalResultsCount());
+        self::assertSame(9057, $this->results->getTotalResultsCount());
     }
 
     #[Test]
     public function itSeesColumns(): void
     {
-        $this->assertSame(['LIST_1', 'LIST_105'], $this->results->getHeaders());
+        self::assertSame(['LIST_1', 'LIST_105'], $this->results->getHeaders());
     }
 
     #[Test]
     public function itSeesTheFirstRecord(): void
     {
-        $this->assertSame('20111007152642181995000000', $this->results->first()['LIST_1'] ?? null);
+        self::assertSame('20111007152642181995000000', $this->results->first()['LIST_1'] ?? null);
     }
 
     #[Test]
     public function itSeesMaxrows(): void
     {
-        $this->assertTrue($this->results->isMaxRowsReached());
+        self::assertTrue($this->results->isMaxRowsReached());
     }
 }

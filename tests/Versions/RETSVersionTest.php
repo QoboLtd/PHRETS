@@ -10,19 +10,19 @@ class RETSVersionTest extends TestCase
     #[Test]
     public function itLoads(): void
     {
-        $this->assertSame('1.7.2', RETSVersion::VERSION_1_7_2->value);
+        self::assertSame('1.7.2', RETSVersion::VERSION_1_7_2->value);
     }
 
     #[Test]
     public function itMakesTheHeader(): void
     {
-        $this->assertSame('RETS/1.7.2', RETSVersion::VERSION_1_7_2->asHeader());
+        self::assertSame('RETS/1.7.2', RETSVersion::VERSION_1_7_2->asHeader());
     }
 
     #[Test]
     public function itIs15(): void
     {
-        $this->assertTrue(RETSVersion::VERSION_1_5->isAtLeast(RETSVersion::VERSION_1_5));
+        self::assertTrue(RETSVersion::VERSION_1_5->isAtLeast(RETSVersion::VERSION_1_5));
     }
 
     #[Test]
@@ -30,8 +30,8 @@ class RETSVersionTest extends TestCase
     {
         $v = RETSVersion::VERSION_1_7;
 
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7));
-        $this->assertFalse($v->isAtLeast(RETSVersion::VERSION_1_7_2));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7));
+        self::assertFalse($v->isAtLeast(RETSVersion::VERSION_1_7_2));
     }
 
     #[Test]
@@ -39,9 +39,9 @@ class RETSVersionTest extends TestCase
     {
         $v = RETSVersion::VERSION_1_7_2;
 
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7));
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7_2));
-        $this->assertFalse($v->isAtLeast(RETSVersion::VERSION_1_8));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7_2));
+        self::assertFalse($v->isAtLeast(RETSVersion::VERSION_1_8));
     }
 
     #[Test]
@@ -49,9 +49,9 @@ class RETSVersionTest extends TestCase
     {
         $v = RETSVersion::VERSION_1_8;
 
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_5));
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7));
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7_2));
-        $this->assertTrue($v->isAtLeast(RETSVersion::VERSION_1_8));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_5));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_7_2));
+        self::assertTrue($v->isAtLeast(RETSVersion::VERSION_1_8));
     }
 }

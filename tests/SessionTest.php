@@ -18,7 +18,7 @@ class SessionTest extends TestCase
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
-        $this->assertSame($c, $s->getConfiguration());
+        self::assertSame($c, $s->getConfiguration());
     }
 
     #[Test]
@@ -40,7 +40,7 @@ class SessionTest extends TestCase
 
         $s = new Session($c);
 
-        $this->assertSame('http://www.reso.org/login', $s->getLoginUrl());
+        self::assertSame('http://www.reso.org/login', $s->getLoginUrl());
     }
 
     #[Test]
@@ -52,7 +52,7 @@ class SessionTest extends TestCase
 
         $s = new Session($c);
         $capabilities = $s->getCapabilities();
-        $this->assertSame($login_url, $capabilities->get('Login'));
+        self::assertSame($login_url, $capabilities->get('Login'));
     }
 
     #[Test]
@@ -65,8 +65,8 @@ class SessionTest extends TestCase
         $s = new Session($c);
 
         $defaultOptions = $s->getDefaultOptions();
-        $this->assertArrayHasKey('allow_redirects', $defaultOptions);
-        $this->assertFalse($defaultOptions['allow_redirects']);
+        self::assertArrayHasKey('allow_redirects', $defaultOptions);
+        self::assertFalse($defaultOptions['allow_redirects']);
     }
 
     #[Test]
@@ -103,7 +103,7 @@ class SessionTest extends TestCase
         $logger = $this->createMock(\Monolog\Logger::class);
         assert($logger instanceof LoggerInterface);
         // just expect that a debug message is spit out
-        $logger->expects($this->atLeastOnce())->method('debug')->with($this->matchesRegularExpression('/logger/'));
+        $logger->expects($this->atLeastOnce())->method('debug')->with(self::matchesRegularExpression('/logger/'));
 
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
@@ -118,7 +118,7 @@ class SessionTest extends TestCase
         $c->setLoginUrl('http://www.reso.org/login');
 
         $s = new Session($c);
-        $this->assertInstanceOf(CookieJar::class, $s->getCookieJar());
+        self::assertInstanceOf(CookieJar::class, $s->getCookieJar());
     }
 
     #[Test]
@@ -130,6 +130,6 @@ class SessionTest extends TestCase
 
         $jar = new \GuzzleHttp\Cookie\CookieJar();
         $s = new Session($c, cookieJar: $jar);
-        $this->assertSame($jar, $s->getCookieJar());
+        self::assertSame($jar, $s->getCookieJar());
     }
 }

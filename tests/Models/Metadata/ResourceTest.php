@@ -14,7 +14,7 @@ class ResourceTest extends TestCase
         $metadata = new Resource();
         $metadata->setDescription('Test Description');
 
-        $this->assertSame('Test Description', $metadata->getDescription());
+        self::assertSame('Test Description', $metadata->getDescription());
     }
 
     #[Test]
@@ -31,7 +31,7 @@ class ResourceTest extends TestCase
     {
         $metadata = new Resource();
         // @phpstan-ignore-next-line method.notFound
-        $this->assertNull($metadata->getSomethingFake());
+        self::assertNull($metadata->getSomethingFake());
     }
 
     #[Test]
@@ -40,8 +40,8 @@ class ResourceTest extends TestCase
         $metadata = new Resource();
         $metadata->setDescription('Test Description');
 
-        $this->assertTrue(isset($metadata['Description']));
-        $this->assertSame('Test Description', $metadata['Description']);
+        self::assertTrue(isset($metadata['Description']));
+        self::assertSame('Test Description', $metadata['Description']);
     }
 
     #[Test]
@@ -50,10 +50,10 @@ class ResourceTest extends TestCase
         $metadata = new Resource();
         $metadata['Description'] = 'Array setter';
 
-        $this->assertSame('Array setter', $metadata->getDescription());
+        self::assertSame('Array setter', $metadata->getDescription());
 
         unset($metadata['Description']);
 
-        $this->assertNull($metadata->getDescription());
+        self::assertNull($metadata->getDescription());
     }
 }

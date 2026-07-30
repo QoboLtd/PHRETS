@@ -16,7 +16,7 @@ class ResponseTest extends TestCase
 
         $response = new Response($guzzleResponse);
 
-        $this->assertEquals(1, $response->xml()->count());
+        self::assertEquals(1, $response->xml()->count());
     }
 
     #[Test]
@@ -28,6 +28,6 @@ class ResponseTest extends TestCase
 
         $response = new Response($guzzleResponse);
 
-        $this->assertEquals(1, $response->xml()->count());
+        self::assertEquals(1, $response->xml()->count());
     }
 }
