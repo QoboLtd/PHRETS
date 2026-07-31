@@ -32,7 +32,8 @@
     "ext-json": "*",
     "ext-simplexml": "*",
     "guzzlehttp/guzzle": "^7.2",
-    "psr/log": "^3.0"
+    "psr/log": "^3.0",
+    "zbateson/mail-mime-parser": "^4.0"
   },
   "require-dev": {
     "monolog/monolog": "^3.8",
