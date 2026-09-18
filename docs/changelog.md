@@ -1,5 +1,15 @@
 ## master
 
+* Support Guzzle 8 alongside Guzzle 7
+* Under Guzzle 8, session cookies are kept in the Session's cookie jar instead of libcurl's cookie engine
+  (Guzzle 8 rejects `CURLOPT_COOKIEFILE`). Guzzle 8 runs the Digest handshake through the jar, so cookies
+  set during it are still sent back.
+* Under Guzzle 8, Digest authentication is handled by Guzzle instead of libcurl. Requests with a body
+  (`use_post_method`, `Update`, `PostObject`) are first sent as an empty-body probe. If the server answers that
+  probe without a Digest challenge, Guzzle throws `GuzzleHttp\Exception\ResponseException`, whereas libcurl
+  re-sent the request.
+* `PostObject()` attribute values must be strings, and `Update()` additional parameters must be scalars or null
+
 ## 2.6.4
 
 _Released July 11, 2023_

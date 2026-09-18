@@ -1,6 +1,7 @@
 <?php
 namespace PHRETS\Test;
 
+use Composer\InstalledVersions;
 use GuzzleHttp\Cookie\CookieJar;
 use Monolog\Logger;
 use PHPUnit\Framework\Attributes\Test;
@@ -131,5 +132,32 @@ class SessionTest extends TestCase
         $jar = new \GuzzleHttp\Cookie\CookieJar();
         $s = new Session($c, cookieJar: $jar);
         self::assertSame($jar, $s->getCookieJar());
+    }
+
+    #[Test]
+    public function itKeepsCookiesForTheDigestHandshake(): void
+    {
+        $c = new Configuration();
+        $c->setLoginUrl('http://www.reso.org/login');
+
+        $jar = new CookieJar();
+        $defaultOptions = (new Session($c, cookieJar: $jar))->getDefaultOptions();
+
+        if (version_compare((string) InstalledVersions::getVersion('guzzlehttp/guzzle'), '8.0.0', '>=')) {
+            self::assertSame($jar, $defaultOptions['cookies'] ?? null);
+            self::assertArrayNotHasKey('curl', $defaultOptions);
+        } else {
+            self::assertSame([CURLOPT_COOKIEFILE => ''], $defaultOptions['curl'] ?? null);
+            self::assertArrayNotHasKey('cookies', $defaultOptions);
+        }
+    }
+
+    #[Test]
+    public function itSendsEmptyCredentialsWhenNoneAreConfigured(): void
+    {
+        $c = new Configuration();
+        $c->setLoginUrl('http://www.reso.org/login');
+
+        self::assertSame(['', '', Configuration::AUTH_DIGEST], (new Session($c))->getDefaultOptions()['auth']);
     }
 }

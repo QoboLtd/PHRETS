@@ -1,0 +1,4 @@
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Digest realm="rets@retsgw.flexmls.com", qop="auth", nonce="4e6f6e6365466978747572654469676573745072", opaque="6f70617175652d66697874757265"
+Content-Length: 0
+

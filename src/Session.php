@@ -20,6 +20,14 @@ use PHRETS\Parsers\ParserType;
 use Psr\Log\LoggerInterface;
 use Stringable;
 
+/**
+ * @phpstan-type RequestOptions array{
+ *   query?: array<string, scalar|null>,
+ *   form_params?: array<string, scalar|null>,
+ *   headers?: array<string, string>,
+ *   body?: string|resource|\Psr\Http\Message\StreamInterface,
+ * }
+ */
 class Session
 {
     protected readonly ClientInterface $client;
@@ -353,7 +361,7 @@ class Session
      * @param string|null $warning_response
      * @param int $validation_mode
      * @param string $delimiter
-     * @param array<string,mixed> $additional_parameters
+     * @param array<string,scalar|null> $additional_parameters
      * @return array<string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
@@ -397,7 +405,7 @@ class Session
      * @param string $content_type
      * @param string $action
      * @param string|resource|\Psr\Http\Message\StreamInterface $body
-     * @param array<string,mixed> $attributes
+     * @param array<string,string> $attributes
      * @return array<string,mixed>
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\RETSException
@@ -450,7 +458,7 @@ class Session
 
     /**
      * @param string $capability
-     * @param array<string,mixed> $options
+     * @param RequestOptions $options
      * @param bool $is_retry
      *
      *
@@ -488,7 +496,7 @@ class Session
 
                 $response = $this->client->request('POST', $url, [
                     'headers' => $options['headers'],
-                    'body' => $options['body'],
+                    'body' => $options['body'] ?? null,
                 ]);
             } elseif ($this->configuration->readOption('use_post_method') ||
                 array_key_exists('form_params', $options)
@@ -498,17 +506,18 @@ class Session
                     $query = $options['form_params'];
                 } else {
                     $this->debug('Using POST method per use_post_method option');
-                    $query = (array_key_exists('query', $options)) ? $options['query'] : null;
+                    $query = $options['query'] ?? null;
                 }
 
                 // do not send query options in url, only in form_params
                 $local_options = $options;
-                unset($local_options['query']);
-                $response = $this->client->request(
-                    'POST',
-                    $url,
-                    array_merge($local_options, ['form_params' => $query])
-                );
+                unset($local_options['query'], $local_options['form_params']);
+                // Guzzle 8 rejects a null form_params, and an empty one would add a Content-Type header
+                if ($query !== null) {
+                    $local_options['form_params'] = $query;
+                }
+
+                $response = $this->client->request('POST', $url, $local_options);
             } else {
                 if (isset($options['query'])) {
                     assert(is_array($options['query']));
@@ -704,18 +713,20 @@ class Session
 
     /**
      * @return array{
-     *   auth:list<?string>,
+     *   auth: array{string, string, string},
      *   headers: array{User-Agent: string, RETS-Version: string, Accept-Encoding: string, Accept: string},
-     *   curl: array<int, string>,
+     *   cookies?: \GuzzleHttp\Cookie\CookieJarInterface,
+     *   curl?: array<int, string>,
      *   allow_redirects?: false
      * }
      */
     public function getDefaultOptions(): array
     {
         $defaults = [
+            // Guzzle 8 rejects null credentials; libcurl treated them as empty strings
             'auth' => [
-                $this->configuration->getUsername(),
-                $this->configuration->getPassword(),
+                $this->configuration->getUsername() ?? '',
+                $this->configuration->getPassword() ?? '',
                 $this->configuration->getHttpAuthenticationMethod(),
             ],
             'headers' => [
@@ -724,8 +735,17 @@ class Session
                 'Accept-Encoding' => 'gzip',
                 'Accept' => '*/*',
             ],
-            'curl' => [CURLOPT_COOKIEFILE => ''],
         ];
+
+        // Some servers require cookies set during the Digest handshake. Guzzle 7 runs that handshake
+        // inside libcurl, out of reach of the cookie middleware, so libcurl's own cookie engine has
+        // to handle them. Guzzle 8 runs Digest in its auth middleware, where each leg passes
+        // through the cookie jar, and rejects CURLOPT_COOKIEFILE.
+        if (self::guzzleMajorVersion() >= 8) {
+            $defaults['cookies'] = $this->cookie_jar;
+        } else {
+            $defaults['curl'] = [CURLOPT_COOKIEFILE => ''];
+        }
 
         // disable following 'Location' header (redirects) automatically
         if ($this->configuration->readOption('disable_follow_location')) {
@@ -733,5 +753,13 @@ class Session
         }
 
         return $defaults;
+    }
+
+    /**
+     * Guzzle major version installed alongside PHRETS (7 or 8)
+     */
+    private static function guzzleMajorVersion(): int
+    {
+        return ClientInterface::MAJOR_VERSION;
     }
 }
