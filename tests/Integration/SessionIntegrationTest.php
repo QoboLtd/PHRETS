@@ -118,13 +118,15 @@ class SessionIntegrationTest extends BaseIntegration
          */
         $container = [];
 
+        // the fixtures middleware answers without calling further down the stack, so record ahead of it
         $history = Middleware::history($container);
-        $handler->push($history);
+        $handler->before('fixtures', $history);
 
         $session->Login();
 
         self::assertCount(1, $container);
-        $last_request = $container[count($container) - 1];
+        $last_request = $container[0] ?? null;
+        self::assertNotNull($last_request);
         self::assertMatchesRegularExpression(
             '/Digest/',
             implode(', ', $last_request['request']->getHeader('RETS-UA-Authorization'))

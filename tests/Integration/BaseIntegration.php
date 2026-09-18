@@ -4,6 +4,7 @@ namespace PHRETS\Test\Integration;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Psr7\Message;
 use PHPUnit\Framework\TestCase;
 use PHRETS\Configuration;
@@ -28,6 +29,8 @@ class BaseIntegration extends TestCase
         'ACCEPT' => 'Accept',
         'USER-AGENT' => 'User-Agent',
         'COOKIE' => 'Cookie',
+        // Guzzle 8 computes Digest in PHP, so the header reaches the fixtures and it changes with every cnonce
+        'AUTHORIZATION' => 'Authorization',
     ];
 
     public function setUp(): void
@@ -65,7 +68,7 @@ class BaseIntegration extends TestCase
     {
         $stack = HandlerStack::create();
 
-        $stack->push($this->onBefore());
+        $stack->push($this->onBefore(), 'fixtures');
         $stack->push($this->onComplete());
 
         return $stack;
@@ -75,15 +78,15 @@ class BaseIntegration extends TestCase
     {
         return function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
-                $promise = $handler($request, $options);
-
+                // Replay the recorded response without calling the real handler, which would send the request
                 if (file_exists($this->getFullFilePath($request))) {
                     $responsedata = file_get_contents($this->getFullFilePath($request));
                     $response = \GuzzleHttp\Psr7\Message::parseResponse($responsedata);
-                    $promise->resolve($response);
+
+                    return Create::promiseFor($response);
                 }
 
-                return $promise;
+                return $handler($request, $options);
             };
         };
     }
@@ -129,7 +132,13 @@ class BaseIntegration extends TestCase
     {
         $result = trim($request->getMethod() . ' ' . $request->getRequestTarget())
             . ' HTTP/' . $request->getProtocolVersion();
-        foreach ($request->getHeaders() as $name => $values) {
+
+        // Sort the headers so the name does not depend on the order guzzlehttp/psr7 stores them in,
+        // which differs between its major versions
+        $headers = $request->getHeaders();
+        uksort($headers, strcasecmp(...));
+
+        foreach ($headers as $name => $values) {
             if (array_key_exists(strtoupper($name), $this->ignored_headers)) {
                 continue;
             }
