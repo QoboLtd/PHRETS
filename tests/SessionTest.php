@@ -141,7 +141,7 @@ class SessionTest extends TestCase
         $c->setLoginUrl('http://www.reso.org/login');
 
         $jar = new CookieJar();
-        $defaultOptions = new Session($c, cookieJar: $jar)->getDefaultOptions();
+        $defaultOptions = (new Session($c, cookieJar: $jar))->getDefaultOptions();
 
         if (version_compare((string) InstalledVersions::getVersion('guzzlehttp/guzzle'), '8.0.0', '>=')) {
             self::assertSame($jar, $defaultOptions['cookies'] ?? null);
@@ -158,6 +158,6 @@ class SessionTest extends TestCase
         $c = new Configuration();
         $c->setLoginUrl('http://www.reso.org/login');
 
-        self::assertSame(['', '', Configuration::AUTH_DIGEST], new Session($c)->getDefaultOptions()['auth']);
+        self::assertSame(['', '', Configuration::AUTH_DIGEST], (new Session($c))->getDefaultOptions()['auth']);
     }
 }
